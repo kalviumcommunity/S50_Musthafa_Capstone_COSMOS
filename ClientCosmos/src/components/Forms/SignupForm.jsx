@@ -75,7 +75,7 @@ function SignupForm() {
               </div>
             </div>
           )}
-
+          
           <div className="flex items-center justify-center bg-black h-screen w-screen">
             <div className="flex gap-72 px-40 justify-between">
               <div>
