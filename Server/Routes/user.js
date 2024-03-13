@@ -2,9 +2,26 @@ const express = require("express");
 const router = express.Router();
 const usermodel = require("../Schemas/Users");
 const app = express();
+const Joi = require("joi");
+const jwt = require("jsonwebtoken");
+const saltRounds = 10; 
+
 app.use(express.json());
 
+const generateToken = (data) => {
+  const secretKey = "secret";
+  const expiresIn = "1h";
+  const plainData = data.toObject();
+  const token = jwt.sign(plainData, secretKey, { expiresIn });
+  return token;
+};
 
+const PostuserSchema = Joi.object({
+  username: Joi.string().min(3).max(30).required(),
+  email: Joi.string().email().required(),
+  name: Joi.string().required(),
+  password: Joi.string().required(),
+});
 
 // GET REQUEST
 router.get("/", async (req, res) => {
@@ -12,13 +29,16 @@ router.get("/", async (req, res) => {
     const data = await usermodel.find();
     res.json(data);
   } catch (error) {
-    console.error("An error occurred with the GET method while getting the user data:", error);
+    console.error(
+      "An error occurred with the GET method while getting the user data:",
+      error
+    );
     res.status(500).json({
-      error: "Internal Server Error with the GET method while getting the user data",
+      error:
+        "Internal Server Error with the GET method while getting the user data",
     });
   }
 });
-
 
 // GET REQUEST ACCORDING ID
 router.get("/:id", async (req, res) => {
@@ -34,35 +54,43 @@ router.get("/:id", async (req, res) => {
   } catch (error) {
     console.error("An error occurred while getting the user details:", error);
     res.status(500).json({
-      error: "Internal Server Error with the GET method of getting the user details",
+      error:
+        "Internal Server Error with the GET method of getting the user details",
     });
   }
 });
-
-
-
 
 // POST REQUEST with Joi Validation
 
+const bcrypt = require('bcrypt');
 
 router.post("/", async (req, res) => {
   try {
-    const data = await usermodel.create(req.body);
-    const token = generateToken(data);
+    const { error } = PostuserSchema.validate(req.body);
 
-    console.log("Token",token)
-    console.log("Data",data)
+    if (error) {
+      return res.status(400).json({ error: error.details[0].message });
+    } else {
+      // Hash the password
+      const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
+      const userData = { ...req.body, password: hashedPassword };
 
-    res.status(201).json({ user: data, token: token });
+      const data = await usermodel.create(userData);
+      const token = generateToken(data);
+
+      res.status(201).json({ user:data,  token: token });
+    }
   } catch (err) {
-    console.log("An error is caught with the POST method while posting the user data", err);
+    console.log(
+      "An error is caught with the POST method while posting the user data",
+      err
+    );
     res.status(500).json({
-      error: "Internal Server Error with the POST method while posting the user data",
+      error:
+        "Internal Server Error with the POST method while posting the user data",
     });
   }
 });
-
-
 
 // PUT REQUEST with Joi Validation
 
@@ -97,10 +125,10 @@ router.put("/:id", async (req, res) => {
 
 // PATCH REQUEST with Joi Validation
 
-router.patch("/:id" , async (req, res) => {
+router.patch("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id)
+    console.log(id);
 
     const updateFields = {};
     if (req.body.name) {
@@ -119,8 +147,10 @@ router.patch("/:id" , async (req, res) => {
       updateFields.phone_number = req.body.phone_number;
     }
 
-    const updatedData = await usermodel.findByIdAndUpdate(id, updateFields,{new: true});
-    console.log("üpdated",updatedData)
+    const updatedData = await usermodel.findByIdAndUpdate(id, updateFields, {
+      new: true,
+    });
+    console.log("üpdated", updatedData);
 
     if (!updatedData) {
       return res.status(404).json({ error: "User not found" });
@@ -143,6 +173,5 @@ router.delete("/:id", async (req, res) => {
     Message: "Deleted Successfully",
   });
 });
-
 
 module.exports = router;

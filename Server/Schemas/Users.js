@@ -13,9 +13,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String
   },
-  phone_number: {
-    type: String
-  },
   date: {
     type: Date,
     default: Date.now()
