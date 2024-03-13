@@ -3,6 +3,7 @@ import Landingpage from "./components/Landingpage";
 import LoginForm from "./components/Forms/LoginForm";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignupForm from "./components/Forms/SignupForm";
+import Loading from "./components/Loading";
 
 function App() {
   return (
