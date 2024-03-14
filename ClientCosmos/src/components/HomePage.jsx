@@ -21,7 +21,7 @@ function HomePage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));  
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -34,11 +34,16 @@ function HomePage() {
 
   const onClick = (e) => {
     if (e === "signup") {
+      
       navigate("/signup");
     } else if (e === "login") {
       navigate("/login");
     }
   };
+
+  const ProfileClick = () => {
+    navigate("/profile")
+  }
 
   return (
     <>
@@ -55,7 +60,7 @@ function HomePage() {
             />
             <div className="flex pr-16 gap-10">
               { userData ? (
-                <div className="flex gap-5 items-center cursor-pointer">
+                <div onClick={ProfileClick} className="flex gap-5 items-center cursor-pointer">
                     <img
                     src="https://pluspng.com/img-png/user-png-icon-download-icons-logos-emojis-users-2240.png"
                     className="border rounded-full w-10"
