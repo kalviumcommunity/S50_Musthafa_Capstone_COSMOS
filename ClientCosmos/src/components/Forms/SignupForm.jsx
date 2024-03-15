@@ -8,6 +8,8 @@ import APPLE from "../../Assets/APPLE.png";
 import FACEBOOK from "../../Assets/FACEBOOK.png";
 import Loading from "../Loading";
 import Cookies from "js-cookie";
+import "preline/preline";
+
 
 function SignupForm() {
   const navigate = useNavigate();
@@ -49,7 +51,7 @@ function SignupForm() {
       const { token, user } = response.data;
 
       Cookies.set("token", token);
-      user.password = "";
+      user.password = undefined;
       Cookies.set("userData", JSON.stringify(user));
 
       navigate("/HomePage");
@@ -81,7 +83,7 @@ function SignupForm() {
           <div className="flex items-center justify-center bg-black h-screen w-screen">
             <div className="flex gap-72 px-40 justify-between">
               <div>
-                <img src={COSMOS} className="h-14" alt="" />
+                <img src={COSMOS} className="h-12" alt="" />
                 <div className="flex gap-16 mt-28">
                   <img
                     className=" rounded-full cursor-pointer w-14"
