@@ -2,11 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.fade-in {
-  opacity: 1;
-  transition: opacity 4s ease-in-out;
-}
-
-.fade-in.loaded {
-  opacity: 0;
-}
+.font-poppins{
+    font-family: 'Poppins', sans-serif;
+  }
+  

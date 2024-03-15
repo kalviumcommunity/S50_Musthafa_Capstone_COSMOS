@@ -45,10 +45,11 @@ function SignupForm() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post("http://localhost:3000/users", data);
-
+      setAlert(false)
       const { token, user } = response.data;
 
       Cookies.set("token", token);
+      user.password = "";
       Cookies.set("userData", JSON.stringify(user));
 
       navigate("/HomePage");
@@ -56,6 +57,7 @@ function SignupForm() {
       setApiError(null);
     } catch (error) {
       console.error("Error in post request", error.response.data.error);
+      setAlert(true)
       setApiError(error.response.data.error);
     }
   };
@@ -66,7 +68,7 @@ function SignupForm() {
         <Loading />
       ) : (
         <>
-          {alert && (
+          {alert && apiError && (
             <div className="absolute flex justify-center items-center w-screen transition-transform transform translate-y-full">
               <div className="px-7 w-2/4 rounded-md py-2 bg-red-600 flex items-center justify-center text-center">
                 <h2 className="text-xl text-white font-thin tracking-widest">
@@ -75,7 +77,7 @@ function SignupForm() {
               </div>
             </div>
           )}
-
+          
           <div className="flex items-center justify-center bg-black h-screen w-screen">
             <div className="flex gap-72 px-40 justify-between">
               <div>
