@@ -99,7 +99,37 @@ function UserPosts() {
               <p className="line-clamp-3 text-xl w-96 font-light mt-2">
                 {post.content}
               </p>
-             
+              <div className="flex items-center gap-5 justify-end">
+                <label className="ui-bookmark">
+                  <input type="checkbox" />
+                  <div className="bookmark -z-50">
+                    <svg
+                      viewBox="0 0 16 16"
+                      style={{ marginTop: "4px" }}
+                      className="bi bi-heart-fill mt-10"
+                      height="25"
+                      width="25"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                        fill-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                </label>
+
+                <label className="custom-container">
+                  <input type="checkbox" />
+                  <div className="custom-bookmark -z-50">
+                    <svg viewBox="0 0 32 32">
+                      <g>
+                        <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
+                      </g>
+                    </svg>
+                  </div>
+                </label>
+              </div>
             </div>
           ))}
         </div>
