@@ -100,7 +100,7 @@ function Profile() {
               </div>
             </div>
             <div className="w-64 flex flex-col items-center shadow-xl">
-                <h1 className="mt-20 bg-white font-semibold text-2xl tracking-wide">CREATE A POST</h1>
+                <h1 className="mt-20  font-semibold text-2xl tracking-wide">CREATE A POST</h1>
               <button
                 title="Add New"
                 className="group cursor-pointer mt-5 w-fit h-fit outline-none hover:rotate-90 duration-300"

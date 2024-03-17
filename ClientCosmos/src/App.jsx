@@ -5,6 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import SignupForm from "./components/Forms/SignupForm";
 import Profile from "./components/Profile";
 import UserPosts from "./components/UserPosts";
+import Explore from "./components/Explore";
+import Communties from "./components/Communties";
 function App() {
   return (
     <>
@@ -15,6 +17,8 @@ function App() {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/userPosts" element={<UserPosts />} />
+        <Route path="/explore" element={<Explore />} />
+        <Route path="/communities" element={<Communties />} />
 
       </Routes>
     </>

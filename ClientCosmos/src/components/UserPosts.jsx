@@ -4,41 +4,47 @@ import exampleIMG2 from "../Assets/exampleimg2.webp";
 import exampleIMG3 from "../Assets/exampleimg3.jpeg";
 import exampleIMG4 from "../Assets/exampleimg4.jpg";
 import exampleIMG5 from "../Assets/exampleimg5.jpeg";
+import { useNavigate } from "react-router-dom";
 
 function UserPosts() {
+  const navigate = useNavigate();
   const posts = [
     {
       id: 1,
-      title: "ALEXA",
+      title: "MIKE",
       image: exampleIMG2,
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incididunt ut labore et dolore magna",
     },
     {
       id: 2,
-      title: "ALEXA",
+      title: "JACK",
       image: exampleIMG5,
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incididunt ut labore et dolore magna",
     },
     {
       id: 3,
-      title: "ALEXA",
+      title: "ALICE",
       image: exampleIMG3,
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incididunt ut labore et dolore magna",
     },
     {
       id: 4,
-      title: "ALEXA",
+      title: "TRAVIS",
       image: exampleIMG4,
       content:
         "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed eiusmod tempor incididunt ut labore et dolore magna",
     },
   ];
 
+  const NavigateFun = () => {
+    navigate("/HomePage")
+  }
   return (
     <div className="">
+      {/* navbar */}
       <nav className="flex bg-white pr-28 fixed w-screen pl-20 py-10 justify-between">
         <h1 className="text-4xl font-poppins font-bold">USER POSTS</h1>
         <div className="flex bg-slate-100 w-2/4 rounded-lg shadow-sm">
@@ -61,9 +67,9 @@ function UserPosts() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             >
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.3-4.3" />
@@ -71,10 +77,16 @@ function UserPosts() {
           </button>
         </div>
       </nav>
+      {/* Side bar */}
       <div className="flex ">
         <div className="ml-20 fixed top-32 h-fit py-16 mt-5 items-center flex justify-center px-20 shadow-lg border w-fit">
           <div className="">
-            <button className="text-center my-5 py-3 rounded-sm w-full  bg-black text-white shadow-md ">
+            <button
+              onClick={
+                NavigateFun
+            }
+              className="text-center my-5 py-3 rounded-sm w-full  bg-black text-white shadow-md "
+            >
               Home
             </button>
             <button className="text-center my-5 py-3 rounded-sm w-full  bg-black text-white shadow-md ">
@@ -88,6 +100,9 @@ function UserPosts() {
             </button>
           </div>
         </div>
+
+        {/* posts */}
+
         <div className="pl-48 ml-96 mt-28 h-screen">
           {posts.map((post) => (
             <div key={post.id} className="m-6 p-10  shadow-lg">
@@ -113,7 +128,7 @@ function UserPosts() {
                     >
                       <path
                         d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                       ></path>
                     </svg>
                   </div>
