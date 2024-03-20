@@ -8,6 +8,7 @@ import APPLE from "../../Assets/APPLE.png";
 import FACEBOOK from "../../Assets/FACEBOOK.png";
 import Cookies from "js-cookie";
 import "preline/preline";
+import Transition from "../Transition/Transition";
 
 function SignupForm() {
   const navigate = useNavigate();
@@ -61,7 +62,8 @@ function SignupForm() {
           </div>
         )}
 
-        <div className="flex items-center justify-center bg-black h-screen w-screen">
+        <div 
+        className="flex items-center justify-center bg-black h-screen w-screen">
           <div className="flex gap-72 px-40 justify-between">
             <div>
               <img src={COSMOS} className="h-12" alt="" />
@@ -230,4 +232,4 @@ function SignupForm() {
   );
 }
 
-export default SignupForm;
+export default Transition(SignupForm);

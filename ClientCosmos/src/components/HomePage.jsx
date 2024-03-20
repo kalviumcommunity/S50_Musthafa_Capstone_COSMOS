@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import WHAM from "../Assets/WHAM.png";
 import BHAM from "../Assets/BHAM.png";
+import Transition from "./Transition/Transition";
+
 function HomePage() {
   const navigate = useNavigate();
 
@@ -29,19 +31,15 @@ function HomePage() {
   const ProfileClick = (e) => {
     switch (e) {
       case "profile":
-        // Navigate to the user's profile page
         navigate("/profile");
         break;
       case "explore":
-        // Navigate to the explore topics page
         navigate("/explore");
         break;
       case "communities":
-        // Navigate to the communities page
         navigate("/communities");
         break;
       case "userPosts":
-        // Navigate to the user's posts page
         navigate("/userPosts");
         break;
       default:
@@ -53,7 +51,6 @@ function HomePage() {
     <>
       <div className="bg-black w-screen py-10 px-10 h-screen">
         <nav className="flex px-10 items-center justify-between py-3 bg-gray-100">
-          {/* <img src={LOGO} className="w-72" alt="" /> */}
           <div>
             <div className="flex bg-slate-100 w-96 rounded-lg shadow-sm">
               <input
@@ -87,17 +84,7 @@ function HomePage() {
           </div>
           <div className="flex gap-10">
             {userData ? (
-              <div
-              // onClick={ProfileClick}
-              // className="flex gap-3   items-center cursor-pointer"
-              >
-                {/* <img
-                  src="https://pluspng.com/img-png/user-png-icon-download-icons-logos-emojis-users-2240.png"
-                  className="border rounded-full w-10"
-                  alt=""
-                />
-                <h1 className="text-black text-xl">{userData.username}</h1> */}
-              </div>
+              <div></div>
             ) : (
               <>
                 <button
@@ -136,7 +123,7 @@ function HomePage() {
 
             <ul className="menu pt-10 p-7 w-80 min-h-full bg-white flex items-center text-base-content">
               <li className="w-full" onClick={() => ProfileClick("profile")}>
-                <div className="w-full text-black bg-white shadow-lg hover:bg-gray-950 hover:text-white">
+                <div className="w-full text-black bg-white shadow-lg hover:bg-gray-100">
                   <div className="w-full  rounded-md p-4 ">
                     {/* Profile picture */}
                     <img
@@ -187,4 +174,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default Transition(HomePage);

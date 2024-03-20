@@ -1,9 +1,10 @@
 import React from 'react'
+import Transition from './Transition/Transition.jsx'
 
 function Explore() {
   return (
-    <div>Explore</div>
+    <div className='bg-white'>Explore</div>
   )
 }
 
-export default Explore
+export default Transition(Explore);

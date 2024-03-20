@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import settingsIcon from "../Assets/settings.png";
 import editIcon from "../Assets/icon.png";
-import axios from "axios";
 import Cookies from "js-cookie";
+import Transition from "./Transition/Transition";
 function Profile() {
   const [userData, setUserData] = useState("");
   const [bgImage, setBgImage] = useState("");
@@ -49,7 +49,6 @@ function Profile() {
   }, []);
   useEffect(() => {
     const storedUserData = Cookies.get("userData");
-    // 
     if (storedUserData) {
       const parsedUserData = JSON.parse(storedUserData);
       setUserData(parsedUserData);
@@ -60,7 +59,6 @@ function Profile() {
     <>
       <div
         className="bg-cover bg-center  absolute bg-black -z-50 w-screen h-64"
-        // style={{ backgroundImage: `url(${bgImage})` }}
       ></div>
       <div className="flex ">
         <div className="flex px-11 flex-col bg-white shadow-xl rounded-sm  absolute top-24 left-28  w-fit justify-center items-center text-center">
@@ -70,7 +68,7 @@ function Profile() {
             alt=""
           />
 
-          <h2 className="font-bold font-poppins mb-11 text-3xl">{userData.name}</h2>
+          <h2 className="font-bold font-poppins mb-11 text-3xl">ALEXIA</h2>
           <button className="text-white flex items-center w-56 justify-center gap-3 rounded-md mb-6 py-2  bg-black font-poppins tracking-wider">
             <img src={editIcon} className="w-5" alt="" />
             Edit Profile
@@ -128,4 +126,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default Transition(Profile);
