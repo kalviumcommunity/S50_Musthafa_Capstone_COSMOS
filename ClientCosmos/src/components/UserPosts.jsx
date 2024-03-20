@@ -1,10 +1,10 @@
 import React from "react";
 import exampleIMG2 from "../Assets/exampleimg2.webp";
-
 import exampleIMG3 from "../Assets/exampleimg3.jpeg";
 import exampleIMG4 from "../Assets/exampleimg4.jpg";
 import exampleIMG5 from "../Assets/exampleimg5.jpeg";
 import { useNavigate } from "react-router-dom";
+import Transition from "./Transition/Transition";
 
 function UserPosts() {
   const navigate = useNavigate();
@@ -43,7 +43,7 @@ function UserPosts() {
     navigate("/HomePage")
   }
   return (
-    <div className="">
+    <div className="bg-white h-max">
       {/* navbar */}
       <nav className="flex bg-white pr-28 fixed w-screen pl-20 py-10 justify-between">
         <h1 className="text-4xl font-poppins font-bold">USER POSTS</h1>
@@ -53,7 +53,7 @@ function UserPosts() {
             id="hs-trailing-button-add-on-with-icon"
             name="hs-trailing-button-add-on-with-icon"
             placeholder="Search here"
-            className="py-3 px-4 block w-full shadow-lg rounded-s-lg text-sm focus:z-10 disabled:opacity-50 bg-white disabled:pointer-events-none dark:bg-white outline-none"
+            className="py-3 px-4  block w-full shadow-lg rounded-s-lg text-sm focus:z-10 disabled:opacity-50 bg-white disabled:pointer-events-none dark:bg-white outline-none"
           />
           <button
             type="button"
@@ -105,7 +105,7 @@ function UserPosts() {
 
         <div className="pl-48 ml-96 mt-28 h-screen">
           {posts.map((post) => (
-            <div key={post.id} className="m-6 p-10  shadow-lg">
+            <div key={post.id} className="m-6 p-10 -z-50 shadow-lg">
               <h1 className="font-bold font-poppins tracking-wider text-2xl">
                 {post.title}
               </h1>
@@ -114,10 +114,11 @@ function UserPosts() {
               <p className="line-clamp-3 text-xl w-96 font-light mt-2">
                 {post.content}
               </p>
+    
               <div className="flex items-center gap-5 justify-end">
                 <label className="ui-bookmark">
                   <input type="checkbox" />
-                  <div className="bookmark -z-50">
+                  <div className="bookmark ">
                     <svg
                       viewBox="0 0 16 16"
                       style={{ marginTop: "4px" }}
@@ -136,7 +137,7 @@ function UserPosts() {
 
                 <label className="custom-container">
                   <input type="checkbox" />
-                  <div className="custom-bookmark -z-50">
+                  <div className="custom-bookmark ">
                     <svg viewBox="0 0 32 32">
                       <g>
                         <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
@@ -153,4 +154,4 @@ function UserPosts() {
   );
 }
 
-export default UserPosts;
+export default Transition(UserPosts);
