@@ -9,6 +9,7 @@ import Explore from "./Explore";
 import Communties from "./Communties";
 import Profile from "./Profile";
 import { AnimatePresence } from "framer-motion";
+import News from "./News";
 
 function AnimationRoutes() {
   const location = useLocation();
@@ -23,6 +24,8 @@ function AnimationRoutes() {
         <Route path="/userPosts" element={<UserPosts />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/communities" element={<Communties />} />
+        <Route path="/news" element={<News />} />
+
       </Routes>
     </AnimatePresence>
   );

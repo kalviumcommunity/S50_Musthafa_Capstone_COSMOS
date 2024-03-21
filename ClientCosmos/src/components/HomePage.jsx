@@ -5,12 +5,12 @@ import Cookies from "js-cookie";
 import WHAM from "../Assets/WHAM.png";
 import BHAM from "../Assets/BHAM.png";
 import Transition from "./Transition/Transition";
-
+import axios from "axios";
 function HomePage() {
   const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState("");
+  const [latestNews, setLatestNews] = useState(null);
 
   useEffect(() => {
     const storedUserData = Cookies.get("userData");
@@ -28,6 +28,71 @@ function HomePage() {
     }
   };
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = "https://spaceapi.p.rapidapi.com/news";
+      const options = {
+        method: "GET",
+        headers: {
+          "X-RapidAPI-Key":
+            "4d57f80c3cmsh220894b8060dac0p183d06jsn2765d1228c85",
+          "X-RapidAPI-Host": "spaceapi.p.rapidapi.com",
+        },
+      };
+
+      try {
+        const response = await fetch(url, options);
+        const result = await response.text();
+        console.log(result);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const newsData = [
+    {
+      imageUrl:
+        "https://cdn.mos.cms.futurecdn.net/RMH4iPBHsybrCo3WhDSfhF-650-80.jpg.webp",
+      title: `Helping build instrument for Japanese Mars mission 'a favorite time' for new NASA astronaut (exclusive)`,
+      content: `A new NASA astronaut already has a space mission ready for launch, but (spoiler alert!) he won't be on the rocket.
+      NASA astronaut Andre Douglas, and a large international team, worked on the Martian Moons Exploration (MMX) mission,
+       which is slated lift off in late 2026. Douglas played a role in creating a key Mars instrument while he was employed at Johns
+        Hopkins University Applied Physics Laboratory (APL) in Baltimore, prior to joining NASA.`,
+    },
+    {
+      imageUrl:
+        "https://cdn.mos.cms.futurecdn.net/fHyEPhgy7R2Pkhx8DrXyrb-1200-80.jpg.webp",
+      title: "China launches satellite to support future moon missions",
+      content: `China launched a satellite toward the moon this week to help support the country's lunar ambitions.
+                On Tuesday (March 19), a Long March 8 rocket took off from the Wenchang Satellite Launch Center on 
+                the southern Chinese island of Hainan carrying the Queqiao-2 satellite. The spacecraft is what's known
+                 as a relay satellite, meaning it will help pass messages back and forth between China's Chang'e moon 
+                 spacecraft, as well as other vehicles on the lunar surface, and mission controllers on Earth.`,
+    },
+    {
+      imageUrl:
+        "https://cdn.mos.cms.futurecdn.net/ifG9uaGvRi7HsdAaQwL9vb-650-80.jpg.webp",
+      title: "1 in 12 stars might have swallowed a planet",
+      content: `About one in every 12 stars may have swallowed a planet, a new study finds.
+      Previous research had discovered that some distant stars possess unusual levels of elements,
+      such as iron, which one would expect to make up rocky worlds such as Earth. This and other evidence
+      suggested that stars may sometimes ingest planets, but much remained uncertain about how often that might happen.
+      One way to uncover more about planetary ingestion is to look at two stars born at the same time.
+      Such twins should have a virtually identical composition, as they are both born from the same parent cloud of gas and dust.
+      Any major chemical differences between these so-called "co-natal" stars may thus be a sign that one devoured a world.
+      `,
+    },
+    {
+      imageUrl:
+        "https://cdn.mos.cms.futurecdn.net/o3egecNDBubCJmmEbLT3Db-1200-80.jpg.webp",
+      title: "Total solar eclipse 2024: Live updates",
+      content: "A total solar eclipse is coming to North America.",
+    },
+  ];
+
   const ProfileClick = (e) => {
     switch (e) {
       case "profile":
@@ -42,6 +107,9 @@ function HomePage() {
       case "userPosts":
         navigate("/userPosts");
         break;
+      case "news":
+        navigate("/news");
+        break;
       default:
         break;
     }
@@ -51,8 +119,8 @@ function HomePage() {
     <>
       <div className="bg-black w-screen py-10 px-10 h-screen">
         <nav className="flex px-10 items-center justify-between py-3 bg-gray-100">
-          <div>
-            <div className="flex bg-slate-100 w-96 rounded-lg shadow-sm">
+          <div className="w-full">
+            <div className="flex bg-slate-100 w-2/4 rounded-lg shadow-sm">
               <input
                 type="text"
                 id="hs-trailing-button-add-on-with-icon"
@@ -153,6 +221,16 @@ function HomePage() {
                   EXPLORE TOPICS
                 </button>
               </li>
+              <li className=" w-full" onClick={() => ProfileClick("userPosts")}>
+                <button className=" text-black font-poppins mt-4 py-3 px-5 border shadow-md rounded-sm">
+                  USER POSTS
+                </button>
+              </li>
+              <li className=" w-full" onClick={() => ProfileClick("news")}>
+                <button className=" text-black font-poppins mt-4 py-3 px-5 border shadow-md rounded-sm">
+                  NEWS
+                </button>
+              </li>
               <li
                 className="w-full"
                 onClick={() => ProfileClick("communities")}
@@ -161,12 +239,29 @@ function HomePage() {
                   COMMUNITIES
                 </button>
               </li>
-              <li className=" w-full" onClick={() => ProfileClick("userPosts")}>
-                <button className=" text-black font-poppins mt-4 py-3 px-5 border shadow-md rounded-sm">
-                  USER POSTS
-                </button>
-              </li>
             </ul>
+          </div>
+        </div>
+        <div className="">
+          <h2 className="text-3xl mt-7 text-white font-bold font-poppins">
+            LATEST NEWS
+          </h2>
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-10 mt-10">
+            {newsData.map((news, index) => (
+              <div
+                key={index}
+                onClick={() => ProfileClick("news")}
+                className="bg-white cursor-pointer duration-500"
+              >
+                <img className="" src={news.imageUrl} alt="" />
+                <div className="my-3 mx-5">
+                  <h2 className="text-xl font-semibold line-clamp-2 font-poppins">
+                    {news.title}
+                  </h2>
+                  <p className="line-clamp-3">{news.content}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
