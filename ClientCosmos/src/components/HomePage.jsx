@@ -10,7 +10,6 @@ function HomePage() {
   const navigate = useNavigate();
 
   const [userData, setUserData] = useState("");
-  const [latestNews, setLatestNews] = useState(null);
 
   useEffect(() => {
     const storedUserData = Cookies.get("userData");
@@ -27,30 +26,6 @@ function HomePage() {
       navigate("/login");
     }
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const url = "https://spaceapi.p.rapidapi.com/news";
-      const options = {
-        method: "GET",
-        headers: {
-          "X-RapidAPI-Key":
-            "4d57f80c3cmsh220894b8060dac0p183d06jsn2765d1228c85",
-          "X-RapidAPI-Host": "spaceapi.p.rapidapi.com",
-        },
-      };
-
-      try {
-        const response = await fetch(url, options);
-        const result = await response.text();
-        console.log(result);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const newsData = [
     {
