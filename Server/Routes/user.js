@@ -4,17 +4,37 @@ const usermodel = require("../Schemas/Users");
 const app = express();
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
-const saltRounds = 10; 
+const saltRounds = 10;
 
 app.use(express.json());
+const secretKey = "secret";
 
 const generateToken = (data) => {
-  const secretKey = "secret";
   const expiresIn = "1h";
   const plainData = data.toObject();
   const token = jwt.sign(plainData, secretKey, { expiresIn });
   return token;
 };
+
+const verifyToken = (req, res, next) => {
+  const token =
+    req.body.token || req.query.token || req.headers["x-access-token"];
+  if (!token) {
+    return res.status(200).json({ error: "Token is not provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, secretKey);
+    req.decoded = decoded;
+    next();
+  } catch (error) {
+    return res.status(401).json({ error: "Failed to authenticate token" });
+  }
+};
+
+router.post("/tokenvalidate", verifyToken, (req, res) => {
+  res.status(200).json({ valid: true, user: req.decoded });
+});
 
 const PostuserSchema = Joi.object({
   username: Joi.string().min(3).max(30).required(),
@@ -41,28 +61,28 @@ router.get("/", async (req, res) => {
 });
 
 // GET REQUEST ACCORDING ID
-router.get("/:id", async (req, res) => {
+router.post("/getone", async (req, res) => {
   try {
-    const userID = req.params.id;
-    const userData = await usermodel.findById(userID);
-
-    if (!userData) {
-      return res.status(404).json({ error: "User not found" });
+    const { email, password } = req.body;
+    const user = await usermodel.findOne({ email });
+    if (!user) {
+      return res.status(401).json({ error: "Invalid email" });
     }
-
-    res.json(userData);
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: "Invalid password" });
+    }
+    const token = generateToken(user);
+    res.status(201).json({ user, token });
   } catch (error) {
-    console.error("An error occurred while getting the user details:", error);
-    res.status(500).json({
-      error:
-        "Internal Server Error with the GET method of getting the user details",
-    });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 
 // POST REQUEST with Joi Validation
 
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 router.post("/", async (req, res) => {
   try {
@@ -78,7 +98,7 @@ router.post("/", async (req, res) => {
       const data = await usermodel.create(userData);
       const token = generateToken(data);
 
-      res.status(201).json({ user:data,  token: token });
+      res.status(201).json({ user: data, token: token });
     }
   } catch (err) {
     console.log(

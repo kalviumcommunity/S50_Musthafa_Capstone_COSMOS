@@ -1,10 +1,8 @@
-import React from 'react'
-import Transition from './Transition/Transition.jsx'
+import React from "react";
+import Transition from "./Transition/Transition.jsx";
 
 function Explore() {
-  return (
-    <div className='bg-white'>Explore</div>
-  )
+  return <div className="">Explore</div>;
 }
 
-export default Transition(Explore);
+export default Explore;

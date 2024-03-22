@@ -1,31 +1,15 @@
 import React, { useState, useEffect } from "react";
-import LOGO from "../Assets/LOGO.png";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
-import WHAM from "../Assets/WHAM.png";
-import BHAM from "../Assets/BHAM.png";
-import Transition from "./Transition/Transition";
 import axios from "axios";
+import WHAM from "../Assets/WHAM.png";
+
 function HomePage() {
   const navigate = useNavigate();
 
-  const [userData, setUserData] = useState("");
-
-  useEffect(() => {
-    const storedUserData = Cookies.get("userData");
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
-      setUserData(parsedUserData);
-    }
-  }, []);
-
-  const onClick = (e) => {
-    if (e === "signup") {
-      navigate("/signup");
-    } else if (e === "login") {
-      navigate("/login");
-    }
-  };
+  const [valid, setValid] = useState("");
+  const [user, setUser] = useState([]);
+  const [loading, setLoading] = useState(true); 
 
   const newsData = [
     {
@@ -68,6 +52,52 @@ function HomePage() {
     },
   ];
 
+
+  useEffect(() => {
+    const userDataString = Cookies.get("userData");
+    let userData = "";
+
+    try {
+      userData = JSON.parse(userDataString);
+    } catch (error) {
+      console.error("Error parsing userData:", error);
+    }
+    setUser(userData);
+
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      if (token) {
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/users/tokenvalidate",
+            { token }
+          );
+          setValid(response.data.valid);
+        } catch (error) {
+          console.error("Error in post request", error.response.data.error);
+        }
+      } else {
+        console.log("Token is not there");
+      }
+    };
+
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    fetchData();
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  const onClick = (e) => {
+    if (e === "signup") {
+      navigate("/signup");
+    } else if (e === "login") {
+      navigate("/login");
+    }
+  };
+
   const ProfileClick = (e) => {
     switch (e) {
       case "profile":
@@ -89,6 +119,19 @@ function HomePage() {
         break;
     }
   };
+
+  // Render loading screen while loading is true
+  if (loading) {
+    return (
+      <div className="w-screen h-screen bg-black grid justify-center items-center">
+        <div className="loading-container">
+          <div className="loader">
+            <div className="spinner"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -126,7 +169,7 @@ function HomePage() {
             </div>
           </div>
           <div className="flex gap-10">
-            {userData ? (
+            {valid ? (
               <div></div>
             ) : (
               <>
@@ -177,7 +220,7 @@ function HomePage() {
 
                     {/* Name */}
                     <h2 className="text-center  font-semibold text-lg mb-2">
-                      John Doe
+                      {user.name}
                     </h2>
                   </div>
                   <p className="text-sm line-clamp-4">
@@ -244,4 +287,4 @@ function HomePage() {
   );
 }
 
-export default Transition(HomePage);
+export default HomePage;
