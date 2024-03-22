@@ -162,7 +162,7 @@ function News() {
       {!clickedNews ? (
         <>
           <div className="">
-            <div className="m-10 grid grid-cols-4 gap-7">
+            <div className="m-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-7">
               {AllNews.map((detail, index) => (
                 <div
                   key={index}
@@ -189,15 +189,15 @@ function News() {
           </div>
         </>
       ) : (
-        <div className="flex">
-          <div className=" w-3/5 mx-10 p-10">
+        <div className="flex flex-col lg:flex-row">
+          <div className="lg:w-3/5 mx-10 p-10">
             <h2 className="text-3xl mb-4">{clickedNews.title}</h2>
             <img src={clickedNews.imageUrl} alt="" className="w-full" />
-            <div className="text-lg  font-normal mt-6">
+            <div className="text-lg font-normal mt-6">
               <p className="">{clickedNews.description}</p>
             </div>
           </div>
-          <div className="mx-10 py-10">
+          <div className="lg:mx-10 py-10">
             {/* Render other related news items */}
             <h3 className="text-2xl font-medium font-poppins mb-4">
               Related News
@@ -207,14 +207,14 @@ function News() {
                 <li
                   key={index}
                   onClick={() => handleNewsClick(news)}
-                  className="flex w-96 items-center mb-4"
+                  className="flex flex-col lg:flex-row lg:w-96 items-start lg:items-center mb-4"
                 >
                   <img
                     src={news.imageUrl}
                     alt={`Related News Image ${index + 1}`}
-                    className="w-36 h-32 mr-4"
+                    className="w-full lg:w-36 h-32 lg:mr-4"
                   />
-                  <div>
+                  <div className="lg:w-full">
                     <h4 className="text-md font-semibold line-clamp-2">
                       {news.title}
                     </h4>

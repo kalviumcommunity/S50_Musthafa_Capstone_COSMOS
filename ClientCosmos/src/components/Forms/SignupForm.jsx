@@ -232,4 +232,4 @@ function SignupForm() {
   );
 }
 
-export default Transition(SignupForm);
+export default SignupForm;
