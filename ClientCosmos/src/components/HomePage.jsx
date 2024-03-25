@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import axios from "axios";
 import WHAM from "../Assets/WHAM.png";
+import EARTH from "../Assets/EARTH.jpg";
+import SOLARSYSTEM from "../Assets/SOLARSYSTEM1.webp";
 
 function HomePage() {
   const navigate = useNavigate();
 
   const [valid, setValid] = useState("");
   const [user, setUser] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
+
 
   const newsData = [
     {
@@ -52,7 +55,6 @@ function HomePage() {
     },
   ];
 
-
   useEffect(() => {
     const userDataString = Cookies.get("userData");
     let userData = "";
@@ -74,6 +76,8 @@ function HomePage() {
           );
           setValid(response.data.valid);
         } catch (error) {
+          Cookies.remove("userData");
+          Cookies.remove("token");
           console.error("Error in post request", error.response.data.error);
         }
       } else {
@@ -95,6 +99,41 @@ function HomePage() {
       navigate("/signup");
     } else if (e === "login") {
       navigate("/login");
+    }
+  };
+
+  const NavigateTopics = (e) => {
+    switch (e) {
+      case "HOME":
+        console.log("HOME");
+        navigate("");
+        break;
+      case "SOLAR SYSTEM":
+        console.log("SOLAR SYSTEM");
+        navigate("");
+        break;
+      case "STARS":
+        console.log("STARS");
+        navigate("");
+        break;
+      case "GALAXIES":
+        console.log("GALAXIES");
+        navigate("");
+        break;
+      case "SUPERNOVAS":
+        console.log("SUPERNOVAS");
+        navigate("");
+        break;
+      case "NEBULAS":
+        console.log("NEBULAS");
+        navigate("");
+        break;
+      case "BLACK HOLES":
+        console.log("BLACK HOLES");
+        navigate("");
+        break;
+      default:
+        break;
     }
   };
 
@@ -120,6 +159,42 @@ function HomePage() {
     }
   };
 
+  const topics = [
+    {
+      name: "HOME",
+      imageUrl: EARTH,
+    },
+    {
+      name: "SOLAR SYSTEM",
+      imageUrl: SOLARSYSTEM,
+    },
+    {
+      name: "STARS",
+      imageUrl:
+        "https://images.pexels.com/photos/816608/pexels-photo-816608.jpeg?auto=compress&cs=tinysrgb&w=600",
+    },
+    {
+      name: "GALAXIES",
+      imageUrl:
+        "https://images.pexels.com/photos/2150/sky-space-dark-galaxy.jpg?auto=compress&cs=tinysrgb&w=600",
+    },
+    {
+      name: "SUPERNOVAS",
+      imageUrl:
+        "https://images.newscientist.com/wp-content/uploads/2020/04/10202803/cfa-019-supernova_illesized.jpg",
+    },
+    {
+      name: "NEBULAS",
+      imageUrl:
+        "https://media.istockphoto.com/id/1351809486/photo/abstract-deep-space-nebula-background.jpg?b=1&s=612x612&w=0&k=20&c=v3xgQPFBKo6d_EO9Qqb5jGb7k7vPCkba6NsZEPZdwZQ=",
+    },
+    {
+      name: "BLACK HOLES",
+      imageUrl:
+        "https://s.yimg.com/zb/imgv1/b58b6f08-f6a8-36cd-8731-39ced65a2b75/t_500x300",
+    },
+  ];
+
   // Render loading screen while loading is true
   if (loading) {
     return (
@@ -135,7 +210,7 @@ function HomePage() {
 
   return (
     <>
-      <div className="bg-black w-screen py-10 px-10 h-screen">
+      <div className="bg-black  py-10 px-10">
         <nav className="flex px-10 items-center justify-between py-3 bg-gray-100">
           <div className="w-full">
             <div className="flex bg-slate-100 w-2/4 rounded-lg shadow-sm">
@@ -148,7 +223,7 @@ function HomePage() {
               />
               <button
                 type="button"
-                className="w-[2.875rem] h-[2.875rem]  flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-black text-white hover:bg-gray-800 duration-500 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+                className="w-[2.875rem] h-[2.875rem] flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-black text-white hover:bg-gray-800 duration-500 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
               >
                 <svg
                   className="flex-shrink-0 size-4"
@@ -231,13 +306,43 @@ function HomePage() {
               <div className="mt-14 text-start text-black w-full">
                 <h2 className="font-poppins font-semibold text-3xl">EXPLORE</h2>
               </div>
-              <li
-                className="mt-5 w-full"
-                onClick={() => ProfileClick("explore")}
-              >
-                <button className=" text-black font-poppins mt-4 py-3 border shadow-md rounded-sm">
-                  EXPLORE TOPICS
+              <li className="dropdown mt-5 w-full dropdown-right">
+                <button className=" text-black flex justify-between w-full font-poppins mt-4 py-3 border shadow-md rounded-sm">
+                  <span>EXPLORE TOPICS</span>
+                  <span>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth="1.5"
+                      stroke="currentColor"
+                      className="w-5 h-5"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+                      ></path>
+                    </svg>
+                  </span>
                 </button>
+                <ul
+                  tabIndex={0}
+                  className="dropdown-content z-[1] menu p-2 shadow bg-white text-black rounded-sm w-52"
+                >
+                  {topics.map((topic, index) => {
+                    return (
+                      <li onClick={() => NavigateTopics(topic.name)}>
+                        <a
+                          key={index}
+                          className="hover:shadow-md rounded-sm duration-200"
+                        >
+                          {topic.name}
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
               </li>
               <li className=" w-full" onClick={() => ProfileClick("userPosts")}>
                 <button className=" text-black font-poppins mt-4 py-3 px-5 border shadow-md rounded-sm">
@@ -260,7 +365,7 @@ function HomePage() {
             </ul>
           </div>
         </div>
-        <div className="">
+        <div className="mt-10">
           <h2 className="text-3xl mt-7 text-white font-bold font-poppins">
             LATEST NEWS
           </h2>
@@ -269,7 +374,7 @@ function HomePage() {
               <div
                 key={index}
                 onClick={() => ProfileClick("news")}
-                className="bg-white cursor-pointer duration-500"
+                className="bg-white cursor-pointer overflow-auto hover:scale-110 hover:rounded-md duration-500"
               >
                 <img className="" src={news.imageUrl} alt="" />
                 <div className="my-3 mx-5">
@@ -282,7 +387,70 @@ function HomePage() {
             ))}
           </div>
         </div>
+
+        <div className="mt-20">
+          <h2 className="text-3xl mt-7 text-white font-bold font-poppins">
+            EXPLORE TOPICS
+          </h2>
+          <div className="grid lg:grid-cols-4 md:grid-cols-2 mb-16 gap-10 mt-10">
+            {topics.map((topic, index) => (
+              <div
+                key={index}
+                onClick={() => NavigateTopics(topic.name)}
+                className="h-36 shadow-sm cursor-pointer rounded-sm text-2xl font-bold bg-cover text-white pl-2 pt-24 transition duration-300 transform hover:scale-110"
+                style={{ backgroundImage: `url(${topic.imageUrl})` }}
+              >
+                {topic.name}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
+      <footer className="bg-black pt-20 text-white py-8">
+        <div className="container mx-auto">
+          <div className="flex flex-wrap justify-between items-center">
+            <ul className="flex flex-wrap text-sm">
+              <li className="mr-6">
+                <Link to="" className="hover:text-gray-300">
+                  Home
+                </Link>
+              </li>
+              <li className="mr-6">
+                <Link to="/about" className="hover:text-gray-300">
+                  About Us
+                </Link>
+              </li>
+              <li className="mr-6">
+                <Link to="" className="hover:text-gray-300">
+                  Terms &amp; Conditions
+                </Link>
+              </li>
+              <li className="mr-6">
+                <Link to="" className="hover:text-gray-300">
+                  Privacy Policy
+                </Link>
+              </li>
+              <li className="mr-6">
+                <a href="" className="hover:text-gray-300">
+                  Linkedin
+                </a>
+              </li>
+              <li className="mr-6">
+                <Link to="/about" className="hover:text-gray-300">
+                  Contact
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div className="text-sm text-center mt-4">
+          &copy; Copyright 2023 Musthafa
+        </div>
+
+        <div className="text-sm text-center py-4">
+          A project by Muhammed Musthafa
+        </div>
+      </footer>
     </>
   );
 }
