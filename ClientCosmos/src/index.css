@@ -466,3 +466,10 @@
     opacity: 0.5;
   }
 }
+
+
+/* POSTFORM */
+
+.modalBox::-webkit-scrollbar {
+  width: 0;
+}

@@ -106,31 +106,24 @@ function HomePage() {
     switch (e) {
       case "HOME":
         console.log("HOME");
-        navigate("");
         break;
       case "SOLAR SYSTEM":
         console.log("SOLAR SYSTEM");
-        navigate("");
         break;
       case "STARS":
         console.log("STARS");
-        navigate("");
         break;
       case "GALAXIES":
         console.log("GALAXIES");
-        navigate("");
         break;
       case "SUPERNOVAS":
         console.log("SUPERNOVAS");
-        navigate("");
         break;
       case "NEBULAS":
         console.log("NEBULAS");
-        navigate("");
         break;
       case "BLACK HOLES":
         console.log("BLACK HOLES");
-        navigate("");
         break;
       default:
         break;
@@ -448,7 +441,7 @@ function HomePage() {
         </div>
 
         <div className="text-sm text-center py-4">
-          A project by Muhammed Musthafa
+          A project by Muhammed Musthafa CP
         </div>
       </footer>
     </>
