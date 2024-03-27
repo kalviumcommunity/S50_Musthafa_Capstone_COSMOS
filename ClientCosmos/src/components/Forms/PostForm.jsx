@@ -30,7 +30,6 @@ function PostForm({Modal, setModalOpen}) {
       const response = await axios.post("http://localhost:3000/posts", data);
       console.log("Post created successfully:", response.data);
       setModalOpen(false)
-
       Swal.fire({
         title: "You created a post succussfully",
       });

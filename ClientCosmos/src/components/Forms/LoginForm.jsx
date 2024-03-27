@@ -43,7 +43,6 @@ function LoginForm() {
     fetchData();
   }, []);
 
-
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
@@ -55,13 +54,17 @@ function LoginForm() {
       const serializedUser = JSON.stringify(user);
 
       Cookies.set("token", token);
-      Cookies.set("userData", serializedUser); 
+      Cookies.set("userData", serializedUser);
 
       navigate("/HomePage");
     } catch (error) {
       console.error("Error in post request", error.response.data.error);
       setApiError(error.response.data.error);
     }
+  };
+
+  const toLogin = () => {
+    window.location.href = "http://localhost:3000/auth/google";
   };
 
   return (
@@ -72,7 +75,10 @@ function LoginForm() {
             <div className="lg:mr-10 w-full lg:96">
               <img src={COSMOS} className="h-12" alt="" />
               <div className="buttons-container  sm:mt-16 w-full flex flex-col justify-start mt-20 gap-5">
-                <div className="google-login-button gap-5 bg-white flex items-center justify-center rounded-2xl px-6 py-4 shadow-lg cursor-pointer ">
+                <div
+                  onClick={() => toLogin()}
+                  className="google-login-button gap-5 bg-white flex items-center justify-center rounded-2xl px-6 py-4 shadow-lg cursor-pointer "
+                >
                   <svg
                     className="google-icon"
                     xmlns="http://www.w3.org/2000/svg"
@@ -105,6 +111,7 @@ function LoginForm() {
                   </svg>
                   <span>Log in with Google</span>
                 </div>
+
                 <div className="apple-login-button gap-5  flex items-center justify-center rounded-2xl px-6 py-4 shadow-lg cursor-pointer bg-white">
                   <svg
                     className="apple-icon"
