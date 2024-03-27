@@ -49,6 +49,16 @@ function SignupForm() {
     }
   };
 
+  const GoogleSignUp = async () => {
+    console.log("Clicked");
+    // try {
+    //   const response = await axios.get("http://localhost:3000/auth/google");
+    //   console.log(response);
+    // } catch (err) {
+    //   console.log(err.response);
+    // }
+  };
+
   return (
     <>
       <>
@@ -62,17 +72,19 @@ function SignupForm() {
           </div>
         )}
 
-        <div 
-        className="flex items-center justify-center bg-black h-screen w-screen">
+        <div className="flex items-center justify-center bg-black h-screen w-screen">
           <div className="flex gap-72 px-40 justify-between">
             <div>
               <img src={COSMOS} className="h-12" alt="" />
               <div className="flex gap-16 mt-28">
-                <img
-                  className=" rounded-full cursor-pointer w-14"
-                  src={GOOGLE}
-                  alt="google"
-                />
+                <button className="w-14" onCLick={() => GoogleSignUp()}>
+                  <img
+                    className=" rounded-full cursor-pointer w-14"
+                    src={GOOGLE}
+                    alt="google"
+                  />
+                </button>
+
                 <img
                   className=" rounded-full cursor-pointer w-14"
                   src={FACEBOOK}

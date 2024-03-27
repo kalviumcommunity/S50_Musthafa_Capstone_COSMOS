@@ -5,6 +5,7 @@ const Post = require('../Schemas/Posts');
 router.post('/', async (req, res) => {
   try {
     const { title, description, image, video , topic } = req.body;
+    
     if (!image && !video) {
       return res.status(400).json({ error: 'Either imageLink or videoLink is required' });
     }
