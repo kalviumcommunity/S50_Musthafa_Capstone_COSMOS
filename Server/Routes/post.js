@@ -3,29 +3,39 @@ const router = express.Router();
 const Post = require("../Schemas/Posts");
 const Profile = require("../Schemas/Profile");
 
-const authenticate = (req, res, next) => {
-  const profileHeader = req.headers["x-profile"];
-  const profile = JSON.parse(profileHeader);
-
+const authenticate = async (req, res, next) => {
   try {
+    const profileHeader = req.headers["x-profile"];
+
+    if (!profileHeader) {
+      return res
+        .status(401)
+        .json({ error: "Unauthorized: Profile header missing" });
+    }
+
+    let profile;
+    try {
+      profile = JSON.parse(profileHeader);
+    } catch (error) {
+      return res.status(400).json({ error: "Invalid profile data" });
+    }
+
+    if (!profile || !profile._id) {
+      return res.status(400).json({ error: "Invalid profile data" });
+    }
+
+    const userProfile = await Profile.findById(profile._id);
+    if (!userProfile) {
+      return res.status(401).json({ error: "Unauthorized: Profile not found" });
+    }
+
     req.userProfileId = profile._id;
-
     next();
-  } catch (err) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-};
-
-router.get("/", async (req, res) => {
-  try {
-    const posts = await Post.find();
-    res.status(200).json(posts);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
-});
-
+};
 
 router.post("/", authenticate, async (req, res) => {
   try {
