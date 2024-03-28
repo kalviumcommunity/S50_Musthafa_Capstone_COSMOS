@@ -1,45 +1,51 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 
-function PostForm({Modal, setModalOpen}) {
+function PostForm({ Modal, setModalOpen , mypostFetch }) {
   const [iv, setisv] = useState(false);
 
-  useEffect(()=>{
+  useEffect(() => {
     if (Modal == true) {
       document.getElementById("my_modal_3").showModal();
       setisv(true);
     } else {
-        if(iv){
-          document.getElementById("my_modal_3").close();
-          setisv(false);
-        }
+      if (iv) {
+        document.getElementById("my_modal_3").close();
+        setisv(false);
+      }
     }
-  }, [Modal])
+  }, [Modal]);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const onSubmit = async (data) => {
-    console.log(data);
+    const pr = Cookies.get("profile");
+    const profile = JSON.parse(pr);
+  
     try {
-      const response = await axios.post("http://localhost:3000/posts", data);
-      console.log("Post created successfully:", response.data);
-      setModalOpen(false)
-      Swal.fire({
-        title: "You created a post succussfully",
+      const response = await axios.post("http://localhost:3000/posts", data, {
+        headers: {
+          'X-Profile': JSON.stringify(profile) 
+        }
       });
+      setModalOpen(false);
+      Swal.fire({
+        title: "You created a post successfully",
+      });
+      mypostFetch()
     } catch (error) {
       console.log(error);
     }
   };
 
   const closeModall = () => {
-    setModalOpen(false)
+    setModalOpen(false);
   };
 
   return (
@@ -165,8 +171,8 @@ function PostForm({Modal, setModalOpen}) {
                 <option value="star">STARS</option>
                 <option value="galaxies">GALAXIES</option>
                 <option value="supernova">SUPER NOVA</option>
-                <option value="nebula">NEBULA</option>
-                <option value="blackHole">NEBULAS</option>
+                <option value="nebula">NEBULAS</option>
+                <option value="blackHole">BLACK HOLE</option>
               </select>
             </div>
 

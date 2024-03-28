@@ -473,3 +473,7 @@
 .modalBox::-webkit-scrollbar {
   width: 0;
 }
+
+.myPosts::-webkit-scrollbar {
+  width: 0;
+}

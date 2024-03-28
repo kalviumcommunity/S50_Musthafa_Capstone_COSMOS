@@ -33,10 +33,10 @@ function SignupForm() {
     try {
       const response = await axios.post("http://localhost:3000/users", data);
       setAlert(false);
-      const { token, user } = response.data;
-
+      const { token, user , userProfile } = response.data;
       Cookies.set("token", token);
       user.password = undefined;
+      Cookies.set("profile",JSON.stringify(userProfile))
       Cookies.set("userData", JSON.stringify(user));
 
       navigate("/HomePage");
@@ -49,14 +49,9 @@ function SignupForm() {
     }
   };
 
-  const GoogleSignUp = async () => {
-    console.log("Clicked");
-    // try {
-    //   const response = await axios.get("http://localhost:3000/auth/google");
-    //   console.log(response);
-    // } catch (err) {
-    //   console.log(err.response);
-    // }
+  const GoogleSignUp = () => {
+    console.log("isnlkm")
+    window.location.href = "http://localhost:3000/auth/google";
   };
 
   return (
@@ -77,7 +72,7 @@ function SignupForm() {
             <div>
               <img src={COSMOS} className="h-12" alt="" />
               <div className="flex gap-16 mt-28">
-                <button className="w-14" onCLick={() => GoogleSignUp()}>
+                <button className="w-14" onClick={() => GoogleSignUp()}>
                   <img
                     className=" rounded-full cursor-pointer w-14"
                     src={GOOGLE}
