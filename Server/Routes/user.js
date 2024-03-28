@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const usermodel = require("../Schemas/Users");
+const Profilemodel = require("../Schemas/Profile");
+const bcrypt = require("bcrypt");
 const app = express();
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
@@ -10,7 +12,7 @@ app.use(express.json());
 const secretKey = "secret";
 
 const generateToken = (data) => {
-  const expiresIn = "1h";
+  const expiresIn = "7h";
   const plainData = data.toObject();
   const token = jwt.sign(plainData, secretKey, { expiresIn });
   return token;
@@ -82,7 +84,6 @@ router.post("/getone", async (req, res) => {
 
 // POST REQUEST with Joi Validation
 
-const bcrypt = require("bcrypt");
 
 router.post("/", async (req, res) => {
   try {
@@ -95,10 +96,22 @@ router.post("/", async (req, res) => {
       const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
       const userData = { ...req.body, password: hashedPassword };
 
-      const data = await usermodel.create(userData);
-      const token = generateToken(data);
+      console.log(req.body)
+      // Create user
+      const user = await usermodel.create(userData);
 
-      res.status(201).json({ user: data, token: token });
+      // Create user profile
+      const userProfileData = {
+        name: req.body.name,
+        username: req.body.username,
+        email: req.body.email,
+        posts: []
+      };
+      const userProfile = await Profilemodel.create(userProfileData);
+
+      const token = generateToken(user);
+
+      res.status(201).json({ user, userProfile, token });
     }
   } catch (err) {
     console.log(

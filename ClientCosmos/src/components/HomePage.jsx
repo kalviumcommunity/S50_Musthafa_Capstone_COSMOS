@@ -367,7 +367,7 @@ function HomePage() {
               <div
                 key={index}
                 onClick={() => ProfileClick("news")}
-                className="bg-white cursor-pointer overflow-auto hover:scale-110 hover:rounded-md duration-500"
+                className="bg-white cursor-pointer overflow-auto  hover:rounded-md duration-500"
               >
                 <img className="" src={news.imageUrl} alt="" />
                 <div className="my-3 mx-5">

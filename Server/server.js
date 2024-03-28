@@ -37,8 +37,6 @@ function isLoggedIn(req, res, next) {
   req.user ? next() : res.sendStatus(401);
 }
 
-
-
 app.use(express.json());
 
 app.use("/ping", pingrouter);
