@@ -1,0 +1,9 @@
+{
+  "version": "1",
+  "name": "COSMOS",
+  "type": "collection",
+  "ignore": [
+    "node_modules",
+    ".git"
+  ]
+}

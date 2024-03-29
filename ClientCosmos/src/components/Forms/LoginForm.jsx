@@ -50,11 +50,13 @@ function LoginForm() {
         data
       );
 
-      const { user, token } = response.data;
+      const { user, token , userProfile } = response.data;
       const serializedUser = JSON.stringify(user);
 
+      Cookies.set("profile", JSON.stringify(userProfile));
       Cookies.set("token", token);
       Cookies.set("userData", serializedUser);
+      
 
       navigate("/HomePage");
     } catch (error) {

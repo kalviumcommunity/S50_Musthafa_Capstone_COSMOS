@@ -5,7 +5,6 @@ import axios from "axios";
 import WHAM from "../Assets/WHAM.png";
 import EARTH from "../Assets/EARTH.jpg";
 import SOLARSYSTEM from "../Assets/SOLARSYSTEM1.webp";
-
 function HomePage() {
   const navigate = useNavigate();
 
@@ -78,6 +77,7 @@ function HomePage() {
         } catch (error) {
           Cookies.remove("userData");
           Cookies.remove("token");
+          Cookies.remove("profile");
           console.error("Error in post request", error.response.data.error);
         }
       } else {
