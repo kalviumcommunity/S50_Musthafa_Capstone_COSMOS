@@ -38,6 +38,7 @@ function PostForm({ Modal, setModalOpen , mypostFetch }) {
       Swal.fire({
         title: "You created a post successfully",
       });
+      console.log(response.data)
       mypostFetch()
     } catch (error) {
       console.log(error);

@@ -1,11 +1,26 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import commenticon from "../Assets/commenticon.png";
+import Cookies from "js-cookie";
 
 function UserPosts() {
   const navigate = useNavigate();
   const [shuffledPosts, setShuffledPosts] = useState([]);
-  const [loading, setLoading] = useState(true); // Initially set loading to true
+  const [loading, setLoading] = useState(true);
+  const [comments, setComments] = useState([]);
+  const [yourComment, setYourComment] = useState([]);
+  const [ pid, setpId ] = useState("")
+
+  const [userData, setUserData] = useState("");
+
+  useEffect(() => {
+    const storedUserData = Cookies.get("userData");
+    if (storedUserData) {
+      const parsedUserData = JSON.parse(storedUserData);
+      setUserData(parsedUserData);
+    }
+  }, []);
 
   useEffect(() => {
     axios
@@ -16,10 +31,11 @@ function UserPosts() {
         setLoading(false);
       })
       .catch((error) => {
-        console.error("Error fetching profile data:", error);
+        console.error("Error fetching posts:", error);
         setLoading(false);
       });
   }, []);
+
 
   const shuffleArray = (array) => {
     const shuffledArray = [...array];
@@ -30,13 +46,56 @@ function UserPosts() {
         shuffledArray[i],
       ];
     }
-    return shuffledArray;
+    return array;
   };
 
   const NavigateFun = () => {
     navigate("/HomePage");
   };
+  const takeComment = (e) => {
+    setYourComment(e.target.value);
+  };
 
+  const profilepic =
+    "https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220";
+
+
+  const AddComment = (e) => {
+    const com = {
+      postid: pid,
+      comment: yourComment,
+      name: userData.username,
+      profilepic: profilepic,
+    };
+
+    axios
+      .post("http://localhost:3000/posts/addcomment", com)
+      .then((response) => {
+        console.log("Comment added successfully:", response.data);
+        
+      })
+      .catch((error) => {
+        console.error("Error adding comment:", error);
+      });
+
+    setYourComment("");
+  };
+
+  const commentsClick = (e) => {
+    setpId(e._id)
+    axios
+      .get(`http://localhost:3000/posts/getcomments`, {
+        headers: {
+          postid: e._id
+        }
+      })
+      .then((response) => {
+        setComments(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching posts:", error);
+      });
+  };
   return (
     <div className="bg-white h-max">
       {/* navbar */}
@@ -100,46 +159,130 @@ function UserPosts() {
           {loading ? (
             <div className="mt-10 h-screen w-screen">
               <div className="w-2/4 border-2 h-3/5  rounded-lg">
-                <h1 className="font-bold h-10 bg-gray-200 rounded-lg m-10 font-poppins tracking-wider text-2xl">
-                  
-                </h1>
+                <h1 className="font-bold h-10 bg-gray-200 rounded-lg m-10 font-poppins tracking-wider text-2xl"></h1>
 
-                <div className="flex items-center mx-10 bg-gray-200 rounded-lg gap-5 h-3/5 m-10 justify-end">
-
-                </div>
+                <div className="flex items-center mx-10 bg-gray-200 rounded-lg gap-5 h-3/5 m-10 justify-end"></div>
               </div>
             </div>
           ) : shuffledPosts.length > 0 ? (
             shuffledPosts.map((post, index) => (
-              <div key={index} className="m-6 p-10  shadow-lg">
-                <h1 className="font-bold font-poppins tracking-wider text-2xl">
-                  LOREM
-                </h1>
+              <div key={index} className="m-6 p-10 shadow-2xl">
+                <div className="flex justify-between">
+                  <h1 className="font-bold font-poppins tracking-wider text-2xl">
+                    {post.username}
+                  </h1>
+                </div>
                 <img className="mt-2 w-full" src={post.image} alt="" />
                 <h2 className="text-xl font-semibold mt-2">{post.title}</h2>
-                <p className="line-clamp-3 text-xl w-96 font-light mt-2">
-                  {post.description}
-                </p>
+                <p className="text-xl font-light mt-2">{post.description}</p>
 
-                <div className="flex items-center gap-5 justify-end">
-                  <label className="ui-bookmark">
-                    <input type="checkbox" />
-                    <div className="bookmark z-0">
-                      <svg
-                        viewBox="0 0 16 16"
-                        style={{ marginTop: "4px" }}
-                        className="bi bi-heart-fill mt-10"
-                        height="25"
-                        width="25"
-                        xmlns="http://www.w3.org/2000/svg"
+                <div className="flex items-center justify-between mt-3 gap-5">
+                  <div className="flex gap-4 items-center">
+                    <label className="ui-bookmark">
+                      <input type="checkbox" />
+                      <div className="bookmark z-0">
+                        <svg
+                          viewBox="0 0 16 16"
+                          style={{ marginTop: "4px" }}
+                          className="bi bi-heart-fill mt-10"
+                          height="25"
+                          width="25"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                            fillRule="evenodd"
+                          ></path>
+                        </svg>
+                      </div>
+                    </label>
+
+                    <div className="drawer drawer-end w-fit ">
+                      <input
+                        id="my-drawer-4"
+                        type="checkbox"
+                        className="drawer-toggle"
+                      />
+                      <div
+                        onClick={() => commentsClick(post)}
+                        className="drawer-content z-30 w-fit"
                       >
-                        <path
-                          d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                          fillRule="evenodd"
-                        ></path>
-                      </svg>
+                        <label htmlFor="my-drawer-4" className="cursor-pointer">
+                          <img src={commenticon} className="w-6" alt="" />
+                        </label>
+                      </div>
+                      <div className="drawer-side z-50">
+                        <label
+                          htmlFor="my-drawer-4"
+                          aria-label="close sidebar"
+                          className="drawer-overlay"
+                        ></label>
+                        <ul className="menu p-4 w-2/4 min-h-full bg-gray-900 text-base-content">
+                          {/* Sidebar content here */}
+                          <h2 className="text-3xl text-white tracking-wider font-bold p-10">
+                            COMMENTS
+                          </h2>
+                          <div className="px-20">
+                            <div className="flex bg-white rounded-lg outline-none text-black px-3 py-3 w-full justify-between">
+                              <input
+                                required
+                                placeholder="Comment here..."
+                                value={yourComment}
+                                onChange={takeComment}
+                                type="text"
+                                id="messageInput"
+                                className="w-full bg-transparent outline-none  pl-4"
+                              />
+                              <button
+                                id="sendButton"
+                                className="flex items-center justify-center"
+                                onClick={() => AddComment(post._id)}
+                              >
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 664 663"
+                                  className="h-6"
+                                >
+                                  <path
+                                    fill="none"
+                                    d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
+                                  ></path>
+                                  <path
+                                    strokeLinejoin="round"
+                                    strokeLinecap="round"
+                                    strokeWidth="33.67"
+                                    stroke="#6c6c6c"
+                                    d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
+                                  ></path>
+                                </svg>
+                              </button>
+                            </div>
+                          </div>
+                          <div className="mx-7 mt-6 h-96 overflow-auto myPosts">
+                            {comments.map((comment , index ) => {
+                              return (
+                                <div key={index} className="bg-gray-100 text-black p-5 mb-6">
+                                  <div className="flex gap-4 items-center">
+                                    <img
+                                      className="w-10 h-10 rounded-full"
+                                      src={comment.profilepic}
+                                      alt=""
+                                    />
+                                    <h2 className="text-xl font-semibold">
+                                      {comment.name}
+                                    </h2>
+                                  </div>
+
+                                  <h2 className="mt-3">{comment.comment}</h2>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </ul>
+                      </div>
                     </div>
-                  </label>
+                  </div>
 
                   <label className="custom-container">
                     <input type="checkbox" />
@@ -155,7 +298,9 @@ function UserPosts() {
               </div>
             ))
           ) : (
-            <div className="">No posts found</div>
+            <div className="mt-32 ml-40 w-96 h-96 text-end text-3xl font-bold tracking-wide">
+              NO POST FOUND
+            </div>
           )}
         </div>
       </div>

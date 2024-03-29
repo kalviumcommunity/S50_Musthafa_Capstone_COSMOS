@@ -6,8 +6,8 @@ const bcrypt = require("bcrypt");
 const app = express();
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
+const profile = require("../Schemas/Profile");
 const saltRounds = 10;
-
 app.use(express.json());
 const secretKey = "secret";
 
@@ -62,6 +62,8 @@ router.get("/", async (req, res) => {
   }
 });
 
+
+
 // GET REQUEST ACCORDING ID
 router.post("/getone", async (req, res) => {
   try {
@@ -75,12 +77,21 @@ router.post("/getone", async (req, res) => {
       return res.status(401).json({ error: "Invalid password" });
     }
     const token = generateToken(user);
-    res.status(201).json({ user, token });
+    
+    const userProfile = await profile.findOne({ name: user.name, username: user.username });
+    const responseData = {
+      user,
+      token,
+      userProfile
+    };
+
+    res.status(201).json(responseData);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 // POST REQUEST with Joi Validation
 
