@@ -3,6 +3,7 @@ import Cookies from "js-cookie";
 import PostForm from "./Forms/PostForm";
 import axios from "axios";
 import commenticon from "../Assets/commenticon.png";
+import swal from "sweetalert";
 
 function Profile() {
   const [userData, setUserData] = useState("");
@@ -28,7 +29,6 @@ function Profile() {
   const closeModal = () => {
     setModalOpen(false);
   };
-
   const mypostFetch = () => {
     const storedProfile = Cookies.get("profile");
     if (storedProfile) {
@@ -37,7 +37,15 @@ function Profile() {
       axios
         .get(`http://localhost:3000/posts/getmyposts/${id}`)
         .then((response) => {
-          seMyPosts(response.data);
+          const postsWithBase64Images = response.data.map((post) => {
+            const base64Image = post.image.toString("base64");
+            return {
+              ...post,
+              image: `data:image/png;base64,${base64Image}`,
+            };
+          });
+          console.log(postsWithBase64Images);
+          seMyPosts(postsWithBase64Images);
         })
         .catch((error) => {
           console.error("Error fetching profile data:", error);
@@ -46,38 +54,55 @@ function Profile() {
   };
 
   const DeleteMyPost = (e) => {
-    axios
-      .delete(`http://localhost:3000/posts/${e}`)
-      .then((res) => {
-        console.log(res.data);
-        mypostFetch();
-      })
-      .catch((err) => {
-        console.log("Error while deleting the Post", err);
-      });
+    swal({
+      title: "Are you sure?",
+      text: "Once deleted, you will not be able to recover this post!",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        axios
+          .delete(`http://localhost:3000/posts/${e}`)
+          .then((res) => {
+            console.log(res.data);
+            mypostFetch();
+          })
+          .catch((err) => {
+            console.log("Error while deleting the Post", err);
+          });
+        swal("Poof! Your post has been deleted!", {
+          icon: "success",
+        });
+      }
+    });
   };
   const takeComment = (e) => {
     setYourComment(e.target.value);
   };
 
-  const profilepic = "https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
-  const AddComment = (e) => {
-    console.log(e)
-    const com = {
-      postid : e,
-      comment : yourComment,
-      name : userData.username ,
-      profilepic : profilepic
-    }
+  const Edit = () => {};
 
-    axios.post("http://localhost:3000/posts/addcomment", com)
-    .then((response) => {
-      console.log("Comment added successfully:", response.data);
-      window.relaod
-    })
-    .catch((error) => {
-      console.error("Error adding comment:", error);
-    });
+  const profilepic =
+    "https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220";
+  const AddComment = (e) => {
+    console.log(e);
+    const com = {
+      postid: e,
+      comment: yourComment,
+      name: userData.username,
+      profilepic: profilepic,
+    };
+
+    axios
+      .post("http://localhost:3000/posts/addcomment", com)
+      .then((response) => {
+        console.log("Comment added successfully:", response.data);
+        window.relaod;
+      })
+      .catch((error) => {
+        console.error("Error adding comment:", error);
+      });
 
     setYourComment("");
   };
@@ -108,6 +133,7 @@ function Profile() {
           <div className="lg:overflow-auto myPosts lg:h-72">
             <div className="my-5">
               <h2 className="text-lg tracking-wider">NAME</h2>
+             
               <input
                 type="text"
                 className="w-full font-light border mt-2 p-3 outline-none bg-white rounded-md"

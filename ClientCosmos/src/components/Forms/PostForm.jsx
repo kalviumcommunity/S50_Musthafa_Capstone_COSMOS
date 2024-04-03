@@ -3,10 +3,23 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import React from "react";
+import ReactDOM from "react-dom";
+import { Pane, FileUploader, FileCard } from "evergreen-ui";
 
-function PostForm({ Modal, setModalOpen , mypostFetch }) {
+function PostForm({ Modal, setModalOpen, mypostFetch }) {
   const [iv, setisv] = useState(false);
-
+  const [files, setFiles] = React.useState([]);
+  const [fileRejections, setFileRejections] = React.useState([]);
+  const handleChange = React.useCallback((files) => setFiles([files[0]]), []);
+  const handleRejected = React.useCallback(
+    (fileRejections) => setFileRejections([fileRejections[0]]),
+    []
+  );
+  const handleRemove = React.useCallback(() => {
+    setFiles([]);
+    setFileRejections([]);
+  }, []);
   useEffect(() => {
     if (Modal == true) {
       document.getElementById("my_modal_3").showModal();
@@ -27,23 +40,41 @@ function PostForm({ Modal, setModalOpen , mypostFetch }) {
   const onSubmit = async (data) => {
     const pr = Cookies.get("profile");
     const profile = JSON.parse(pr);
-  
+
     try {
-      const response = await axios.post("http://localhost:3000/posts", data, {
-        headers: {
-          'X-Profile': JSON.stringify(profile) 
+      const formData = new FormData();
+      formData.append("title", data.title);
+      formData.append("description", data.description);
+      formData.append("topic", data.topic);
+      formData.append("video", data.video);
+
+      if (files.length > 0) {
+        formData.append("image", files[0]);
+      }
+
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
+
+      const response = await axios.post(
+        "http://localhost:3000/posts",
+        formData,
+        {
+          headers: {
+            "X-Profile": JSON.stringify(profile),
+            "Content-Type": "multipart/form-data",
+          },
         }
-      });
+      );
       setModalOpen(false);
       Swal.fire({
         title: "You created a post successfully",
       });
-      mypostFetch()
+      mypostFetch();
     } catch (error) {
       console.log(error);
     }
   };
-
   const closeModall = () => {
     setModalOpen(false);
   };
@@ -110,7 +141,7 @@ function PostForm({ Modal, setModalOpen , mypostFetch }) {
             </div>
 
             <div className="mt-3">
-              <label
+              {/* <label
                 htmlFor="imageLink"
                 className="block text-sm mb-2 text-black"
               >
@@ -122,7 +153,36 @@ function PostForm({ Modal, setModalOpen , mypostFetch }) {
                 name="imageLink"
                 className="  py-3 px-4 block w-full border-gray-200 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none bg-white border "
                 {...register("image")}
-              />
+              /> */}
+              <Pane maxWidth={654}>
+                <FileUploader
+                  label="Upload File"
+                  description="You can upload 1 file. File can be up to 50 MB."
+                  maxSizeInBytes={50 * 1024 ** 2}
+                  maxFiles={1}
+                  onChange={handleChange}
+                  onRejected={handleRejected}
+                  renderFile={(file) => {
+                    const { name, size, type } = file;
+                    const fileRejection = fileRejections.find(
+                      (fileRejection) => fileRejection.file === file
+                    );
+                    const { message } = fileRejection || {};
+                    return (
+                      <FileCard
+                        key={name}
+                        isInvalid={fileRejection != null}
+                        name={name}
+                        onRemove={handleRemove}
+                        sizeInBytes={size}
+                        type={type}
+                        validationMessage={message}
+                      />
+                    );
+                  }}
+                  values={files}
+                />
+              </Pane>
               <p className="text-red-500 text-xs">
                 {errors.image && (
                   <span className="error-message">{errors.image.message}</span>
