@@ -52,7 +52,6 @@ router.get("/", async (req, res) => {
       };
     });
 
-    console.log(postsWithBase64Images)
     res.status(200).json(postsWithBase64Images);
   } catch (error) {
     console.error(error);
@@ -96,9 +95,7 @@ const upload = multer({ storage: storage });
 router.post("/", authenticate, upload.single("image"), async (req, res) => {
   try {
     const { title, description, topic, video } = req.body;
-    const bf = Buffer.from(req.file.buffer, "utf-8");
-    fs.writeFileSync("./b.png", bf)
-    
+    const bf = Buffer.from(req.file.buffer, "utf-8");    
     const createdBy = req.userProfileId;
     const username = req.username
     const comments = []
