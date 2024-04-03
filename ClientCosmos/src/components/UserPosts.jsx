@@ -26,7 +26,16 @@ function UserPosts() {
     axios
       .get(`http://localhost:3000/posts`)
       .then((response) => {
-        const shuffledArray = shuffleArray(response.data);
+        
+        const postsWithBase64Images = response.data.map((post) => {
+          const base64Image = post.image.toString("base64");
+          return {
+            ...post,
+            image: `data:image/png;base64,${base64Image}`,
+          };
+        });
+        console.log(postsWithBase64Images)
+        const shuffledArray = shuffleArray(postsWithBase64Images);
         setShuffledPosts(shuffledArray);
         setLoading(false);
       })
