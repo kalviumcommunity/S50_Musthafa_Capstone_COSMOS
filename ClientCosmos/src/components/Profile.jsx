@@ -44,7 +44,6 @@ function Profile() {
               image: `data:image/png;base64,${base64Image}`,
             };
           });
-          console.log(postsWithBase64Images);
           seMyPosts(postsWithBase64Images);
         })
         .catch((error) => {

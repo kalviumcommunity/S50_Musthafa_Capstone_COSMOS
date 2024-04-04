@@ -13,6 +13,7 @@ import News from "./News";
 import Loading from "./Loading";
 import About from "./About";
 import PostForm from "./Forms/PostForm";
+import Community from "./Community/Community";
 
 function AnimationRoutes() {
   const location = useLocation();
@@ -31,6 +32,8 @@ function AnimationRoutes() {
         <Route path="/loading" element={<Loading />} />
         <Route path="/about" element={<About />} />
         <Route path="/Postform" element={<PostForm />} />
+        <Route path="/community" element={<Community />} />
+
       </Routes>
     </AnimatePresence>
   );
