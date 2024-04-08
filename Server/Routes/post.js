@@ -136,7 +136,6 @@ router.get("/getmyposts/:id", async (req, res) => {
       };
     });
 
-    console.log(postsWithBase64Images)
     res.status(200).json(postsWithBase64Images);
   } catch (error) {
     console.error(error);
