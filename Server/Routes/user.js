@@ -9,7 +9,8 @@ const jwt = require("jsonwebtoken");
 const profile = require("../Schemas/Profile");
 const saltRounds = 10;
 app.use(express.json());
-const secretKey = "secret";
+require("dotenv").config();
+const secretKey = process.env.JWT_SECRET;
 
 const generateToken = (data) => {
   const expiresIn = "7h";

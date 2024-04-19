@@ -14,7 +14,7 @@ import Loading from "./Loading";
 import About from "./About";
 import PostForm from "./Forms/PostForm";
 import Community from "./Community/Community";
-
+import SelectedNews from './SelectedNews'
 function AnimationRoutes() {
   const location = useLocation();
   return (
@@ -33,7 +33,7 @@ function AnimationRoutes() {
         <Route path="/about" element={<About />} />
         <Route path="/Postform" element={<PostForm />} />
         <Route path="/community" element={<Community />} />
-
+        <Route path="/selectednews" element={<SelectedNews />} />
       </Routes>
     </AnimatePresence>
   );

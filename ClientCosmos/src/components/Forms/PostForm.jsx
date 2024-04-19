@@ -141,19 +141,6 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
             </div>
 
             <div className="mt-3">
-              {/* <label
-                htmlFor="imageLink"
-                className="block text-sm mb-2 text-black"
-              >
-                Image Link
-              </label>
-              <input
-                type="text"
-                id="imageLink"
-                name="imageLink"
-                className="  py-3 px-4 block w-full border-gray-200 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none bg-white border "
-                {...register("image")}
-              /> */}
               <Pane maxWidth={654}>
                 <FileUploader
                   label="Upload File"
