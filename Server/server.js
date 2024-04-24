@@ -6,6 +6,7 @@ const pingrouter = require("./Routes/ping");
 const userrouter = require("./Routes/user");
 const postrouter = require("./Routes/post");
 const authrouter = require("./Routes/auth");
+const communityrouter = require("./Routes/community");
 require("dotenv").config();
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
@@ -43,6 +44,7 @@ app.use("/ping", pingrouter);
 app.use("/users", userrouter);
 app.use("/posts", postrouter);
 app.use("/auth", authrouter);
+app.use("/community", communityrouter);
 
 
 app.listen(port, () => {
