@@ -23,23 +23,28 @@ router.get("/", async (req, res) => {
 
 router.post('/create', async (req, res) => {
   try {
-    const { name, description, communityprofile , creator } = req.body;
+    const { name, description, communityprofile, creator } = req.body;
 
     const community = {
-      name : name,
-      description : description,
-      communityprofile : communityprofile,
-      creator : creator,
-      members : []
-    }
-    const com = await communitymodel.create(community)
+      name: name,
+      description: description,
+      communityprofile: communityprofile,
+      creator: creator,
+      members: []
+    };
 
-    res.status(200).json({ message: 'Community created successfully' , community : com });
+    const com = await communitymodel.create(community);
+
+    if (com) {
+      res.status(200).json({ message: 'Community created successfully', community: com });
+    } else {
+      res.status(500).json({ error: 'Failed to create community' });
+    }
   } catch (error) {
     console.error('Error creating community:', error);
     res.status(500).json({ error: 'Internal server error' });
-  }});
-
+  }
+});
 
 
 // DELETE ACCORDING ID
