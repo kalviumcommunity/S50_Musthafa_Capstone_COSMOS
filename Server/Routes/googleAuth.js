@@ -55,11 +55,11 @@ passport.use(
           const token = generateToken(existingUser)
 
           request.res.cookie("userData", userDataJSON, {
-            maxAge: 900000,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: false,
           });
           request.res.cookie("profile", profileJSON, {
-            maxAge: 900000,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: false,
           });
           request.res.cookie("token", token, {
@@ -77,6 +77,7 @@ passport.use(
           username: profile.name.givenName,
           email: profile.email,
           posts: [],
+          // profilepic : ""
         };
 
         const userData = await usermodel.create(userDetail);

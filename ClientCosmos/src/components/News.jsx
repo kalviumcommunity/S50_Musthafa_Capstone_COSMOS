@@ -1,6 +1,13 @@
 import React, { useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
-function News() {
+function News({ setSelectedNews }) {
+  const navigate = useNavigate();
+  const handleNewsClick = (detail) => {
+    setSelectedNews(detail);
+    navigate("/selenews");
+  };
+
   const AllNews = [
     {
       imageUrl:
@@ -16,7 +23,6 @@ function News() {
         "https://cdn.mos.cms.futurecdn.net/UsyVTcvivR63vNJx7NVf6D-970-80.jpg.webp",
       title: `SpaceX's Starship will go interstellar someday, Elon Musk says`,
       description: `A future iteration of Starship, which conducted its third-ever test flight last week, will go interstellar, according to SpaceX founder and CEO Elon Musk.
-
           "This Starship is designed to traverse our entire solar system and beyond to the cloud of objects surrounding us. A future Starship, much larger and more advanced, will travel to other star systems," Musk said via X early Monday morning (March 18).`,
       datePosted: "10/01/2024",
     },
@@ -117,34 +123,34 @@ function News() {
       </nav>
 
       {/* NEWS PAGE */}
-        <>
-          <div className="">
-            <div className="m-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-7">
-              {AllNews.map((detail, index) => (
-                <div
-                  key={index}
-                  className="hover:shadow-lg duration-300 border text-white cursor-pointer rounded-xl"
-                  onClick={() => handleNewsClick(detail)}
-                >
-                  <div className="w-full rounded-lg shadow-inner">
-                    <img className="rounded-lg" src={detail.imageUrl} alt="" />
-                  </div>
-                  <div className="p-5 w-full">
-                    <p className="text-black text-lg line-clamp-2 font-semibold">
-                      {detail.title}
-                    </p>
-                    <p className="text-gray-800 mt-2 line-clamp-2">
-                      {detail.description}
-                    </p>
-                    <p className="text-sm text-gray-600 w-full text-right mt-4">
-                      Posted on {detail.datePosted}
-                    </p>
-                  </div>
+      <>
+        <div className="">
+          <div className="m-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-7">
+            {AllNews.map((detail, index) => (
+              <div
+                key={index}
+                className="hover:shadow-lg duration-300 border text-white cursor-pointer rounded-xl"
+                onClick={() => handleNewsClick(detail)}
+              >
+                <div className="w-full rounded-lg shadow-inner">
+                  <img className="rounded-lg" src={detail.imageUrl} alt="" />
                 </div>
-              ))}
-            </div>
+                <div className="p-5 w-full">
+                  <p className="text-black text-lg line-clamp-2 font-semibold">
+                    {detail.title}
+                  </p>
+                  <p className="text-gray-800 mt-2 line-clamp-2">
+                    {detail.description}
+                  </p>
+                  <p className="text-sm text-gray-600 w-full text-right mt-4">
+                    Posted on {detail.datePosted}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
-        </>
+        </div>
+      </>
     </>
   );
 }

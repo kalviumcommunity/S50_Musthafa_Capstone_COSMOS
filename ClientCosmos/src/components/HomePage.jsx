@@ -5,54 +5,57 @@ import axios from "axios";
 import WHAM from "../Assets/WHAM.png";
 import EARTH from "../Assets/EARTH.jpg";
 import SOLARSYSTEM from "../Assets/SOLARSYSTEM1.webp";
-function HomePage() {
+function HomePage({ setSelectedNews }) {
   const navigate = useNavigate();
 
   const [valid, setValid] = useState("");
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
   const newsData = [
     {
       imageUrl:
-        "https://cdn.mos.cms.futurecdn.net/RMH4iPBHsybrCo3WhDSfhF-650-80.jpg.webp",
-      title: `Helping build instrument for Japanese Mars mission 'a favorite time' for new NASA astronaut (exclusive)`,
-      content: `A new NASA astronaut already has a space mission ready for launch, but (spoiler alert!) he won't be on the rocket.
-      NASA astronaut Andre Douglas, and a large international team, worked on the Martian Moons Exploration (MMX) mission,
-       which is slated lift off in late 2026. Douglas played a role in creating a key Mars instrument while he was employed at Johns
-        Hopkins University Applied Physics Laboratory (APL) in Baltimore, prior to joining NASA.`,
+        "https://cdn.mos.cms.futurecdn.net/jXP7m9jGGM2XPS74BHoJq3-1200-80.jpg.webp",
+      title:
+        "The James Webb Space Telescope is digging deep into the mysteries of gas planets",
+      description:
+        "Some of the senior researchers thought that it would never be possible to do this, but with some more rigorous tests for a few months, we confirmed that we have done it",
+      datePosted: "13/03/2024",
     },
     {
       imageUrl:
-        "https://cdn.mos.cms.futurecdn.net/fHyEPhgy7R2Pkhx8DrXyrb-1200-80.jpg.webp",
-      title: "China launches satellite to support future moon missions",
-      content: `China launched a satellite toward the moon this week to help support the country's lunar ambitions.
-                On Tuesday (March 19), a Long March 8 rocket took off from the Wenchang Satellite Launch Center on 
-                the southern Chinese island of Hainan carrying the Queqiao-2 satellite. The spacecraft is what's known
-                 as a relay satellite, meaning it will help pass messages back and forth between China's Chang'e moon 
-                 spacecraft, as well as other vehicles on the lunar surface, and mission controllers on Earth.`,
+        "https://cdn.mos.cms.futurecdn.net/UsyVTcvivR63vNJx7NVf6D-970-80.jpg.webp",
+      title: `SpaceX's Starship will go interstellar someday, Elon Musk says`,
+      description: `A future iteration of Starship, which conducted its third-ever test flight last week, will go interstellar, according to SpaceX founder and CEO Elon Musk.
+          "This Starship is designed to traverse our entire solar system and beyond to the cloud of objects surrounding us. A future Starship, much larger and more advanced, will travel to other star systems," Musk said via X early Monday morning (March 18).`,
+      datePosted: "10/01/2024",
+    },
+
+    {
+      imageUrl:
+        "https://cdn.mos.cms.futurecdn.net/WgwHfgLumAtmUDDt98cU3J-650-80.jpg",
+      title:
+        "SpaceX launches 22 Starlink satellites from California in dusky evening liftoff ",
+      description: `A Falcon 9 rocket carrying 22 Starlink spacecraft lifted off tonight from California's Vandenberg Space Force Base at 10:28 p.m. EDT (7:28 p.m. local California time; 0228 GMT on March 19).
+                The Falcon 9's first stage came back to Earth about 8.5 minutes after liftoff as planned. It landed vertically on the droneship "Of Course I Still Love You," which was stationed in the Pacific Ocean.`,
+      datePosted: "13/03/2024",
     },
     {
       imageUrl:
-        "https://cdn.mos.cms.futurecdn.net/ifG9uaGvRi7HsdAaQwL9vb-650-80.jpg.webp",
-      title: "1 in 12 stars might have swallowed a planet",
-      content: `About one in every 12 stars may have swallowed a planet, a new study finds.
-      Previous research had discovered that some distant stars possess unusual levels of elements,
-      such as iron, which one would expect to make up rocky worlds such as Earth. This and other evidence
-      suggested that stars may sometimes ingest planets, but much remained uncertain about how often that might happen.
-      One way to uncover more about planetary ingestion is to look at two stars born at the same time.
-      Such twins should have a virtually identical composition, as they are both born from the same parent cloud of gas and dust.
-      Any major chemical differences between these so-called "co-natal" stars may thus be a sign that one devoured a world.
-      `,
-    },
-    {
-      imageUrl:
-        "https://cdn.mos.cms.futurecdn.net/o3egecNDBubCJmmEbLT3Db-1200-80.jpg.webp",
-      title: "Total solar eclipse 2024: Live updates",
-      content: "A total solar eclipse is coming to North America.",
+        "https://cdn.mos.cms.futurecdn.net/vjqUkRzRofzvfL5HxE8rdB-650-80.jpg.webp",
+      title:
+        "Thomas Stafford, NASA astronaut who led Apollo-Soyuz joint mission, dies at 93",
+      description: `Former NASA astronaut Thomas Stafford, who flew to the moon before leading the first international space mission carried out by the United States and Russia, has died at the age of 93.
+          Stafford's death on Monday (March 18) came after an extended illness, according to Max Ary, director of the Stafford Air and Space Museum in Oklahoma.
+          `,
+      datePosted: "02/02/2024",
     },
   ];
+
+  const selectedNews = (e) => {
+    setSelectedNews(e);
+    navigate("/selenews");
+  };
 
   useEffect(() => {
     const userDataString = Cookies.get("userData");
@@ -64,11 +67,9 @@ function HomePage() {
       console.error("Error parsing userData:", error);
     }
     setUser(userData);
-    console.log(userData)
 
     const fetchData = async () => {
       const token = Cookies.get("token");
-      console.log(token)
       if (token) {
         try {
           const response = await axios.post(
@@ -240,7 +241,14 @@ function HomePage() {
           </div>
           <div className="flex gap-10">
             {valid ? (
-              <div></div>
+              <div onClick={() => ProfileClick("profile")} className="flex items-center gap-3 justify-between cursor-pointer bg-gray-200 px-3 py-2 rounded-xl">
+                <div className="rounded">
+                  <img className="rounded-lg h-8" src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220" />
+                </div>
+                <div className="font-poppins text-sm">
+                  {user.name}
+                </div>
+              </div>
             ) : (
               <>
                 <button
@@ -284,7 +292,7 @@ function HomePage() {
                     {/* Profile picture */}
                     <img
                       className="w-16 h-16 rounded-full mx-auto mb-2"
-                      src="https://pluspng.com/img-png/user-png-icon-download-icons-logos-emojis-users-2240.png"
+                      src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
                       alt="Profile"
                     />
 
@@ -368,7 +376,7 @@ function HomePage() {
             {newsData.map((news, index) => (
               <div
                 key={index}
-                onClick={() => ProfileClick("news")}
+                onClick={() => selectedNews(news)}
                 className="bg-white cursor-pointer overflow-auto  hover:rounded-md duration-500"
               >
                 <img className="" src={news.imageUrl} alt="" />
@@ -376,7 +384,7 @@ function HomePage() {
                   <h2 className="text-xl font-semibold line-clamp-2 font-poppins">
                     {news.title}
                   </h2>
-                  <p className="line-clamp-3">{news.content}</p>
+                  <p className="line-clamp-3">{news.description}</p>
                 </div>
               </div>
             ))}
