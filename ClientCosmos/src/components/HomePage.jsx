@@ -54,7 +54,7 @@ function HomePage({ setSelectedNews }) {
 
   const selectedNews = (e) => {
     setSelectedNews(e);
-    navigate("/selenews");
+    navigate("/selenews")
   };
 
   useEffect(() => {
@@ -133,6 +133,24 @@ function HomePage({ setSelectedNews }) {
     }
   };
 
+  const LogOut = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/auth/logout");
+      console.log(response.data);
+      if (response.status === 200) {
+        Cookies.remove("userData");
+        Cookies.remove("token");
+        Cookies.remove("profile");
+        window.location.reload();
+      } else {
+        console.error("Error while logging out:", response.data);
+      }
+    } catch (err) {
+      console.error("Error while logging out", err);
+    }
+  };
+  
+
   const ProfileClick = (e) => {
     switch (e) {
       case "profile":
@@ -149,6 +167,9 @@ function HomePage({ setSelectedNews }) {
         break;
       case "news":
         navigate("/news");
+        break;
+      case "logout":
+        LogOut()
         break;
       default:
         break;
@@ -191,7 +212,6 @@ function HomePage({ setSelectedNews }) {
     },
   ];
 
-  // Render loading screen while loading is true
   if (loading) {
     return (
       <div className="w-screen h-screen bg-black grid justify-center items-center">
@@ -335,9 +355,8 @@ function HomePage({ setSelectedNews }) {
                 >
                   {topics.map((topic, index) => {
                     return (
-                      <li onClick={() => NavigateTopics(topic.name)}>
+                          <li key={index}  onClick={() => NavigateTopics(topic.name)} >
                         <a
-                          key={index}
                           className="hover:shadow-md rounded-sm duration-200"
                         >
                           {topic.name}
@@ -363,6 +382,14 @@ function HomePage({ setSelectedNews }) {
               >
                 <button className=" text-black font-poppins mt-4 py-3 border shadow-md rounded-sm">
                   COMMUNITIES
+                </button>
+              </li>
+              <li
+                className="w-full"
+                onClick={() => ProfileClick("logout")}
+              >
+                <button className=" text-black font-poppins mt-4 py-3 border shadow-md rounded-sm">
+                  LOGOUT
                 </button>
               </li>
             </ul>

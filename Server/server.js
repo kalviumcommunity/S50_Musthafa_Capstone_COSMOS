@@ -2,15 +2,14 @@ const express = require("express");
 const app = express();
 const port = 3000;
 const connectDB = require("./config/connect");
-const pingrouter = require("./Routes/ping");
 const userrouter = require("./Routes/user");
 const postrouter = require("./Routes/post");
-const authrouter = require("./Routes/auth");
+const authrouter = require("./GoogleAuth/auth");
 const communityrouter = require("./Routes/community");
 require("dotenv").config();
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
-require("./Routes/GoogleAuth");
+require("./GoogleAuth/GoogleAuth");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
@@ -33,14 +32,8 @@ app.use(cors(
   }
 ))
 
-function isLoggedIn(req, res, next) {
-  console.log("ll",isLoggedIn)
-  req.user ? next() : res.sendStatus(401);
-}
-
 app.use(express.json());
 
-app.use("/ping", pingrouter);
 app.use("/users", userrouter);
 app.use("/posts", postrouter);
 app.use("/auth", authrouter);

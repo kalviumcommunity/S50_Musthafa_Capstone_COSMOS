@@ -3,9 +3,6 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import COSMOS from "../../Assets/COSMOS.png";
-import GOOGLE from "../../Assets/GOOGLE.png";
-import APPLE from "../../Assets/APPLE.png";
-import FACEBOOK from "../../Assets/FACEBOOK.png";
 import Cookies from "js-cookie";
 import "preline/preline";
 

@@ -6,6 +6,9 @@ import Swal from "sweetalert2";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Pane, FileUploader, FileCard } from "evergreen-ui";
+import { imDB} from "../Firebase/firebase"
+import { v4 } from "uuid"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 function PostForm({ Modal, setModalOpen, mypostFetch }) {
   const [iv, setisv] = useState(false);
@@ -42,23 +45,19 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
     const profile = JSON.parse(pr);
 
     try {
-      const formData = new FormData();
-      formData.append("title", data.title);
-      formData.append("description", data.description);
-      formData.append("topic", data.topic);
-      formData.append("video", data.video);
+      const imgS = ref(imDB, `images${v4()}`);
+      const uploadData = await uploadBytes(imgS, files[0]);
+      const imageUrl = await getDownloadURL(uploadData.ref);
+  
+      const requestData = {
+        ...data,
+        image: imageUrl
+      };
 
-      if (files.length > 0) {
-        formData.append("image", files[0]);
-      }
-
-      for (let pair of formData.entries()) {
-        console.log(pair[0] + ", " + pair[1]);
-      }
-
+      setModalOpen(false);
       const response = await axios.post(
-        "http://localhost:3000/posts",
-        formData,
+        "http://localhost:3000/posts/newpost",
+        requestData,
         {
           headers: {
             "X-Profile": JSON.stringify(profile),
@@ -66,7 +65,6 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
           },
         }
       );
-      setModalOpen(false);
       Swal.fire({
         title: "You created a post successfully",
       });
@@ -177,7 +175,7 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
               </p>
             </div>
 
-            <div class="py-3 mt-2 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:me-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">
+            <div className="py-3 mt-2 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:me-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">
               Or
             </div>
 
@@ -210,9 +208,6 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
                 required
                 {...register("topic")}
               >
-                {/* <option className="text-gray-200" value="" disabled selected>
-                  Select a topic
-                </option> */}
                 <option value="home">EARTH</option>
                 <option value="solarsystem">SOLAR SYSTEM</option>
                 <option value="star">STARS</option>
