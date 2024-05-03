@@ -4,48 +4,44 @@ const communitymodel = require("../Schemas/Community");
 const app = express();
 app.use(express.json());
 require("dotenv").config();
+const multer = require("multer");
 
-router.get("/", async (req, res) => {
+router.get("/getAll", async (req, res) => {
   try {
-    const data = await communitymodel.find();
-    res.json(data);
+    const communities = await communitymodel.find();
+    res.status(200).json(communities);
   } catch (error) {
-    console.error(
-      "An error occurred with the GET method while getting the user data:",
-      error
-    );
+    console.error("An error occurred while fetching community data:", error);
     res.status(500).json({
-      error:
-        "Internal Server Error with the GET method while getting the user data",
+      error: "Internal Server Error while fetching community data",
     });
   }
 });
 
-router.post('/create', async (req, res) => {
+router.post("/create", async (req, res) => {
   try {
-    const { name, description, communityprofile, creator } = req.body;
+    const { name, description, creator, communityprofile } = req.body;
 
     const community = {
       name: name,
       description: description,
       communityprofile: communityprofile,
       creator: creator,
-      members: []
+      members: [],
     };
-
     const com = await communitymodel.create(community);
-
     if (com) {
-      res.status(200).json({ message: 'Community created successfully', community: com });
+      res
+        .status(200)
+        .json({ message: "Community created successfully", community: com });
     } else {
-      res.status(500).json({ error: 'Failed to create community' });
+      res.status(500).json({ error: "Failed to create community" });
     }
   } catch (error) {
-    console.error('Error creating community:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error creating community:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 // DELETE ACCORDING ID
 router.delete("/:id", async (req, res) => {

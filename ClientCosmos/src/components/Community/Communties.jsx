@@ -1,15 +1,30 @@
-import React, { useState } from "react";
-import logo from "../Assets/COSMOS.png";
+import React, { useEffect, useState } from "react";
+import logo from "../../Assets/COSMOS.png";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { Pane, FileUploader, FileCard } from "evergreen-ui";
+import { imDB} from "../Firebase/firebase"
+import {v4} from "uuid"
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 function Communities() {
   const [showAll, setShowAll] = useState(true);
+  const [community ,setCommunities] = useState([])
   const [showOneCommunity, setShowOneCommunity] = useState(false);
   const { register, handleSubmit } = useForm();
-
+  const [files, setFiles] = React.useState([]);
+  const [fileRejections, setFileRejections] = React.useState([]);
+  const handleChange = React.useCallback((files) => setFiles([files[0]]), []);
+  const handleRejected = React.useCallback(
+    (fileRejections) => setFileRejections([fileRejections[0]]),
+    []
+  );
+  const handleRemove = React.useCallback(() => {
+    setFiles([]);
+    setFileRejections([]);
+  }, []);
   const onClickAll = () => {
     setShowAll(true);
     setShowOneCommunity(false);
@@ -23,64 +38,50 @@ function Communities() {
   const onClickCommunity = () => {
     setShowOneCommunity(true);
   };
-  const communities = [
-    {
-      dpURL:
-        "https://images.pexels.com/photos/6039245/pexels-photo-6039245.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      bio: "",
-      name: "",
-    },
-    {
-      dpURL:
-        "https://images.pexels.com/photos/41951/solar-system-emergence-spitzer-telescope-telescope-41951.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      bio: "",
-      name: "",
-    },
-    {
-      dpURL:
-        "https://images.pexels.com/photos/2150/sky-space-dark-galaxy.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      bio: "",
-      name: "",
-    },
-    {
-      dpURL:
-        "https://images.pexels.com/photos/3279307/pexels-photo-3279307.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      bio: "",
-      name: "",
-    },
-    {
-      dpURL:
-        "https://images.pexels.com/photos/3180831/pexels-photo-3180831.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      bio: "",
-      name: "",
-    },
-    {
-      dpURL:
-        "https://images.pexels.com/photos/2538107/pexels-photo-2538107.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      bio: "",
-      name: "",
-    },
-  ];
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/community/getAll");
+      console.log(response.data)
+      setCommunities(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const onSubmit = async (data) => {
     try {
       const userData = Cookies.get("userData");
       if (!userData) {
-        console.error('User data not found in cookies');
+        console.error("User data not found in cookies");
         return;
       }
   
       const id = JSON.parse(userData)._id;
-      // console.log()
-      const response = await axios.post('http://localhost:3000/community/create', {
+  
+      const imgS = ref(imDB, `images${v4()}`);
+      const uploadData = await uploadBytes(imgS, files[0]);
+      const imageUrl = await getDownloadURL(uploadData.ref);
+  
+      const requestData = {
         ...data,
-        creator: id
-      });
-
-      const {message , community} = response.data
-      console.log(community);
+        creator: id,
+        communityprofile: imageUrl
+      };
+  
+      const response = await axios.post(
+        "http://localhost:3000/community/create",
+        requestData
+      );
+      fetchData();
+      console.log(response.data);
     } catch (error) {
-      console.error('Error creating community:', error);
+      console.error("Error creating community:", error);
     }
   };
   return (
@@ -122,11 +123,34 @@ function Communities() {
                   type="text"
                 />
                 <h2 className="font-light text-sm mb-1">Community profile</h2>
-                <input
-                  {...register("communityprofile")}
-                  className="bg-white pl-3 font-light rounded-md border outline-none w-full h-10"
-                  type="text"
-                />
+                <Pane maxWidth={654}>
+                  <FileUploader
+                    maxSizeInBytes={50 * 1024 ** 2}
+                    maxFiles={1}
+                    onChange={handleChange}
+                    onRejected={handleRejected}
+                    renderFile={(file) => {
+                      const { name, size, type } = file;
+                      const fileRejection = fileRejections.find(
+                        (fileRejection) => fileRejection.file === file
+                      );
+                      const { message } = fileRejection || {};
+                      return (
+                        <FileCard
+                          key={name}
+                          isInvalid={fileRejection != null}
+                          name={name}
+                          onRemove={handleRemove}
+                          sizeInBytes={size}
+                          type={type}
+                          validationMessage={message}
+                        />
+                      );
+                    }}
+                    values={files}
+                  />
+                </Pane>
+
                 <button
                   type="submit"
                   className="bg-black w-full mt-7 h-10 rounded-md text-white"
@@ -191,7 +215,7 @@ function Communities() {
             BROWSE BY THE TOPIC
           </h2>
           <div className="pt-4 md:pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-10">
-            {communities.map((community, index) => (
+            {community.map((community, index) => (
               <Link
                 to="/community"
                 onClick={onClickCommunity}
@@ -200,14 +224,13 @@ function Communities() {
               >
                 <figure>
                   <div className="w-full h-52">
-                    <img src={community.dpURL} alt="DP" className="w-full" />
+                    <img src={community.communityprofile} alt="DP" className="w-full" />
                   </div>
                 </figure>
                 <div className="card-body">
-                  <h2 className="card-title text-xl">LOREM</h2>
+                  <h2 className="card-title text-xl">{community.name}</h2>
                   <p className="line-clamp-2">
-                    Lorem ipsum dolor si lore dolores voluptate quam
-                    dignissimos? Quis, accusamus quas!
+                    {community.description}
                   </p>
                 </div>
               </Link>
@@ -216,13 +239,8 @@ function Communities() {
         </div>
       ) : (
         <div className="p-4 md:p-14">
-          {" "}
-          {/* Adjust padding for smaller screens */}
           <h2 className="text-4xl tracking-wide font-bold">YOUR COMMUNITIES</h2>
           <div className="pt-4 md:pt-10 grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-10">
-            {" "}
-            {/* Adjust grid layout for smaller screens */}
-            {/* Add your communities rendering here */}
             <Link
               to="/community"
               onClick={onClickCommunity}

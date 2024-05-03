@@ -13,5 +13,19 @@ router.get('/google/callback',
   })
 );
 
+router.get("/logout", (req, res) => {
+  req.logout(function (err) {
+    if (err) {
+      return res.status(500).send("Error during logout");
+    }
+    req.session.destroy(function (err) {
+      if (err) {
+        return res.status(500).send("Error destroying session");
+      }
+      res.send("User logged out successfully");
+    });
+  });
+});
+
 
 module.exports = router;

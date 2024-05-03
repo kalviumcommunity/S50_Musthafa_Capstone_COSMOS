@@ -8,7 +8,6 @@ const fs = require("fs");
 const authenticate = async (req, res, next) => {
   try {
     const profileHeader = req.headers["x-profile"];
-
     if (!profileHeader) {
       return res
         .status(401)
@@ -44,15 +43,7 @@ const authenticate = async (req, res, next) => {
 router.get("/", async (req, res) => {
   try {
     const posts = await Post.find();
-    const postsWithBase64Images = posts.map(post => {
-      const base64Image = post.image.toString('base64');
-      return {
-        ...post._doc, 
-        image: base64Image
-      };
-    });
-
-    res.status(200).json(postsWithBase64Images);
+    res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -79,27 +70,23 @@ router.post("/addcomment", async (req, res) => {
   }
 });
 
-
-const storage = multer.memoryStorage({
+const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/')
+    cb(null, 'uploads/');
   },
   filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now()
-    cb(null, uniqueSuffix + file.originalname)
+    cb(null, file.fieldname + '-' + Date.now());
   }
 });
 
 const upload = multer({ storage: storage });
 
-router.post("/", authenticate, upload.single("image"), async (req, res) => {
+router.post('/newpost',authenticate,  upload.any(), async (req, res) => {
   try {
-    const { title, description, topic, video } = req.body;
-    const bf = Buffer.from(req.file.buffer, "utf-8");    
+    const { title, description, topic, video, image } = req.body;
     const createdBy = req.userProfileId;
     const username = req.username
     const comments = []
-    const image = bf
     const post = new Post({
       username,
       title,
@@ -111,11 +98,11 @@ router.post("/", authenticate, upload.single("image"), async (req, res) => {
       comments
     });
 
-
     await Profile.updateOne({ _id : createdBy }, { $push: { posts: post._id } });
 
     await post.save();
     res.status(201).json(post);
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -127,16 +114,7 @@ router.get("/getmyposts/:id", async (req, res) => {
     const userId = req.params.id;
 
     const posts = await Post.find({ createdBy: userId });
-
-    const postsWithBase64Images = posts.map(post => {
-      const base64Image = post.image.toString('base64');
-      return {
-        ...post._doc, 
-        image: base64Image
-      };
-    });
-
-    res.status(200).json(postsWithBase64Images);
+    res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -160,11 +138,27 @@ router.get("/getcomments", (req, res) => {
 });
 
 router.delete("/:id", async (req, res) => {
-  const id = req.params.id;
-  await Post.findByIdAndDelete(id);
-  res.status(201).json({
-    Message: "Deleted Successfully",
-  });
+  try {
+    const id = req.params.id;
+    
+    const deletedPost = await Post.findByIdAndDelete(id);
+
+    if (!deletedPost) {
+      return res.status(404).json({
+        error: "Post not found"
+      });
+    }
+
+    res.status(200).json({
+      message: "Deleted successfully",
+      deletedPost: deletedPost
+    });
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    res.status(500).json({
+      error: "Internal server error"
+    });
+  }
 });
 
 module.exports = router;

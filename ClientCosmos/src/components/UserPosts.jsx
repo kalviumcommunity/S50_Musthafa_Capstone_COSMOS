@@ -26,15 +26,7 @@ function UserPosts() {
     axios
       .get(`http://localhost:3000/posts`)
       .then((response) => {
-        
-        const postsWithBase64Images = response.data.map((post) => {
-          const base64Image = post.image.toString("base64");
-          return {
-            ...post,
-            image: `data:image/png;base64,${base64Image}`,
-          };
-        });
-        console.log(postsWithBase64Images)
+        const postsWithBase64Images = response.data
         const shuffledArray = shuffleArray(postsWithBase64Images);
         setShuffledPosts(shuffledArray);
         setLoading(false);
@@ -81,7 +73,6 @@ function UserPosts() {
       .post("http://localhost:3000/posts/addcomment", com)
       .then((response) => {
         console.log("Comment added successfully:", response.data);
-        
       })
       .catch((error) => {
         console.error("Error adding comment:", error);
@@ -175,7 +166,7 @@ function UserPosts() {
             </div>
           ) : shuffledPosts.length > 0 ? (
             shuffledPosts.map((post, index) => (
-              <div key={index} className="m-6 p-10 shadow-2xl">
+              <div key={index} className="mx-6 mt-6 p-10 mb-20 shadow-2xl">
                 <div className="flex justify-between">
                   <h1 className="font-bold font-poppins tracking-wider text-2xl">
                     {post.username}

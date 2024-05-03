@@ -1,4 +1,3 @@
-// Assuming you have mongoose installed and required
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
@@ -14,7 +13,7 @@ const postSchema = new mongoose.Schema({
     required: true,
   },
   image: {
-    type: Buffer,
+    type: String,
   },
   video: {
     type: String,

@@ -8,7 +8,6 @@ import APPLE from "../../Assets/APPLE.png";
 import FACEBOOK from "../../Assets/FACEBOOK.png";
 import Cookies from "js-cookie";
 import "preline/preline";
-import Transition from "../Transition/Transition";
 
 function SignupForm() {
   const navigate = useNavigate();
