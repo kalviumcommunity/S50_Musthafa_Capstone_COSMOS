@@ -1,15 +1,16 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getStorage } from "firebase/storage"
+import firebasevariables from "../../../env"
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD6T9JhGrAlgGpJbwNE5Ahyvxwoma8xLRI",
-  authDomain: "cosmos-16de1.firebaseapp.com",
-  projectId: "cosmos-16de1",
-  storageBucket: "cosmos-16de1.appspot.com",
-  messagingSenderId: "605832186824",
-  appId: "1:605832186824:web:d5942c1aed0de2d9d48efd",
-  measurementId: "G-SBRKJGGCZR"
+  apiKey: firebasevariables.apiKey,
+  authDomain: firebasevariables.authDomain,
+  projectId: firebasevariables.projectId,
+  storageBucket: firebasevariables.storageBucket,
+  messagingSenderId: firebasevariables.messagingSenderId,
+  appId: firebasevariables.appId,
+  measurementId: firebasevariables.measurementId
 };
 
 // Initialize Firebase
