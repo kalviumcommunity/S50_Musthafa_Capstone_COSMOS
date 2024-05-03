@@ -10,12 +10,12 @@ const communityrouter = require("./Routes/community");
 require("dotenv").config();
 const SESSION_SECRET = process.env.SESSION_SECRET;
 
-require("./Routes/googleAuth");
+require("./Routes/GoogleAuth");
 const cors = require("cors");
 const passport = require("passport");
 const session = require("express-session");
 connectDB();
-// iii
+
 app.use(session({
   secret: SESSION_SECRET,
   resave: false,
