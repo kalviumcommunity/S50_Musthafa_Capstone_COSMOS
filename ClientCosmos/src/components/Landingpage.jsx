@@ -10,6 +10,7 @@ function Landingpage() {
   const onClick = () => {
     navigate("/HomePage");
   };
+  
   return (
     <>
       <motion.div

@@ -10,11 +10,33 @@ function About() {
     "SOLAR SYSTEM",
     "STARS",
     "GALAXIES",
-    "SUPERNOVAS",
     "NEBULAS",
     "BLACK HOLES",
   ];
-
+  const NavigateTopics = (e) => {
+    switch (e) {
+      case "HOME":
+        navigate("/earth");
+        break;
+      case "SOLAR SYSTEM":
+        navigate("/solarsystem");
+        break;
+      case "STARS":
+        navigate("/stars");
+        break;
+      case "GALAXIES":
+        navigate("/galaxies");
+        break;
+      case "NEBULAS":
+        navigate("/nebulas");
+        break;
+      case "BLACK HOLES":
+        navigate("/blackholes");
+        break;
+      default:
+        break;
+    }
+  };
   const ProfileClick = (e) => {
     switch (e) {
       case "Home":
@@ -166,7 +188,9 @@ function About() {
           </p>
         </div>
         <div></div>
-        <h2 className=" font-bold mb-2 text-center text-3xl mt-8">Contact Us</h2>
+        <h2 className=" font-bold mb-2 text-center text-3xl mt-8">
+          Contact Us
+        </h2>
         <div className="flex justify-center">
           <p className="mb-4">
             For inquiries, suggestions, or just to share your own cosmic

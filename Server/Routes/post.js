@@ -60,7 +60,6 @@ router.post("/addcomment", async (req, res) => {
     }
 
     post.comments.push({ name, comment, profilepic });
-
     await post.save();
 
     res.status(200).json({ message: "Comment added successfully" });

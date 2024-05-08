@@ -46,15 +46,8 @@ function LoginForm() {
         "http://localhost:3000/users/getone",
         data
       );
-
-      const { user, token , userProfile } = response.data;
-      const serializedUser = JSON.stringify(user);
-
-      Cookies.set("profile", JSON.stringify(userProfile));
+      const { token } = response.data;
       Cookies.set("token", token);
-      Cookies.set("userData", serializedUser);
-      
-
       navigate("/HomePage");
     } catch (error) {
       console.error("Error in post request", error.response.data.error);

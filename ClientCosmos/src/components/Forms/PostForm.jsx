@@ -13,6 +13,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 function PostForm({ Modal, setModalOpen, mypostFetch }) {
   const [iv, setisv] = useState(false);
   const [files, setFiles] = React.useState([]);
+  const [profile, setProfile] = useState([]);
   const [fileRejections, setFileRejections] = React.useState([]);
   const handleChange = React.useCallback((files) => setFiles([files[0]]), []);
   const handleRejected = React.useCallback(
@@ -35,20 +36,41 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
     }
   }, [Modal]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      if (token) {
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/users/tokenvalidate",
+            { token }
+          );
+          const { user } = response.data;
+          setProfile(user);
+        } catch (error) {
+          console.error("Error in post request", error);
+        }
+      } else {
+        console.log("Token is not there");
+      }
+    };
+
+    fetchData();
+
+  })
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
-    const pr = Cookies.get("profile");
-    const profile = JSON.parse(pr);
-
     try {
       const imgS = ref(imDB, `images${v4()}`);
       const uploadData = await uploadBytes(imgS, files[0]);
       const imageUrl = await getDownloadURL(uploadData.ref);
-  
+      
+      console.log(imageUrl)
       const requestData = {
         ...data,
         image: imageUrl

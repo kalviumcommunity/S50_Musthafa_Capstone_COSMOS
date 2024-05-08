@@ -12,6 +12,12 @@ import About from "./components/About";
 import PostForm from "./components/Forms/PostForm";
 import Community from "./components/Community/Community";
 import SelectedNews from "./components/News/SelectedNews";
+import Earth from "./components/Topics/Earth";
+import SolarSystem from "./components/Topics/SolarSystem";
+import BlackHoles from "./components/Topics/BlackHoles";
+import Nebulas from "./components/Topics/Nebulas";
+import Stars from "./components/Topics/Stars";
+import Galaxies from "./components/Topics/Galaxies";
 
 function App() {
   const location = useLocation();
@@ -48,6 +54,12 @@ function App() {
             )
           }
         />
+        <Route path="/galaxies" element={<Galaxies setSelectedNews={setSelectedNews}/>} />
+        <Route path="/nebulas" element={<Nebulas />} />
+        <Route path="/stars" element={<Stars />} />
+        <Route path="/blackholes" element={<BlackHoles setSelectedNews={setSelectedNews} />} />
+        <Route path="/solarsystem" element={<SolarSystem />} />
+        <Route path="/earth" element={<Earth />} />
       </Routes>
     </>
   );

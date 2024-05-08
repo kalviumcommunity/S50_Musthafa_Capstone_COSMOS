@@ -13,11 +13,13 @@ require("dotenv").config();
 const secretKey = process.env.JWT_SECRET;
 
 const generateToken = (data) => {
+  const { _id, name, username, email } = data;
   const expiresIn = "7h";
-  const plainData = data.toObject();
-  const token = jwt.sign(plainData, secretKey, { expiresIn });
+  const payload = { _id, name, username, email };
+  const token = jwt.sign(payload, secretKey, { expiresIn });
   return token;
 };
+
 
 const verifyToken = (req, res, next) => {
   const token =
@@ -77,13 +79,11 @@ router.post("/getone", async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid password" });
     }
-    const token = generateToken(user);
     
     const userProfile = await profile.findOne({ name: user.name, username: user.username });
+    const token = generateToken(userProfile);
     const responseData = {
-      user,
-      token,
-      userProfile
+      token
     };
 
     res.status(201).json(responseData);
@@ -121,7 +121,7 @@ router.post("/", async (req, res) => {
       };
       const userProfile = await Profilemodel.create(userProfileData);
 
-      const token = generateToken(user);
+      const token = generateToken(userProfile);
 
       res.status(201).json({ user, userProfile, token });
     }

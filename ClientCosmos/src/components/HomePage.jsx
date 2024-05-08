@@ -5,9 +5,9 @@ import axios from "axios";
 import WHAM from "../Assets/WHAM.png";
 import EARTH from "../Assets/EARTH.jpg";
 import SOLARSYSTEM from "../Assets/SOLARSYSTEM1.webp";
+
 function HomePage({ setSelectedNews }) {
   const navigate = useNavigate();
-
   const [valid, setValid] = useState("");
   const [user, setUser] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,20 +54,10 @@ function HomePage({ setSelectedNews }) {
 
   const selectedNews = (e) => {
     setSelectedNews(e);
-    navigate("/selenews")
+    navigate("/selenews");
   };
 
   useEffect(() => {
-    const userDataString = Cookies.get("userData");
-    let userData = "";
-
-    try {
-      userData = JSON.parse(userDataString);
-    } catch (error) {
-      console.error("Error parsing userData:", error);
-    }
-    setUser(userData);
-
     const fetchData = async () => {
       const token = Cookies.get("token");
       if (token) {
@@ -76,11 +66,11 @@ function HomePage({ setSelectedNews }) {
             "http://localhost:3000/users/tokenvalidate",
             { token }
           );
-          setValid(response.data.valid);
+          const { user, valid } = response.data;
+          setUser(user);
+          setValid(valid);
         } catch (error) {
-          Cookies.remove("userData");
           Cookies.remove("token");
-          Cookies.remove("profile");
           console.error("Error in post request", error.response.data.error);
         }
       } else {
@@ -108,25 +98,22 @@ function HomePage({ setSelectedNews }) {
   const NavigateTopics = (e) => {
     switch (e) {
       case "HOME":
-        console.log("HOME");
+        navigate("/earth");
         break;
       case "SOLAR SYSTEM":
-        console.log("SOLAR SYSTEM");
+        navigate("/solarsystem");
         break;
       case "STARS":
-        console.log("STARS");
+        navigate("/stars");
         break;
       case "GALAXIES":
-        console.log("GALAXIES");
-        break;
-      case "SUPERNOVAS":
-        console.log("SUPERNOVAS");
+        navigate("/galaxies");
         break;
       case "NEBULAS":
-        console.log("NEBULAS");
+        navigate("/nebulas");
         break;
       case "BLACK HOLES":
-        console.log("BLACK HOLES");
+        navigate("/blackholes");
         break;
       default:
         break;
@@ -138,9 +125,7 @@ function HomePage({ setSelectedNews }) {
       const response = await axios.get("http://localhost:3000/auth/logout");
       console.log(response.data);
       if (response.status === 200) {
-        Cookies.remove("userData");
         Cookies.remove("token");
-        Cookies.remove("profile");
         window.location.reload();
       } else {
         console.error("Error while logging out:", response.data);
@@ -149,15 +134,11 @@ function HomePage({ setSelectedNews }) {
       console.error("Error while logging out", err);
     }
   };
-  
 
   const ProfileClick = (e) => {
     switch (e) {
       case "profile":
         navigate("/profile");
-        break;
-      case "explore":
-        navigate("/explore");
         break;
       case "communities":
         navigate("/communities");
@@ -169,7 +150,7 @@ function HomePage({ setSelectedNews }) {
         navigate("/news");
         break;
       case "logout":
-        LogOut()
+        LogOut();
         break;
       default:
         break;
@@ -194,11 +175,6 @@ function HomePage({ setSelectedNews }) {
       name: "GALAXIES",
       imageUrl:
         "https://images.pexels.com/photos/2150/sky-space-dark-galaxy.jpg?auto=compress&cs=tinysrgb&w=600",
-    },
-    {
-      name: "SUPERNOVAS",
-      imageUrl:
-        "https://images.newscientist.com/wp-content/uploads/2020/04/10202803/cfa-019-supernova_illesized.jpg",
     },
     {
       name: "NEBULAS",
@@ -261,13 +237,17 @@ function HomePage({ setSelectedNews }) {
           </div>
           <div className="flex gap-10">
             {valid ? (
-              <div onClick={() => ProfileClick("profile")} className="flex items-center gap-3 justify-between cursor-pointer bg-gray-200 px-3 py-2 rounded-xl">
+              <div
+                onClick={() => ProfileClick("profile")}
+                className="flex items-center gap-3 justify-between cursor-pointer bg-gray-200 px-3 py-2 rounded-xl"
+              >
                 <div className="rounded">
-                  <img className="rounded-lg h-8" src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220" />
+                  <img
+                    className="rounded-lg h-8"
+                    src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
+                  />
                 </div>
-                <div className="font-poppins text-sm">
-                  {user.name}
-                </div>
+                <div className="font-poppins text-sm">{user.name}</div>
               </div>
             ) : (
               <>
@@ -355,10 +335,11 @@ function HomePage({ setSelectedNews }) {
                 >
                   {topics.map((topic, index) => {
                     return (
-                          <li key={index}  onClick={() => NavigateTopics(topic.name)} >
-                        <a
-                          className="hover:shadow-md rounded-sm duration-200"
-                        >
+                      <li
+                        key={index}
+                        onClick={() => NavigateTopics(topic.name)}
+                      >
+                        <a className="hover:shadow-md rounded-sm duration-200">
                           {topic.name}
                         </a>
                       </li>
@@ -384,10 +365,7 @@ function HomePage({ setSelectedNews }) {
                   COMMUNITIES
                 </button>
               </li>
-              <li
-                className="w-full"
-                onClick={() => ProfileClick("logout")}
-              >
+              <li className="w-full" onClick={() => ProfileClick("logout")}>
                 <button className=" text-black font-poppins mt-4 py-3 border shadow-md rounded-sm">
                   LOGOUT
                 </button>
