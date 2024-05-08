@@ -34,9 +34,7 @@ function SignupForm() {
       setAlert(false);
       const { token, user , userProfile } = response.data;
       Cookies.set("token", token);
-      user.password = undefined;
-      Cookies.set("profile",JSON.stringify(userProfile))
-      Cookies.set("userData", JSON.stringify(user));
+z
 
       navigate("/HomePage");
 

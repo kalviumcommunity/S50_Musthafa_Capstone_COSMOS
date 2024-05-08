@@ -10,9 +10,10 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const secretKey = process.env.JWT_SECRET;
 
 const generateToken = (data) => {
+  const { _id, name, username, email } = data;
   const expiresIn = "7h";
-  const plainData = data.toObject();
-  const token = jwt.sign(plainData, secretKey, { expiresIn });
+  const payload = { _id, name, username, email };
+  const token = jwt.sign(payload, secretKey, { expiresIn });
   return token;
 };
 
@@ -52,16 +53,8 @@ passport.use(
 
           const userDataJSON = JSON.stringify(existingUser);
           const profileJSON = JSON.stringify(existingProfile);
-          const token = generateToken(existingUser)
+          const token = generateToken(existingProfile)
 
-          request.res.cookie("userData", userDataJSON, {
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: false,
-          });
-          request.res.cookie("profile", profileJSON, {
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: false,
-          });
           request.res.cookie("token", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: false,
@@ -83,19 +76,11 @@ passport.use(
         const userData = await usermodel.create(userDetail);
         const profileData = await Profilemodel.create(userProfile);
 
-        const token = generateToken(userData);
+        const token = generateToken(profileData);
 
         const userDataJSON = JSON.stringify(userData);
         const profileJSON = JSON.stringify(profileData);
 
-        request.res.cookie("userData", userDataJSON, {
-          maxAge: 900000,
-          httpOnly: false,
-        });
-        request.res.cookie("profile", profileJSON, {
-          maxAge: 900000,
-          httpOnly: false,
-        });
         request.res.cookie("token", token, {
           maxAge: 7 * 24 * 60 * 60 * 1000,
           httpOnly: false,

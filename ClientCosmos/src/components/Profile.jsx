@@ -8,19 +8,38 @@ import swal from "sweetalert";
 function Profile() {
   const [userData, setUserData] = useState("");
   const [myPosts, setMyPosts] = useState([]);
-
-  useEffect(() => {
-    const storedUserData = Cookies.get("userData");
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
-      setUserData(parsedUserData);
-    }
-    mypostFetch();
-  }, []);
-
   const [modalOpen, setModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [yourComment, setYourComment] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      if (token) {
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/users/tokenvalidate",
+            { token }
+          );
+          const { valid, user } = response.data;
+          setUserData(user);
+        } catch (error) {
+          Cookies.remove("token");
+          console.error("Error in post request", error);
+        }
+      } else {
+        console.log("Token is not there");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (userData._id) {
+      mypostFetch();
+    }
+  }, [userData]);
 
   const openModal = () => {
     setModalOpen(true);
@@ -29,25 +48,22 @@ function Profile() {
   const closeModal = () => {
     setModalOpen(false);
   };
+
   const mypostFetch = () => {
-    const storedProfile = Cookies.get("profile");
-    if (storedProfile) {
-      const parsedUserData = JSON.parse(storedProfile);
-      const id = parsedUserData._id;
-      axios
-        .get(`http://localhost:3000/posts/getmyposts/${id}`)
-        .then((response) => {
-          setMyPosts(response.data);
-        })
-        .catch((error) => {
-          console.error("Error fetching profile data:", error);
-        });
-    }
+    const id = userData._id;
+    axios
+      .get(`http://localhost:3000/posts/getmyposts/${id}`)
+      .then((response) => {
+        setMyPosts(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching profile data:", error);
+      });
   };
 
   const DeleteMyPost = (e) => {
     swal({
-      title: "Are you sure?",
+      title: "Are you sure ?",
       text: "Once deleted, you will not be able to recover this post!",
       icon: "warning",
       buttons: true,

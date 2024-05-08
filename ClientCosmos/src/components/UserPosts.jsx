@@ -15,11 +15,26 @@ function UserPosts() {
   const [userData, setUserData] = useState("");
 
   useEffect(() => {
-    const storedUserData = Cookies.get("userData");
-    if (storedUserData) {
-      const parsedUserData = JSON.parse(storedUserData);
-      setUserData(parsedUserData);
-    }
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      if (token) {
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/users/tokenvalidate",
+            { token }
+          );
+          const { valid, user } = response.data;
+          setUserData(user);
+        } catch (error) {
+          Cookies.remove("token");
+          console.error("Error in post request", error);
+        }
+      } else {
+        console.log("Token is not there");
+      }
+    };
+
+    fetchData();
   }, []);
 
   useEffect(() => {

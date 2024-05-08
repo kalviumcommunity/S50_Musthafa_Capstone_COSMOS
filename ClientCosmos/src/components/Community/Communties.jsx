@@ -13,6 +13,7 @@ function Communities() {
   const [showAll, setShowAll] = useState(true);
   const [community ,setCommunities] = useState([])
   const [showOneCommunity, setShowOneCommunity] = useState(false);
+  const [userData , setUserData ] = useState([])
   const { register, handleSubmit } = useForm();
   const [files, setFiles] = React.useState([]);
   const [fileRejections, setFileRejections] = React.useState([]);
@@ -39,7 +40,7 @@ function Communities() {
     setShowOneCommunity(true);
   };
 
-  const fetchData = async () => {
+  const fetchCommunities = async () => {
     try {
       const response = await axios.get("http://localhost:3000/community/getAll");
       console.log(response.data)
@@ -48,22 +49,44 @@ function Communities() {
       console.error("Error fetching data:", error);
     }
   };
-  
 
   useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      if (token) {
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/users/tokenvalidate",
+            { token }
+          );
+          const { valid, user } = response.data;
+          setUserData(user);
+        } catch (error) {
+          Cookies.remove("token");
+          console.error("Error in post request", error);
+        }
+      } else {
+        console.log("Token is not there");
+      }
+    };
+
     fetchData();
   }, []);
 
+  useEffect(() => {
+    if (userData._id) {
+      fetchCommunities();
+    }
+  }, [userData]);
+
+
+  
+
   const onSubmit = async (data) => {
     try {
-      const userData = Cookies.get("userData");
-      if (!userData) {
-        console.error("User data not found in cookies");
-        return;
-      }
   
-      const id = JSON.parse(userData)._id;
-  
+      const id = userData._id;
+
       const imgS = ref(imDB, `images${v4()}`);
       const uploadData = await uploadBytes(imgS, files[0]);
       const imageUrl = await getDownloadURL(uploadData.ref);
@@ -78,7 +101,7 @@ function Communities() {
         "http://localhost:3000/community/create",
         requestData
       );
-      fetchData();
+      fetchCommunities();
       console.log(response.data);
     } catch (error) {
       console.error("Error creating community:", error);
