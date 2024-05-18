@@ -51,8 +51,6 @@ passport.use(
             return done(new Error("User not found."));
           }
 
-          const userDataJSON = JSON.stringify(existingUser);
-          const profileJSON = JSON.stringify(existingProfile);
           const token = generateToken(existingProfile)
 
           request.res.cookie("token", token, {
@@ -70,16 +68,14 @@ passport.use(
           username: profile.name.givenName,
           email: profile.email,
           posts: [],
-          // profilepic : ""
+          bio : "",
+          communities: []
         };
 
         const userData = await usermodel.create(userDetail);
         const profileData = await Profilemodel.create(userProfile);
 
         const token = generateToken(profileData);
-
-        const userDataJSON = JSON.stringify(userData);
-        const profileJSON = JSON.stringify(profileData);
 
         request.res.cookie("token", token, {
           maxAge: 7 * 24 * 60 * 60 * 1000,

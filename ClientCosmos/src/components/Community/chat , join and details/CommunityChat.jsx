@@ -1,73 +1,148 @@
-import React from "react";
+import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { ShimmerCategoryItem } from "react-shimmer-effects";
+import Cookies from "js-cookie";
 
-function Community() {
-  return (
-    <>
-      <div className="flex">
-        <div className="w-1/4 h-screen shadow-xl py-7">
-          <div className=" px-10 ">
-            <input
-              placeholder="Search here"
-              className="w-full h-10  border rounded-md bg-white text-black outline-none borde pl-3"
-              type="text"
+function CommunityChat() {
+  const { id } = useParams();
+  const [communityData, setCommunityData] = useState(null);
+  const [userData, setUserData] = useState([]);
+
+  const navigate = useNavigate();
+
+  const fetchData = async () => {
+    const token = Cookies.get("token");
+    if (token) {
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/users/tokenvalidate",
+          { token }
+        );
+        const { valid, user } = response.data;
+        setUserData(user);
+      } catch (error) {
+        Cookies.remove("token");
+        console.error("Error in post request", error);
+      }
+    } else {
+      console.log("Token is not there");
+    }
+  };
+
+  useEffect(() => {
+    const fetchCommunityData = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/community/${id}`
+        );
+        setCommunityData(response.data);
+      } catch (error) {
+        console.error("Error fetching community data:", error);
+      }
+    };
+
+    fetchData();
+    fetchCommunityData();
+  }, []);
+
+  if (!communityData) {
+    return (
+      <>
+        <div className="px-6 h-screen">
+          <nav className="px-10 cursor-pointer flex  items-center py-6 border-b-2">
+            <ShimmerCategoryItem
+              hasImage
+              imageType="circular"
+              imageWidth={80}
+              imageHeight={80}
+              title
+            />
+
+            <ShimmerCategoryItem />
+          </nav>
+          <div className="myPosts pb-7 overflow-auto">
+            <div className="w-2/4 mt-10">
+              <ShimmerCategoryItem
+                hasImage
+                imageType="circular"
+                imageWidth={50}
+                imageHeight={50}
+                title
+              />
+            </div>
+            <div className="w-3/4 mt-10">
+              <ShimmerCategoryItem
+                hasImage
+                imageType="circular"
+                imageWidth={50}
+                imageHeight={50}
+                title
+              />
+            </div>
+            <div className="w-1/4 mt-10">
+              <ShimmerCategoryItem
+                hasImage
+                imageType="circular"
+                imageWidth={50}
+                imageHeight={50}
+                title
+              />
+            </div>
+          </div>
+          <div className="cursor-pointer text-xl py-5">
+            <ShimmerCategoryItem
+              hasImage
+              imageType="thumbnail"
+              imageWidth={1400}
+              imageHeight={100}
             />
           </div>
-          <div className="w-full pt-10">
-            <div className="flex items-center border-b-2 cursor-pointer p-5 gap-3 hover:shadow-lg duration-500">
-              <img
-                className="w-10 h-10 rounded-full"
-                src="https://pm1.narvii.com/6051/df6890296e8c3a8db7583b74c1a5dfbcc31cf43b_hq.jpg"
-                alt=""
-              />
-              <div className="">
-                <h2 className="text-xl font-semibold">HYDRA</h2>
-                <p className="line-clamp-1 text-gray-700">
-                  John : It is the first constellation discovered by nasa
-                </p>
-              </div>
-            </div>
-            <div className="flex bg-gray-200 items-center border-b-2 cursor-pointer p-5 gap-3 hover:shadow-lg duration-500">
-              <img
-                className="w-10 h-10 rounded-full"
-                src="https://tse1.mm.bing.net/th?id=OIP.zjkRpue82uCwWxshD08dxQHaEK&pid=Api&P=0&h=220"
-                alt=""
-              />
-              <div className="">
-                <h2 className="text-xl font-semibold">SPACE X</h2>
-                <p className="line-clamp-1 text-gray-700">Mark : Lorem ipsum, dolor sit amet consectetur adipisicing elit. Illo
-                  illum cumque quaerat veritatis. Illo fuga quis, at quo sit
-                  soluta expedita odit temporibus, id est adipisci! Esse culpa
-                  debitis accusantium!</p>
-              </div>
-            </div>
-            <div className="flex items-center border-b-2 cursor-pointer p-5 gap-3 hover:shadow-lg duration-500">
-              <img
-                className="w-10 h-10 rounded-full"
-                src="https://tse4.mm.bing.net/th?id=OIP.VJoP-wUbVsfhxfeeFSHJBwHaGR&pid=Api&P=0&h=220"
-                alt=""
-              />
-              <div className="">
-                <h2 className="text-xl font-semibold">GANYMEDE</h2>
-                <p className="line-clamp-1 text-gray-700">
-                  Alex : It is the first constellation
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
-        <div className="w-3/4 px-6 h-screen">
-          <nav className="px-10 py-6 border-b-2">
+      </>
+    );
+  }
+
+  return (
+    <>
+      <div className="">
+        <div className="px-6 h-screen">
+          <Link  to={`/communitydetails/${id}`} className="pl-5 pr-10 cursor-pointer flex justify-between items-center py-4 border-b-2">
             <div className="flex items-center gap-5 ">
-              <img
-                className="w-14 rounded-full h-14"
-                src="https://tse1.mm.bing.net/th?id=OIP.zjkRpue82uCwWxshD08dxQHaEK&pid=Api&P=0&h=220"
-                alt=""
-              />
-              <h2 className="text-2xl font-semibold"> SPACE X</h2>
-             
+              <Link
+                to={`/mycommunities`}
+                className="flex hover:bg-gray-300 duration-500 rounded-full p-2 items-center"
+              >
+                <span className="mr-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="currentColor"
+                    className="w-7 h-7 transform rotate-180"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+                    ></path>
+                  </svg>
+                </span>
+                <img
+                  className="w-14 rounded-full h-14"
+                  src={communityData.communityprofile}
+                  alt=""
+                />
+              </Link>
+
+              <h2 className="text-2xl font-semibold">{communityData.name}</h2>
             </div>
-            <img src="" alt="" />
-          </nav>
+            <img
+              src="https://seekicon.com/free-icon-download/three-dots-vertical_1.png"
+              className="text-end flex cursor-pointer h-5"
+            />
+          </Link>
           <div className="h-3/4 myPosts pb-7 overflow-auto">
             <div className="chat chat-start">
               <div className="chat-image avatar">
@@ -219,4 +294,4 @@ function Community() {
   );
 }
 
-export default Community;
+export default CommunityChat;

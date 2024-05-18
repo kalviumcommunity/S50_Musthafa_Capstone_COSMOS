@@ -71,37 +71,34 @@ router.post("/addcomment", async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+    cb(null, "uploads/");
   },
   filename: function (req, file, cb) {
-    cb(null, file.fieldname + '-' + Date.now());
-  }
+    cb(null, file.fieldname + "-" + Date.now());
+  },
 });
 
 const upload = multer({ storage: storage });
 
-router.post('/newpost',authenticate,  upload.any(), async (req, res) => {
+router.post("/newpost", authenticate, upload.any(), async (req, res) => {
   try {
-    const { title, description, topic, video, image } = req.body;
+    const { caption, topic, image } = req.body;
     const createdBy = req.userProfileId;
-    const username = req.username
-    const comments = []
+    const username = req.username;
+    const comments = [];
     const post = new Post({
       username,
-      title,
-      description,
+      caption,
       image,
-      video,
       topic,
       createdBy,
-      comments
+      comments,
     });
 
-    await Profile.updateOne({ _id : createdBy }, { $push: { posts: post._id } });
+    await Profile.updateOne({ _id: createdBy }, { $push: { posts: post._id } });
 
     await post.save();
     res.status(201).json(post);
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
@@ -119,6 +116,7 @@ router.get("/getmyposts/:id", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
+
 
 router.get("/getcomments", (req, res) => {
   const postId = req.headers.postid;
@@ -139,23 +137,23 @@ router.get("/getcomments", (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    
+
     const deletedPost = await Post.findByIdAndDelete(id);
 
     if (!deletedPost) {
       return res.status(404).json({
-        error: "Post not found"
+        error: "Post not found",
       });
     }
 
     res.status(200).json({
       message: "Deleted successfully",
-      deletedPost: deletedPost
+      deletedPost: deletedPost,
     });
   } catch (error) {
     console.error("Error deleting post:", error);
     res.status(500).json({
-      error: "Internal server error"
+      error: "Internal server error",
     });
   }
 });

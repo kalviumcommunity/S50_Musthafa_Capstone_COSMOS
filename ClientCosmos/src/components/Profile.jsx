@@ -4,6 +4,7 @@ import PostForm from "./Forms/PostForm";
 import axios from "axios";
 import commenticon from "../Assets/commenticon.png";
 import swal from "sweetalert";
+import { ShimmerPostItem } from "react-shimmer-effects";
 
 function Profile() {
   const [userData, setUserData] = useState("");
@@ -11,6 +12,46 @@ function Profile() {
   const [modalOpen, setModalOpen] = useState(false);
   const [comments, setComments] = useState([]);
   const [yourComment, setYourComment] = useState([]);
+  const [Loading, setLoading] = useState(true);
+  const [editMode, setEditMode] = useState(false);
+  const [bioText, setBioText] = useState("");
+
+  const handleSaveClick = async () => {
+    try {
+      const response = await axios.patch(
+        `http://localhost:3000/users/editBio/${userData._id}`,
+        { bioText }
+      );
+      if (response) {
+        console.log(response.data);
+        setBioText(response.data.bio)
+        setEditMode(false);
+        window.relaod;
+      } else {
+        console.log("Response is not there");
+      }
+    } catch (error) {
+      console.error("Error updating bio:", error);
+    }
+  };
+
+  const handleChange = (e) => {
+    setBioText(e.target.value);
+  };
+
+  const handleEditClick = () => {
+    setEditMode(true);
+  };
+
+  const getUserdata = async (id) => {
+    try {
+      const response = await axios.get(`http://localhost:3000/users/${id}`);
+      setBioText(response.data.bio)
+      setUserData(response.data);
+    } catch (err) {
+      console.log("Error while getting the profile data", err);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,7 +63,9 @@ function Profile() {
             { token }
           );
           const { valid, user } = response.data;
-          setUserData(user);
+          if (user) {
+            getUserdata(user._id);
+          }
         } catch (error) {
           Cookies.remove("token");
           console.error("Error in post request", error);
@@ -55,6 +98,7 @@ function Profile() {
       .get(`http://localhost:3000/posts/getmyposts/${id}`)
       .then((response) => {
         setMyPosts(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching profile data:", error);
@@ -88,8 +132,6 @@ function Profile() {
   const takeComment = (e) => {
     setYourComment(e.target.value);
   };
-
-  const Edit = () => {};
 
   const profilepic =
     "https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220";
@@ -148,12 +190,19 @@ function Profile() {
                 value={userData.name}
               />
             </div>
-            <h2 className="text-lg tracking-wider">MY BIO</h2>
-            <div className="w-full myPosts font-light border mt-2 p-3 outline-none bg-white rounded-md">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.Ut iusto
-              debitis necessitatibus tempora, placeat porro veritatis quod
-              similique! Aliquid iusto autem earum illum delectus
-              necessitatibus, est voluptatum maiores tempore esse.
+            <div>
+              <div className="flex justify-between">
+                <h2 className="text-lg tracking-wider">MY BIO</h2>
+                <button onClick={editMode ? handleSaveClick : handleEditClick}>
+                  {editMode ? "SUBMIT" : "EDIT"}
+                </button>
+              </div>
+              <textarea
+                disabled={!editMode}
+                className="w-full h-28 myPosts font-light border mt-2 p-3 outline-none bg-white rounded-md"
+                value={bioText}
+                onChange={handleChange}
+              />
             </div>
           </div>
         </div>
@@ -171,9 +220,23 @@ function Profile() {
           </div>
 
           <div className="overflow-auto myPosts">
-            {myPosts.length === 0 ? (
+            {myPosts.length === 0 && !Loading ? (
               <div className="text-center text-3xl font-bold font-poppins mt-40 mb-40 lg:mb-0 lg:mt-64 text-gray-700">
                 You Hav'nt posted yet
+              </div>
+            ) : Loading ? (
+              <div className="">
+                {[...Array(3)].map((_, index) => (
+                  <ShimmerPostItem
+                    card
+                    title
+                    cta
+                    imageType="thumbnail"
+                    imageWidth={700}
+                    imageHeight={300}
+                    contentCenter
+                  />
+                ))}
               </div>
             ) : (
               myPosts
@@ -216,10 +279,7 @@ function Profile() {
                     </div>
 
                     <img className="mt-2 w-full" src={post.image} alt="" />
-                    <h2 className="text-xl font-semibold mt-2">{post.title}</h2>
-                    <p className=" text-xl font-light mt-2">
-                      {post.description}
-                    </p>
+                    <h2 className="text-xl font-semibold mt-2">{post.caption}</h2>
 
                     <div className="flex items-center justify-between mt-3 gap-5">
                       <div className="flex gap-4 items-center">

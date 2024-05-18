@@ -13,6 +13,13 @@ const profileSchema = new mongoose.Schema({
   posts: {
     type: [mongoose.Schema.Types.ObjectId],
     ref: 'Post'
+  },
+  communities : {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: 'community'
+  },
+  bio:{
+    type : String
   }
 });
 
