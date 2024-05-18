@@ -1,21 +1,14 @@
 const mongoose = require("mongoose");
 
 const postSchema = new mongoose.Schema({
-  username : {
-    type : String,
-  },
-  title: {
+  username: {
     type: String,
-    required: true,
   },
-  description: {
+  caption: {
     type: String,
     required: true,
   },
   image: {
-    type: String,
-  },
-  video: {
     type: String,
   },
   topic: {
@@ -27,9 +20,9 @@ const postSchema = new mongoose.Schema({
       type: {
         name: String,
         comment: String,
-        profilepic: String
-      }
-    }
+        profilepic: String,
+      },
+    },
   ],
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,

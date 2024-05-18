@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import commenticon from "../Assets/commenticon.png";
 import Cookies from "js-cookie";
+import { ShimmerPostItem } from "react-shimmer-effects";
 
 function UserPosts() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ function UserPosts() {
   const [loading, setLoading] = useState(true);
   const [comments, setComments] = useState([]);
   const [yourComment, setYourComment] = useState([]);
-  const [ pid, setpId ] = useState("")
+  const [pid, setpId] = useState("");
 
   const [userData, setUserData] = useState("");
 
@@ -41,7 +42,7 @@ function UserPosts() {
     axios
       .get(`http://localhost:3000/posts`)
       .then((response) => {
-        const postsWithBase64Images = response.data
+        const postsWithBase64Images = response.data;
         const shuffledArray = shuffleArray(postsWithBase64Images);
         setShuffledPosts(shuffledArray);
         setLoading(false);
@@ -51,7 +52,6 @@ function UserPosts() {
         setLoading(false);
       });
   }, []);
-
 
   const shuffleArray = (array) => {
     const shuffledArray = [...array];
@@ -75,7 +75,6 @@ function UserPosts() {
   const profilepic =
     "https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220";
 
-
   const AddComment = (e) => {
     const com = {
       postid: pid,
@@ -97,12 +96,12 @@ function UserPosts() {
   };
 
   const commentsClick = (e) => {
-    setpId(e._id)
+    setpId(e._id);
     axios
       .get(`http://localhost:3000/posts/getcomments`, {
         headers: {
-          postid: e._id
-        }
+          postid: e._id,
+        },
       })
       .then((response) => {
         setComments(response.data);
@@ -170,15 +169,23 @@ function UserPosts() {
 
         {/* posts */}
 
-        <div className="px-32 ml-96 mt-28 h-screen">
+        <div className="px-32 ml-96 mt-28">
           {loading ? (
-            <div className="mt-10 h-screen w-screen">
-              <div className="w-2/4 border-2 h-3/5  rounded-lg">
-                <h1 className="font-bold h-10 bg-gray-200 rounded-lg m-10 font-poppins tracking-wider text-2xl"></h1>
-
-                <div className="flex items-center mx-10 bg-gray-200 rounded-lg gap-5 h-3/5 m-10 justify-end"></div>
+            <>
+              <div className="mt-10">
+                {[...Array(3)].map((_, index) => (
+                  <ShimmerPostItem
+                    card
+                    title
+                    cta
+                    imageType="thumbnail"
+                    imageWidth={800}
+                    imageHeight={300}
+                    contentCenter
+                  />
+                ))}
               </div>
-            </div>
+            </>
           ) : shuffledPosts.length > 0 ? (
             shuffledPosts.map((post, index) => (
               <div key={index} className="mx-6 mt-6 p-10 mb-20 shadow-2xl">
@@ -188,8 +195,8 @@ function UserPosts() {
                   </h1>
                 </div>
                 <img className="mt-2 w-full" src={post.image} alt="" />
-                <h2 className="text-xl font-semibold mt-2">{post.title}</h2>
-                <p className="text-xl font-light mt-2">{post.description}</p>
+                <h2 className="text-xl font-semibold mt-2">{post.caption}</h2>
+                {/* <p className="text-xl font-light mt-2">{post.description}</p> */}
 
                 <div className="flex items-center justify-between mt-3 gap-5">
                   <div className="flex gap-4 items-center">
@@ -275,9 +282,12 @@ function UserPosts() {
                             </div>
                           </div>
                           <div className="mx-7 mt-6 h-96 overflow-auto myPosts">
-                            {comments.map((comment , index ) => {
+                            {comments.map((comment, index) => {
                               return (
-                                <div key={index} className="bg-gray-100 text-black p-5 mb-6">
+                                <div
+                                  key={index}
+                                  className="bg-gray-100 text-black p-5 mb-6"
+                                >
                                   <div className="flex gap-4 items-center">
                                     <img
                                       className="w-10 h-10 rounded-full"

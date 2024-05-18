@@ -141,7 +141,7 @@ function HomePage({ setSelectedNews }) {
         navigate("/profile");
         break;
       case "communities":
-        navigate("/communities");
+        navigate("/allcommunities");
         break;
       case "userPosts":
         navigate("/userPosts");

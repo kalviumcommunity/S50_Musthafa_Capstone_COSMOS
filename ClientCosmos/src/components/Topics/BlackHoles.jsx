@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import WHAM from "../Assets/WHAM.png";
 import BHAM from "../../Assets/BHAM.png";
-import blackhole from "../../Assets/blackhole.webp"
+import blackhole from "../../Assets/blackhole.webp";
 function BlackHoles({ setSelectedNews }) {
   const [showAnswerIndex, setShowAnswerIndex] = useState(-1);
 
@@ -35,7 +35,7 @@ function BlackHoles({ setSelectedNews }) {
     },
   ];
 
-  const Naviagtion = (e) => {
+  const discoverTOpics = (e) => {
     switch (e) {
       case "profile":
         navigate("/profile");
@@ -58,7 +58,7 @@ function BlackHoles({ setSelectedNews }) {
       case "NEBULAS":
         navigate("/nebulas");
         break;
-      case "BLACK HOLES":
+      case "BLACK HOLE":
         navigate("/blackholes");
         break;
       default:
@@ -172,7 +172,7 @@ function BlackHoles({ setSelectedNews }) {
             </div>
           </div>
           <div
-            onClick={() => Naviagtion("profile")}
+            onClick={() => discoverTOpics("profile")}
             className="flex items-center gap-3 justify-between cursor-pointer bg-gray-300 px-3 py-2 rounded-xl"
           >
             <div className="rounded">
@@ -191,20 +191,20 @@ function BlackHoles({ setSelectedNews }) {
             backgroundImage: `url(${blackhole})`,
           }}
         >
-        <h2 className="text-6xl mt-96 mb-14 ml-10 font-poppins text-white font-bold">
-          What is Black Hole ?
-        </h2>
+          <h2 className="text-6xl mt-96 mb-14 ml-10 font-poppins text-white font-bold">
+            What is Black Hole ?
+          </h2>
         </div>
         <div className="mx-auto px-4 pb-12">
           <div className="mb-10">
-            <p className="mt-7 text-xl text-white">
+            <p className="mt-7 text-white">
               Here's a video for Exploring the Enigmatic World of Black Holes: A
               Scientific Journey
             </p>
             <iframe
               className="mt-3"
-              width="800"
-              height="550"
+              width="650"
+              height="450"
               src="https://www.youtube.com/embed/kOEDG3j1bjs?si=sZG9O5PgntbaoiH1"
               title="YouTube video player"
               frameborder="0"
@@ -215,7 +215,7 @@ function BlackHoles({ setSelectedNews }) {
 
             <div className="flex mt-7 gap-8">
               <div className="mb-10">
-                <p className="text-xl text-white">
+                <p className="text-white">
                   A black hole is a region of spacetime where gravity is so
                   strong that nothing, including light and other electromagnetic
                   waves, is capable of possessing enough energy to escape it.
@@ -234,7 +234,7 @@ function BlackHoles({ setSelectedNews }) {
             <h2 className="text-4xl mb-5 font-semibold text-white">
               Einstein's theory of blackhole
             </h2>
-            <p className="text-xl  text-white">
+            <p className="text-xl font-light text-white">
               Einstein's theory of general relativity predicts that a
               sufficiently compact mass can deform spacetime to form a black
               hole. The boundary of no escape is called the event horizon. A
@@ -250,31 +250,111 @@ function BlackHoles({ setSelectedNews }) {
             </p>
           </div>
           <div>
+            <h2 className="text-4xl text-white font-poppins">
+              Essential Black hole Facts
+            </h2>
+            <ul className="text-white grid grid-cols-3 mt-10 text-center">
+              <li className="p-10">
+                <h2 className="text-2xl font-semibold">FARTHEST</h2>
+                <p className="mt-2">
+                  The nearest known black hole, called Gaia BH1, is about 1,500
+                  light-years away.
+                </p>
+              </li>
+              <li className="p-10">
+                <h2 className="text-2xl font-semibold">CLOSEST</h2>
+                <p className="mt-2">
+                  The most distant black hole detected, at the center of a
+                  galaxy called QSO J0313-1806, is around 13 billion light-years
+                  away.
+                </p>
+              </li>
+
+              <li className="p-10">
+                <h2 className="text-2xl font-semi-bold">BIGGEST</h2>
+                <p className="mt-2">
+                  The most massive black hole observed, TON 618, tips the scales
+                  at 66 billion times the Sun’s mass.
+                </p>
+              </li>
+              <li className="p-10">
+                <h2 className="text-2xl font-semi-bold">SMALLEST</h2>
+                <p className="mt-2">
+                  The lightest-known black hole is only 3.8 times the Sun’s
+                  mass. It’s paired up with a star.
+                </p>
+              </li>
+              <li className="p-10">
+                <h2 className="text-2xl font-semi-bold">SPAGHETTIFICATION</h2>
+                <p className="mt-2">
+                  A real term that describes what happens when matter gets too
+                  close to a black hole. It’s squeezed horizontally and
+                  stretched vertically, resembling a noodle.
+                </p>
+              </li>
+              <li className="p-10">
+                <h2 className="text-2xl font-semi-bold">SPIN</h2>
+                <p className="mt-2">
+                  All black holes spin. The fastest-known – named GRS 1915+105 –
+                  clocks in at over 1,000 rotations per second.
+                </p>
+              </li>
+              <li className="p-10">
+                <h2 className="text-2xl font-semi-bold">GRAVITY'S THE SAME</h2>
+                <p className="mt-2">
+                  If you replaced the Sun with a black hole of the same mass,
+                  the solar system would get a lot colder, but the planets would
+                  stay in their orbits.
+                </p>
+              </li>
+              <li className="p-10">
+                <h2 className="text-2xl font-semi-bold">STAR BOOMS</h2>
+                <p className="mt-2">
+                  One type of black hole is born when massive stars run out of
+                  fuel and explode in supernovae.
+                </p>
+              </li>
+              <li className="p-10">
+                <h2 className="text-2xl font-semi-bold">NOT SO RARE</h2>
+                <p className="mt-2">
+                  Most Milky Way-sized galaxies have monster black holes at
+                  their centers. Our is called Sagittarius A* (pronounced
+                  ey-star), and it’s 4 million times the Sun’s mass.
+                </p>
+              </li>
+            </ul>
+          </div>
+          <div>
             <h2 className="text-4xl text-white font-bold mt-10">
               Related Balck hole News
             </h2>
 
             <div>
-              <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-10 mt-10">
+              <div className="grid gap-10 mt-10">
                 {newsData.map((news, index) => (
                   <div
                     key={index}
                     onClick={() => selectedNews(news)}
-                    className="bg-white cursor-pointer overflow-auto duration-500"
+                    className="border-gray-700 border text-white cursor-pointer flex overflow-auto duration-500"
                   >
-                    <img className="w-full h-52" src={news.imageUrl} alt="" />
+                    <img className="w-72 h-64" src={news.imageUrl} alt="" />
                     <div className="my-3 mx-5">
-                      <h2 className="text-xl font-semibold line-clamp-2 font-poppins">
+                      <h2 className="text-3xl mt-3 font-semibold line-clamp-2 font-poppins">
                         {news.title}
                       </h2>
-                      <p className="line-clamp-3">{news.description}</p>
+                      <p className="line-clamp-4  font-light text-lg leading-8 mt-2">
+                        {news.description}
+                      </p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-          <h2 className="text-4xl mt-14 font-poppins text-white">People also ask:</h2>
+
+          <h2 className="text-4xl mt-14 font-poppins text-white">
+            People also ask:
+          </h2>
           <div className="">
             {data.map((item, index) => (
               <div
@@ -302,8 +382,7 @@ function BlackHoles({ setSelectedNews }) {
                 </div>
                 {showAnswerIndex === index && (
                   <div className=" bg-gray-900 w-full mt-5">
-                    <p className="text-white mb-3">ANSWER</p>
-                    <p className="text-white">{item.answer}</p>
+                    <p className="text-white font-light">{item.answer}</p>
                   </div>
                 )}
               </div>
@@ -317,7 +396,8 @@ function BlackHoles({ setSelectedNews }) {
             {discovermore.map((item, index) => (
               <div
                 key={index}
-                className="h-96 w-80 bg-black border-gray-700 border flex items-end bg-cover bg-no-repeat"
+                onClick={() => discoverTOpics(item.title)}
+                className="h-96 w-80 bg-black border-gray-700 border cursor-pointer flex items-end bg-cover bg-no-repeat"
                 style={{
                   backgroundImage: `url(${item.imageUrl})`,
                 }}

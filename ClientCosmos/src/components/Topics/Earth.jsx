@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Earth() {
+function Earth({setSelectedNews}) {
   return (
     <div>Earth</div>
   )

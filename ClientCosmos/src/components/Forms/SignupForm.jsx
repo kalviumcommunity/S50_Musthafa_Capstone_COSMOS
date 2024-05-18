@@ -32,15 +32,13 @@ function SignupForm() {
     try {
       const response = await axios.post("http://localhost:3000/users", data);
       setAlert(false);
-      const { token, user , userProfile } = response.data;
+      const { token } = response.data;
       Cookies.set("token", token);
-z
-
       navigate("/HomePage");
 
       setApiError(null);
     } catch (error) {
-      console.error("Error in post request", error.response.data.error);
+      console.error("Error in post request", error);
       setAlert(true);
       setApiError(error.response.data.error);
     }

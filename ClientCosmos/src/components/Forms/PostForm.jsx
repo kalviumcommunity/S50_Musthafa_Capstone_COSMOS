@@ -117,45 +117,21 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
             </h2>
 
             <div className="mt-5">
-              <label htmlFor="title" className="block text-sm mb-2 text-black">
-                Title
+              <label htmlFor="caption" className="block text-sm mb-2 text-black">
+                Caption
               </label>
               <input
                 type="text"
-                id="title"
-                name="title"
+                id="caption"
+                name="caption"
                 className="  py-3 px-4 block w-full border-gray-200 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none bg-white border "
-                {...register("title", {
-                  required: "Title is required",
+                {...register("caption", {
+                  required: "caption is required",
                 })}
               />
               <p className="text-red-500 text-xs">
-                {errors.title && (
-                  <span className="error-message">{errors.title.message}</span>
-                )}
-              </p>
-            </div>
-
-            <div className="mt-3">
-              <label
-                htmlFor="description"
-                className="block text-sm mb-2 text-black"
-              >
-                Description
-              </label>
-              <textarea
-                id="description"
-                name="description"
-                className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none bg-white border "
-                {...register("description", {
-                  required: "Description is required",
-                })}
-              />
-              <p className="text-red-500 text-xs">
-                {errors.description && (
-                  <span className="error-message">
-                    {errors.description.message}
-                  </span>
+                {errors.caption && (
+                  <span className="error-message">{errors.caption.message}</span>
                 )}
               </p>
             </div>
@@ -193,28 +169,6 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
               <p className="text-red-500 text-xs">
                 {errors.image && (
                   <span className="error-message">{errors.image.message}</span>
-                )}
-              </p>
-            </div>
-
-            <div className="py-3 mt-2 flex items-center text-xs text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:border-gray-200 before:me-6 after:flex-[1_1_0%] after:border-t after:border-gray-200 after:ms-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">
-              Or
-            </div>
-
-            <div className="mt-2">
-              <label htmlFor="video" className="block text-sm mb-2 text-black">
-                Video Link
-              </label>
-              <input
-                type="text"
-                id="videoLink"
-                name="video"
-                className="  py-3 px-4 block w-full border-gray-200 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none bg-white border "
-                {...register("video")}
-              />
-              <p className="text-red-500 text-xs">
-                {errors.video && (
-                  <span className="error-message">{errors.video.message}</span>
                 )}
               </p>
             </div>

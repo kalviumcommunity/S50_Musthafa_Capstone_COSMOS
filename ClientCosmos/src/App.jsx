@@ -10,7 +10,7 @@ import Profile from "./components/Profile";
 import News from "./components/News/News";
 import About from "./components/About";
 import PostForm from "./components/Forms/PostForm";
-import Community from "./components/Community/Community";
+import CommunityJoin from "./components/Community/chat , join and details/CommunityJoin";
 import SelectedNews from "./components/News/SelectedNews";
 import Earth from "./components/Topics/Earth";
 import SolarSystem from "./components/Topics/SolarSystem";
@@ -18,6 +18,11 @@ import BlackHoles from "./components/Topics/BlackHoles";
 import Nebulas from "./components/Topics/Nebulas";
 import Stars from "./components/Topics/Stars";
 import Galaxies from "./components/Topics/Galaxies";
+import Loading from "./components/Loading/Loading";
+import YourCommunity from "./components/Community/sections/YourCommunity";
+import AllCommunity from "./components/Community/sections/AllCommunity";
+import CommunityChat from "./components/Community/chat , join and details/CommunityChat";
+import CommunityDetails from "./components/Community/chat , join and details/CommunityDetails";
 
 function App() {
   const location = useLocation();
@@ -35,14 +40,17 @@ function App() {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/userPosts" element={<UserPosts />} />
-        <Route path="/communities" element={<Communties />} />
+        <Route path="/mycommunities" element={<YourCommunity />} />
+        <Route path="/allcommunities" element={<AllCommunity />} />
+        <Route path="/communitychat/:id" element={<CommunityChat />} />
+        <Route path="/communitydetails/:id" element={<CommunityDetails />} />
         <Route
           path="/news"
           element={<News setSelectedNews={setSelectedNews} />}
         />
         <Route path="/about" element={<About />} />
         <Route path="/Postform" element={<PostForm />} />
-        <Route path="/community" element={<Community />} />
+        <Route path="/communityjoin/:id" element={<CommunityJoin />} />
         <Route
           path="/selenews"
           element={
@@ -55,11 +63,12 @@ function App() {
           }
         />
         <Route path="/galaxies" element={<Galaxies setSelectedNews={setSelectedNews}/>} />
-        <Route path="/nebulas" element={<Nebulas />} />
-        <Route path="/stars" element={<Stars />} />
+        <Route path="/nebulas" element={<Nebulas setSelectedNews={setSelectedNews}/>} />
+        <Route path="/stars" element={<Stars setSelectedNews={setSelectedNews}/>} />
         <Route path="/blackholes" element={<BlackHoles setSelectedNews={setSelectedNews} />} />
-        <Route path="/solarsystem" element={<SolarSystem />} />
-        <Route path="/earth" element={<Earth />} />
+        <Route path="/solarsystem" element={<SolarSystem setSelectedNews={setSelectedNews}/>} />
+        <Route path="/earth" element={<Earth setSelectedNews={setSelectedNews}/>} />
+        <Route path="/loading" element={<Loading/>} />
       </Routes>
     </>
   );

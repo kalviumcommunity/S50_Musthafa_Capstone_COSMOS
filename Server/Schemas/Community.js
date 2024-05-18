@@ -2,20 +2,21 @@ const mongoose = require("mongoose");
 
 const CommunitySchema = new mongoose.Schema({
   name: {
-    type: String
+    type: String,
   },
   members: {
-    type: []
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Profile",
   },
-  communityprofile : {
-    type: String
+  communityprofile: {
+    type: String,
   },
-  creator : {
-    type : String
+  creator: {
+    type: String,
   },
-  description : {
-    type : String
-  }
+  description: {
+    type: String,
+  },
 });
 
 const community = mongoose.model("community", CommunitySchema);

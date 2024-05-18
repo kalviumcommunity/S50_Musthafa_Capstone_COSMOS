@@ -20,7 +20,6 @@ const generateToken = (data) => {
   return token;
 };
 
-
 const verifyToken = (req, res, next) => {
   const token =
     req.body.token || req.query.token || req.headers["x-access-token"];
@@ -65,7 +64,24 @@ router.get("/", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const userData = await Profilemodel.findById(userId);
 
+    if (!userData) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.json(userData);
+  } catch (error) {
+    console.error("An error occurred while getting the user data:", error);
+    res.status(500).json({
+      error: "Internal Server Error while getting the user data",
+      message: error.message, // Include MongoDB error message if available
+    });
+  }
+});
 
 // GET REQUEST ACCORDING ID
 router.post("/getone", async (req, res) => {
@@ -79,11 +95,14 @@ router.post("/getone", async (req, res) => {
     if (!isPasswordValid) {
       return res.status(401).json({ error: "Invalid password" });
     }
-    
-    const userProfile = await profile.findOne({ name: user.name, username: user.username });
+
+    const userProfile = await profile.findOne({
+      name: user.name,
+      username: user.username,
+    });
     const token = generateToken(userProfile);
     const responseData = {
-      token
+      token,
     };
 
     res.status(201).json(responseData);
@@ -93,9 +112,7 @@ router.post("/getone", async (req, res) => {
   }
 });
 
-
 // POST REQUEST with Joi Validation
-
 
 router.post("/", async (req, res) => {
   try {
@@ -108,7 +125,6 @@ router.post("/", async (req, res) => {
       const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
       const userData = { ...req.body, password: hashedPassword };
 
-      console.log(req.body)
       // Create user
       const user = await usermodel.create(userData);
 
@@ -117,13 +133,15 @@ router.post("/", async (req, res) => {
         name: req.body.name,
         username: req.body.username,
         email: req.body.email,
-        posts: []
+        posts: [],
+        bio: "",
+        communities: []
       };
       const userProfile = await Profilemodel.create(userProfileData);
 
       const token = generateToken(userProfile);
 
-      res.status(201).json({ user, userProfile, token });
+      res.status(201).json({ token });
     }
   } catch (err) {
     console.log(
@@ -170,43 +188,27 @@ router.put("/:id", async (req, res) => {
 
 // PATCH REQUEST with Joi Validation
 
-router.patch("/:id", async (req, res) => {
+router.patch("/editBio/:id", async (req, res) => {
   try {
-    const id = req.params.id;
-    console.log(id);
+    const userId = req.params.id;
+    const { bioText } = req.body;
 
-    const updateFields = {};
-    if (req.body.name) {
-      updateFields.name = req.body.name;
-    }
-    if (req.body.username) {
-      updateFields.username = req.body.username;
-    }
-    if (req.body.email) {
-      updateFields.email = req.body.email;
-    }
-    if (req.body.password) {
-      updateFields.password = req.body.password;
-    }
-    if (req.body.phone_number) {
-      updateFields.phone_number = req.body.phone_number;
+    console.log(userId);
+    console.log(bioText);
+    const updatedUser = await Profilemodel.findOneAndUpdate(
+      { _id: userId },
+      { bio: bioText },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
     }
 
-    const updatedData = await usermodel.findByIdAndUpdate(id, updateFields, {
-      new: true,
-    });
-    console.log("üpdated", updatedData);
-
-    if (!updatedData) {
-      return res.status(404).json({ error: "User not found" });
-    }
-
-    res.json(updatedData);
+    res.status(200).json(updatedUser);
   } catch (error) {
-    console.error("An error occurred while updating the user:", error);
-    res.status(500).json({
-      error: "Internal Server Error with the PATCH method of updating the user",
-    });
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
   }
 });
 

@@ -1,19 +1,16 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../Assets/COSMOS.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Pane, FileUploader, FileCard } from "evergreen-ui";
-import { imDB} from "../Firebase/firebase"
-import {v4} from "uuid"
+import { imDB } from "../Firebase/firebase";
+import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 function Communities() {
-  const [showAll, setShowAll] = useState(true);
-  const [community ,setCommunities] = useState([])
-  const [showOneCommunity, setShowOneCommunity] = useState(false);
-  const [userData , setUserData ] = useState([])
+  const [userData, setUserData] = useState([]);
   const { register, handleSubmit } = useForm();
   const [files, setFiles] = React.useState([]);
   const [fileRejections, setFileRejections] = React.useState([]);
@@ -26,28 +23,15 @@ function Communities() {
     setFiles([]);
     setFileRejections([]);
   }, []);
+
+  const navigate = useNavigate();
+
   const onClickAll = () => {
-    setShowAll(true);
-    setShowOneCommunity(false);
+    navigate("/allcommunities");
   };
 
   const onClickYours = () => {
-    setShowAll(false);
-    setShowOneCommunity(false);
-  };
-
-  const onClickCommunity = () => {
-    setShowOneCommunity(true);
-  };
-
-  const fetchCommunities = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/community/getAll");
-      console.log(response.data)
-      setCommunities(response.data);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    navigate("/mycommunities");
   };
 
   useEffect(() => {
@@ -73,40 +57,32 @@ function Communities() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (userData._id) {
-      fetchCommunities();
-    }
-  }, [userData]);
-
-
-  
-
   const onSubmit = async (data) => {
     try {
-  
       const id = userData._id;
 
       const imgS = ref(imDB, `images${v4()}`);
       const uploadData = await uploadBytes(imgS, files[0]);
       const imageUrl = await getDownloadURL(uploadData.ref);
-  
+
       const requestData = {
         ...data,
         creator: id,
-        communityprofile: imageUrl
+        communityprofile: imageUrl,
       };
-  
+
+      console.log(data);
+
       const response = await axios.post(
         "http://localhost:3000/community/create",
         requestData
       );
-      fetchCommunities();
-      console.log(response.data);
+      window.location.reload();
     } catch (error) {
       console.error("Error creating community:", error);
     }
   };
+
   return (
     <>
       <nav className="bg-black px-4 md:px-20 pt-14">
@@ -215,80 +191,19 @@ function Communities() {
         </div>
         <div className="flex justify-center gap-5 mt-4 md:mt-8">
           <button
-            onClick={onClickAll}
-            className={`text-xl duration-500 px-5 py-2 font-poppins border-b-4 border-transparent font-mediam text-white ${
-              showAll ? "border-b-4 border-white" : ""
-            } hover:border-white`}
+            onClick={() => onClickAll()}
+            className={`text-xl duration-500 px-5 py-2 font-poppins border-b-4 border-transparent font-medium text-white`}
           >
             ALL
           </button>
           <button
-            onClick={onClickYours}
-            className={`text-xl duration-500 px-5 py-2 font-poppins border-b-4 border-transparent font-mediam text-white ${
-              !showAll ? "border-b-4 border-white" : ""
-            } hover:border-white`}
+            onClick={() => onClickYours()}
+            className={`text-xl duration-500 px-5 py-2 font-poppins border-b-4 border-transparent font-medium text-white`}
           >
             YOURS
           </button>
         </div>
       </nav>
-      {showAll ? (
-        <div className="p-4 md:p-14">
-          <h2 className="text-4xl tracking-wide font-bold">
-            BROWSE BY THE TOPIC
-          </h2>
-          <div className="pt-4 md:pt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-10">
-            {community.map((community, index) => (
-              <Link
-                to="/community"
-                onClick={onClickCommunity}
-                className="card card-compact grid items-end rounded-sm bg-cover w-full bg-black text-white cursor-pointer duration-300 hover:shadow-2xl"
-                key={index}
-              >
-                <figure>
-                  <div className="w-full h-52">
-                    <img src={community.communityprofile} alt="DP" className="w-full" />
-                  </div>
-                </figure>
-                <div className="card-body">
-                  <h2 className="card-title text-xl">{community.name}</h2>
-                  <p className="line-clamp-2">
-                    {community.description}
-                  </p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      ) : (
-        <div className="p-4 md:p-14">
-          <h2 className="text-4xl tracking-wide font-bold">YOUR COMMUNITIES</h2>
-          <div className="pt-4 md:pt-10 grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-10">
-            <Link
-              to="/community"
-              onClick={onClickCommunity}
-              className="card card-compact grid items-end rounded-sm bg-cover w-full bg-black text-white cursor-pointer duration-300 hover:shadow-2xl"
-            >
-              <figure>
-                <div className="w-full h-52">
-                  <img
-                    src="https://images.pexels.com/photos/586056/pexels-photo-586056.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                    alt="DP"
-                    className="w-full"
-                  />
-                </div>
-              </figure>
-              <div className="card-body">
-                <h2 className="card-title text-xl">LOREM</h2>
-                <p className="line-clamp-2">
-                  Lorem ipsum dolor si lore dolores voluptate quam dignissimos?
-                  Quis, accusamus quas!
-                </p>
-              </div>
-            </Link>
-          </div>
-        </div>
-      )}
     </>
   );
 }
