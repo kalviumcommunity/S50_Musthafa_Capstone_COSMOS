@@ -5,7 +5,7 @@ const Profile = require("../Schemas/Profile");
 const multer = require("multer");
 const fs = require("fs");
 
-// MIDDLEWARES  
+// MIDDLEWARES
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -17,7 +17,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
 
 const authenticate = async (req, res, next) => {
   try {
@@ -72,15 +71,25 @@ router.get("/getmyposts/:id", async (req, res) => {
   try {
     const userId = req.params.id;
 
+    // Check if userId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
+    }
+
     const posts = await Post.find({ createdBy: userId });
+
+    // Check if posts were found
+    if (!posts || posts.length === 0) {
+      return res.status(404).json({ message: "No posts found for this user" });
+    }
+
     res.status(200).json(posts);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error fetching posts:", error);
   }
 });
 
-//* to get all of the comments of a particular post 
+//* to get all of the comments of a particular post
 router.get("/getcomments", (req, res) => {
   const postId = req.headers.postid;
 
@@ -97,7 +106,7 @@ router.get("/getcomments", (req, res) => {
     });
 });
 
-// POST REQUESTS 
+// POST REQUESTS
 router.post("/newpost", authenticate, upload.any(), async (req, res) => {
   try {
     const { caption, topic, image } = req.body;
@@ -142,9 +151,9 @@ router.post("/addcomment", async (req, res) => {
   }
 });
 
-// PUT REQUESTS 
+// PUT REQUESTS
 // to update a posts caption and topic
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   const postId = req.params.id;
   const { caption, topic } = req.body;
 
@@ -156,15 +165,14 @@ router.put('/:id', async (req, res) => {
     );
 
     if (!updatedPost) {
-      return res.status(404).send({ message: 'Post not found' });
+      return res.status(404).send({ message: "Post not found" });
     }
 
     res.send(updatedPost);
   } catch (error) {
-    res.status(500).send({ message: 'Error updating post', error });
+    res.status(500).send({ message: "Error updating post", error });
   }
 });
-
 
 // DELETE REQUESTS
 
