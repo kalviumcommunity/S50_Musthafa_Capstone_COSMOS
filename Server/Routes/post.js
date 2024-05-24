@@ -5,6 +5,19 @@ const Profile = require("../Schemas/Profile");
 const multer = require("multer");
 const fs = require("fs");
 
+// MIDDLEWARES
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + "-" + Date.now());
+  },
+});
+
+const upload = multer({ storage: storage });
+
 const authenticate = async (req, res, next) => {
   try {
     const profileHeader = req.headers["x-profile"];
@@ -40,6 +53,9 @@ const authenticate = async (req, res, next) => {
   }
 };
 
+// GET REQUESTS
+
+// *to get all of the posts
 router.get("/", async (req, res) => {
   try {
     const posts = await Post.find();
@@ -50,36 +66,47 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.post("/addcomment", async (req, res) => {
+// *to get all of the posts of a particular user to show in the profile
+router.get("/getmyposts/:id", async (req, res) => {
   try {
-    const { postid, name, comment, profilepic } = req.body;
-    const post = await Post.findById(postid);
+    const userId = req.params.id;
 
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
+    // Check if userId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid user ID format" });
     }
 
-    post.comments.push({ name, comment, profilepic });
-    await post.save();
+    const posts = await Post.find({ createdBy: userId });
 
-    res.status(200).json({ message: "Comment added successfully" });
+    // Check if posts were found
+    if (!posts || posts.length === 0) {
+      return res.status(404).json({ message: "No posts found for this user" });
+    }
+
+    res.status(200).json(posts);
   } catch (error) {
-    console.error("Error adding comment:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error("Error fetching posts:", error);
   }
 });
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.fieldname + "-" + Date.now());
-  },
+//* to get all of the comments of a particular post
+router.get("/getcomments", (req, res) => {
+  const postId = req.headers.postid;
+
+  Post.findById(postId)
+    .then((post) => {
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+      res.json(post.comments);
+    })
+    .catch((error) => {
+      console.error("Error fetching post:", error);
+      res.status(500).json({ error: "Internal server error" });
+    });
 });
 
-const upload = multer({ storage: storage });
-
+// POST REQUESTS
 router.post("/newpost", authenticate, upload.any(), async (req, res) => {
   try {
     const { caption, topic, image } = req.body;
@@ -105,34 +132,49 @@ router.post("/newpost", authenticate, upload.any(), async (req, res) => {
   }
 });
 
-router.get("/getmyposts/:id", async (req, res) => {
+router.post("/addcomment", async (req, res) => {
   try {
-    const userId = req.params.id;
+    const { postid, name, comment, profilepic } = req.body;
+    const post = await Post.findById(postid);
 
-    const posts = await Post.find({ createdBy: userId });
-    res.status(200).json(posts);
+    if (!post) {
+      return res.status(404).json({ error: "Post not found" });
+    }
+
+    post.comments.push({ name, comment, profilepic });
+    await post.save();
+
+    res.status(200).json({ message: "Comment added successfully" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Error adding comment:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
+// PUT REQUESTS
+// to update a posts caption and topic
+router.put("/:id", async (req, res) => {
+  const postId = req.params.id;
+  const { caption, topic } = req.body;
 
-router.get("/getcomments", (req, res) => {
-  const postId = req.headers.postid;
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      { caption, topic },
+      { new: true }
+    );
 
-  Post.findById(postId)
-    .then((post) => {
-      if (!post) {
-        return res.status(404).json({ error: "Post not found" });
-      }
-      res.json(post.comments);
-    })
-    .catch((error) => {
-      console.error("Error fetching post:", error);
-      res.status(500).json({ error: "Internal server error" });
-    });
+    if (!updatedPost) {
+      return res.status(404).send({ message: "Post not found" });
+    }
+
+    res.send(updatedPost);
+  } catch (error) {
+    res.status(500).send({ message: "Error updating post", error });
+  }
 });
+
+// DELETE REQUESTS
 
 router.delete("/:id", async (req, res) => {
   try {
