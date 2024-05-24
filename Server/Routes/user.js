@@ -12,6 +12,16 @@ app.use(express.json());
 require("dotenv").config();
 const secretKey = process.env.JWT_SECRET;
 
+
+// MIDDLE WARES 
+
+const PostuserSchema = Joi.object({
+  username: Joi.string().min(3).max(30).required(),
+  email: Joi.string().email().required(),
+  name: Joi.string().required(),
+  password: Joi.string().required(),
+});
+
 const generateToken = (data) => {
   const { _id, name, username, email } = data;
   const expiresIn = "7h";
@@ -26,7 +36,6 @@ const verifyToken = (req, res, next) => {
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
-
   try {
     const decoded = jwt.verify(token, secretKey);
     req.decoded = decoded;
@@ -40,14 +49,10 @@ router.post("/tokenvalidate", verifyToken, (req, res) => {
   res.status(200).json({ valid: true, user: req.decoded });
 });
 
-const PostuserSchema = Joi.object({
-  username: Joi.string().min(3).max(30).required(),
-  email: Joi.string().email().required(),
-  name: Joi.string().required(),
-  password: Joi.string().required(),
-});
 
-// GET REQUEST
+// GET REQUESTS
+
+// *to get all of the users
 router.get("/", async (req, res) => {
   try {
     const data = await usermodel.find();
@@ -64,6 +69,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// *to get a particular user
 router.get("/:id", async (req, res) => {
   try {
     const userId = req.params.id;
@@ -78,12 +84,15 @@ router.get("/:id", async (req, res) => {
     console.error("An error occurred while getting the user data:", error);
     res.status(500).json({
       error: "Internal Server Error while getting the user data",
-      message: error.message, // Include MongoDB error message if available
+      message: error.message,
     });
   }
 });
 
-// GET REQUEST ACCORDING ID
+
+// POST REQUESTS
+
+//* to login authentication
 router.post("/getone", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -111,8 +120,6 @@ router.post("/getone", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
-// POST REQUEST with Joi Validation
 
 router.post("/", async (req, res) => {
   try {
@@ -186,7 +193,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// PATCH REQUEST with Joi Validation
+// PATCH REQUEST 
 
 router.patch("/editBio/:id", async (req, res) => {
   try {

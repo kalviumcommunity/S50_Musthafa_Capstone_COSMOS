@@ -5,8 +5,11 @@ const app = express();
 app.use(express.json());
 require("dotenv").config();
 const multer = require("multer");
-const Profile = require("../Schemas/Profile")
+const Profile = require("../Schemas/Profile");
 
+// GET ROUTES
+
+// to get all of the communities
 router.get("/getAll", async (req, res) => {
   try {
     const communities = await communitymodel.find();
@@ -19,6 +22,7 @@ router.get("/getAll", async (req, res) => {
   }
 });
 
+// to get a particular community using id
 router.get("/:id", async (req, res) => {
   try {
     const communityID = req.params.id;
@@ -32,22 +36,21 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+//* to get the details of a community such as members, description, etc. 
 router.get("/details/:id", async (req, res) => {
   try {
     const communityID = req.params.id;
     const page = parseInt(req.query.page) || 1;
     const perPage = 10;
 
-    const community = await communitymodel
-      .findById(communityID)
-      .populate({
-        path: "members",
-        select: "name bio",
-        options: {
-          limit: perPage,
-          skip: (page - 1) * perPage,
-        },
-      });
+    const community = await communitymodel.findById(communityID).populate({
+      path: "members",
+      select: "name bio",
+      options: {
+        limit: perPage,
+        skip: (page - 1) * perPage,
+      },
+    });
 
     res.status(200).json(community);
   } catch (error) {
@@ -58,6 +61,7 @@ router.get("/details/:id", async (req, res) => {
   }
 });
 
+//* to get all the community which a particular user has included
 router.get("/mycommunities/:id", async (req, res) => {
   try {
     const userId = req.params.id;
@@ -68,10 +72,12 @@ router.get("/mycommunities/:id", async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const communityIds = user.communities; 
-    const communities = await communitymodel.find({ _id: { $in: communityIds } });
+    const communityIds = user.communities;
+    const communities = await communitymodel.find({
+      _id: { $in: communityIds },
+    });
 
-    res.status(200).json( communities );
+    res.status(200).json(communities);
   } catch (error) {
     console.error("An error occurred while fetching community data:", error);
     res.status(500).json({
@@ -79,6 +85,8 @@ router.get("/mycommunities/:id", async (req, res) => {
     });
   }
 });
+
+// POST RQUESTS
 
 router.post("/create", async (req, res) => {
   try {
@@ -101,7 +109,6 @@ router.post("/create", async (req, res) => {
     } else {
       res.status(500).json({ error: "Failed to create community" });
     }
-
   } catch (error) {
     console.error("Error creating community:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -109,18 +116,22 @@ router.post("/create", async (req, res) => {
 });
 
 router.post("/join", async (req, res) => {
-
   const { userId, communityid } = req.body;
 
   try {
-
-    const community =   await communitymodel.updateOne({ _id: communityid }, { $push: { members: userId } });
+    const community = await communitymodel.updateOne(
+      { _id: communityid },
+      { $push: { members: userId } }
+    );
 
     if (!community) {
       return res.status(404).json({ message: "Community not found" });
     }
 
-    await Profile.updateOne({ _id: userId }, { $push: { communities: communityid } });
+    await Profile.updateOne(
+      { _id: userId },
+      { $push: { communities: communityid } }
+    );
 
     res.status(200).json({ message: "User joined community successfully" });
   } catch (error) {
@@ -128,7 +139,6 @@ router.post("/join", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
 
 // DELETE ACCORDING ID
 router.delete("/:id", async (req, res) => {
