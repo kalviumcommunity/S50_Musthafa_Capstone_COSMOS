@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../Assets/COSMOS.png";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -8,17 +8,22 @@ import { Pane, FileUploader, FileCard } from "evergreen-ui";
 import { imDB } from "../Firebase/firebase";
 import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import AllCommunities from "./sections/AllCommunity";
+import YourCommunity from "./sections/YourCommunity";
 
 function Communities() {
   const [userData, setUserData] = useState([]);
   const { register, handleSubmit } = useForm();
-  const [files, setFiles] = React.useState([]);
-  const [fileRejections, setFileRejections] = React.useState([]);
+  const [files, setFiles] = useState([]);
+  const [fileRejections, setFileRejections] = useState([]);
+  const [activeButton, setActiveButton] = useState("ALL");
+
   const handleChange = React.useCallback((files) => setFiles([files[0]]), []);
   const handleRejected = React.useCallback(
     (fileRejections) => setFileRejections([fileRejections[0]]),
     []
   );
+
   const handleRemove = React.useCallback(() => {
     setFiles([]);
     setFileRejections([]);
@@ -27,11 +32,11 @@ function Communities() {
   const navigate = useNavigate();
 
   const onClickAll = () => {
-    navigate("/allcommunities");
+    setActiveButton("ALL");
   };
 
   const onClickYours = () => {
-    navigate("/mycommunities");
+    setActiveButton("YOURS");
   };
 
   useEffect(() => {
@@ -60,7 +65,6 @@ function Communities() {
   const onSubmit = async (data) => {
     try {
       const id = userData._id;
-
       const imgS = ref(imDB, `images${v4()}`);
       const uploadData = await uploadBytes(imgS, files[0]);
       const imageUrl = await getDownloadURL(uploadData.ref);
@@ -87,7 +91,14 @@ function Communities() {
     <>
       <nav className="bg-black px-4 md:px-20 pt-14">
         <div className="flex justify-between">
-          <img src={logo} className="h-12" alt="" />
+          <img
+            onClick={() => {
+              navigate("/HomePage");
+            }}
+            src={logo}
+            className="h-12 hover:cursor-pointer"
+            alt=""
+          />
           <button
             className="py-2 px-4 bg-white"
             onClick={() => document.getElementById("my_modal_1").showModal()}
@@ -191,19 +202,33 @@ function Communities() {
         </div>
         <div className="flex justify-center gap-5 mt-4 md:mt-8">
           <button
-            onClick={() => onClickAll()}
-            className={`text-xl duration-500 px-5 py-2 font-poppins border-b-4 border-transparent font-medium text-white`}
+            onClick={onClickAll}
+            className={`text-xl duration-500 px-5 py-2 font-poppins border-b-4 font-medium ${
+              activeButton == "ALL"
+                ? "bg-white text-black border-black"
+                : "text-white border-transparent"
+            }`}
           >
             ALL
           </button>
           <button
-            onClick={() => onClickYours()}
-            className={`text-xl duration-500 px-5 py-2 font-poppins border-b-4 border-transparent font-medium text-white`}
+            onClick={onClickYours}
+            className={`text-xl duration-500 px-5 py-2 font-poppins border-b-4 font-medium ${
+              activeButton == "YOURS"
+                ? "bg-white text-black border-black"
+                : "text-white border-transparent"
+            }`}
           >
             YOURS
           </button>
         </div>
       </nav>
+      <div>
+        <div>
+
+          {activeButton === "ALL" ? <AllCommunities /> : <YourCommunity />}
+        </div>
+      </div>
     </>
   );
 }

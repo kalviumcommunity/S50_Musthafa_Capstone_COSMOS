@@ -1,9 +1,10 @@
 import axios from "axios";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, useId } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { UserIcon } from "evergreen-ui";
 
 function CommunityDetails() {
   const { id } = useParams();
@@ -82,6 +83,39 @@ function CommunityDetails() {
     navigate(`/communitychat/${id}`);
   };
 
+  const ExitCommunity = () => {
+    const userID = userData._id;
+    console.log(userID);
+
+    swal({
+      title: "Are you sure?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willExit) => {
+      if (willExit) {
+        axios
+          .post(`http://localhost:3000/community/exit`, {
+            userId: userID,
+            communityId: id,
+          })
+          .then((res) => {
+            console.log(res.data);
+            navigate("/allcommunities");
+            swal("Poof! You've successfully exited!", {
+              icon: "success",
+            });
+          })
+          .catch((err) => {
+            console.log("Error while exiting the community", err);
+            swal("Error while exiting the community", {
+              icon: "error",
+            });
+          });
+      }
+    });
+  };
+
   return (
     <div className="bg-black text-white">
       <div className="relative h-72 mx-auto">
@@ -107,7 +141,7 @@ function CommunityDetails() {
           <h1 className=" text-2xl font-semibold">DESCRIPTION</h1>
           <p className="mt-2 text-lg">{communityData?.description}</p>
         </div>
-        
+
         <h2 className="text-2xl font-semibold mt-3 mb-4">Members</h2>
         <ul>
           {communityData &&
@@ -162,9 +196,7 @@ function CommunityDetails() {
           <button
             type="button"
             className="px-4 py-2 mr-4 text-sm font-semibold text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600"
-            onClick={() => {
-              console.log("Exiting community...");
-            }}
+            onClick={() => ExitCommunity()}
           >
             Exit Community
           </button>

@@ -83,7 +83,6 @@ function HomePage({ setSelectedNews }) {
     }, 1000);
 
     fetchData();
-
     return () => clearTimeout(timer);
   }, []);
 
@@ -121,18 +120,35 @@ function HomePage({ setSelectedNews }) {
   };
 
   const LogOut = async () => {
-    try {
-      const response = await axios.get("http://localhost:3000/auth/logout");
-      console.log(response.data);
-      if (response.status === 200) {
-        Cookies.remove("token");
-        window.location.reload();
-      } else {
-        console.error("Error while logging out:", response.data);
+    swal({
+      title: "Are you sure?",
+      text: "Any unsaved changes will be lost.",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willExit) => {
+      if (willExit) {
+        axios
+          .get("http://localhost:3000/auth/logout")
+          .then((res) => {
+            if (res.status === 200) {
+              Cookies.remove("token");
+              window.location.reload();
+              swal("Poof! You've successfully logged out!", {
+                icon: "success",
+              });
+            } else {
+              console.error("Error while logging out:", response.data);
+            }
+          })
+          .catch((err) => {
+            console.log("Error while loggin out", err);
+            swal("Error while logging out", {
+              icon: "error",
+            });
+          });
       }
-    } catch (err) {
-      console.error("Error while logging out", err);
-    }
+    });
   };
 
   const ProfileClick = (e) => {
@@ -141,7 +157,7 @@ function HomePage({ setSelectedNews }) {
         navigate("/profile");
         break;
       case "communities":
-        navigate("/allcommunities");
+        navigate("/communities");
         break;
       case "userPosts":
         navigate("/userPosts");
@@ -287,23 +303,18 @@ function HomePage({ setSelectedNews }) {
 
             <ul className="menu pt-10 p-7 w-80 min-h-full bg-white flex items-center text-base-content">
               <li className="w-full" onClick={() => ProfileClick("profile")}>
-                <div className="w-full text-black bg-white shadow-lg hover:bg-gray-100">
-                  <div className="w-full  rounded-md p-4 ">
-                    {/* Profile picture */}
-                    <img
-                      className="w-16 h-16 rounded-full mx-auto mb-2"
-                      src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
-                      alt="Profile"
-                    />
+                <div className="w-full  text-black flex gap-5  shadow-lg hover:bg-gray-300">
+                  {/* Profile picture */}
+                  <img
+                    className="w-16 h-16 rounded-lg mb-2"
+                    src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
+                    alt="Profile"
+                  />
 
-                    {/* Name */}
-                    <h2 className="text-center  font-semibold text-lg mb-2">
-                      {user.name}
-                    </h2>
-                  </div>
-                  <p className="text-sm line-clamp-4">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  </p>
+                  {/* Name */}
+                  <h2 className="text-center  font-semibold text-lg mb-2">
+                    {user.name}
+                  </h2>
                 </div>
               </li>
               <div className="mt-14 text-start text-black w-full">
