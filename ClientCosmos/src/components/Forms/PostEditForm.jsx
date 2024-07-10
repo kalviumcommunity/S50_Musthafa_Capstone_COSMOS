@@ -3,15 +3,14 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
+import React from "react";
 
-function PostEditForm({ EditPost, EditModal, setEditModalOpen, mypostFetch }) {
+function PostEditForm({ EditModal, setEditModalOpen, mypostFetch, post }) {
   const [iv, setisv] = useState(false);
   const [profile, setProfile] = useState([]);
-  const [caption, setCaption] = useState(EditPost.caption);
-  const [topic, setTopic] = useState(EditPost.topic);
 
   useEffect(() => {
-    if (EditModal) {
+    if (EditModal == true) {
       document.getElementById("my_modal_3").showModal();
       setisv(true);
     } else {
@@ -20,11 +19,9 @@ function PostEditForm({ EditPost, EditModal, setEditModalOpen, mypostFetch }) {
         setisv(false);
       }
     }
-  }, [EditModal, iv]);
+  }, [EditModal]);
 
   useEffect(() => {
-    setCaption(EditPost.caption);
-    setTopic(EditPost.topic);
     const fetchData = async () => {
       const token = Cookies.get("token");
       if (token) {
@@ -42,42 +39,45 @@ function PostEditForm({ EditPost, EditModal, setEditModalOpen, mypostFetch }) {
         console.log("Token is not there");
       }
     };
-
     fetchData();
-  }, [EditPost]);
+  }, []);
 
   const {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
   } = useForm();
 
-  const handleCaptionChange = (e) => {
-    setCaption((prevCaption) => e.target.value);
-  };
-
-  const handleTopicChange = (e) => {
-    setTopic((prevTopic) => e.target.value);
-  };
+  useEffect(() => {
+    if (post) {
+      setValue("caption", post.caption);
+      setValue("topic", post.topic);
+    }
+  }, [post, setValue]);
 
   const onSubmit = async (data) => {
     try {
-      const updatedPost = {
-        ...EditPost,
-        caption: data.caption,
-        topic: data.topic,
-      };
-
-      await axios.put(
-        `http://localhost:3000/posts/${EditPost._id}`,
-        updatedPost
-      );
       setEditModalOpen(false);
+      const response = await axios.put(
+        `http://localhost:3000/posts/${post._id}`,
+        data,
+        {
+          headers: {
+            "X-Profile": JSON.stringify(profile),
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response) {
+        console.log(response);
+        Swal.fire({
+          title: "You updated the post successfully",
+        });
+      }
       mypostFetch();
-      Swal.fire("Success", "Post updated successfully", "success");
     } catch (error) {
       console.log(error);
-      Swal.fire("Error", "Failed to update post", "error");
     }
   };
 
@@ -93,13 +93,13 @@ function PostEditForm({ EditPost, EditModal, setEditModalOpen, mypostFetch }) {
             <button
               type="button"
               className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-              onClick={closeModall}
+              onClick={() => closeModall()}
             >
               ✕
             </button>
 
             <h2 className="text-3xl tracking-widest font-bold">
-              EDIT YOUR POST
+              UPDATE YOUR POST
             </h2>
 
             <div className="mt-5">
@@ -113,11 +113,9 @@ function PostEditForm({ EditPost, EditModal, setEditModalOpen, mypostFetch }) {
                 type="text"
                 id="caption"
                 name="caption"
-                value={caption}
-                onChange={handleCaptionChange}
-                className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm bg-white border"
+                className="  py-3 px-4 block w-full border-gray-200 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none bg-white border "
                 {...register("caption", {
-                  required: "Caption is required",
+                  required: "caption is required",
                 })}
               />
               <p className="text-red-500 text-xs">
@@ -136,9 +134,8 @@ function PostEditForm({ EditPost, EditModal, setEditModalOpen, mypostFetch }) {
               <select
                 id="topic"
                 name="topic"
-                value={topic}
-                onChange={handleTopicChange}
-                className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm bg-white border"
+                className="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm disabled:opacity-50 disabled:pointer-events-none bg-white border "
+                required
                 {...register("topic")}
               >
                 <option value="home">EARTH</option>
@@ -146,14 +143,14 @@ function PostEditForm({ EditPost, EditModal, setEditModalOpen, mypostFetch }) {
                 <option value="star">STARS</option>
                 <option value="galaxies">GALAXIES</option>
                 <option value="supernova">SUPER NOVA</option>
-                <option value="nebula">NEBULAE</option>
+                <option value="nebula">NEBULAS</option>
                 <option value="blackHole">BLACK HOLE</option>
               </select>
             </div>
 
             <button
               type="submit"
-              className="w-full py-3 px-4 mt-8 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-black text-white hover:bg-gray-900 duration-300"
+              className="w-full py-3 px-4 mt-8 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-black text-white hover:bg-gray-900 duration-300 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
             >
               UPDATE POST
             </button>

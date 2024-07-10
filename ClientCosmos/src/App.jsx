@@ -4,9 +4,8 @@ import Landingpage from "./components/Landingpage";
 import HomePage from "./components/HomePage";
 import LoginForm from "./components/Forms/LoginForm";
 import SignupForm from "./components/Forms/SignupForm";
-import UserPosts from "./components/UserPosts";
-import Communties from "./components/Community/Communties";
-import Profile from "./components/Profile";
+import Posts from "./components/Posts/Posts";
+import Profile from "./components/Profile/Profile";
 import News from "./components/News/News";
 import About from "./components/About";
 import PostForm from "./components/Forms/PostForm";
@@ -19,12 +18,10 @@ import Nebulas from "./components/Topics/Nebulas";
 import Stars from "./components/Topics/Stars";
 import Galaxies from "./components/Topics/Galaxies";
 import Loading from "./components/Loading/Loading";
-import YourCommunity from "./components/Community/sections/YourCommunity";
-import AllCommunity from "./components/Community/sections/AllCommunity";
 import CommunityChat from "./components/Community/chat , join and details/CommunityChat";
-import CommunityDetails from "./components/Community/chat , join and details/CommunityDetails";
-import PostComments from "./components/PostComments";
+import PostComments from "./components/Comment/PostComments";
 import Communities from "./components/Community/Communties";
+import Settings from "./components/Settings/Settings";
 
 function App() {
   const location = useLocation();
@@ -41,10 +38,9 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/userPosts" element={<UserPosts />} />
+        <Route path="/userPosts" element={<Posts />} />
         <Route path="/communities" element={<Communities />} />
         <Route path="/communitychat/:id" element={<CommunityChat />} />
-        <Route path="/communitydetails/:id" element={<CommunityDetails />} />
         <Route path="/postComments" element={<PostComments />} />
         <Route
           path="/news"
@@ -89,6 +85,7 @@ function App() {
           element={<Earth setSelectedNews={setSelectedNews} />}
         />
         <Route path="/loading" element={<Loading />} />
+        <Route path="/settings" element={<Settings />} />
       </Routes>
     </>
   );

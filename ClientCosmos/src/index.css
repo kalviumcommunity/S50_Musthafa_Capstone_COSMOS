@@ -6,7 +6,7 @@
   font-family: "Poppins", sans-serif;
 }
 
-:root{
+:root {
   background-color: white;
   color: black;
 }
@@ -120,8 +120,6 @@
   animation-delay: var(--icon-anmt-duration);
 }
 
-
-
 @-webkit-keyframes bookmark {
   50% {
     -webkit-transform: scaleY(0.6);
@@ -216,8 +214,6 @@
   }
 }
 
-
-
 .container {
   --color: #a5a5b0;
   --size: 30px;
@@ -233,13 +229,13 @@
 
 .container .save-regular {
   position: absolute;
-  animation: keyframes-fill .5s;
+  animation: keyframes-fill 0.5s;
   transform-origin: top;
 }
 
 .container .save-solid {
   position: absolute;
-  animation: keyframes-fill .5s;
+  animation: keyframes-fill 0.5s;
   display: none;
   transform-origin: top;
 }
@@ -274,10 +270,7 @@
   }
 }
 
-
-
 /* SAVE  */
-
 
 .custom-container {
   --icon-size: 24px;
@@ -396,8 +389,7 @@
   }
 }
 
-
-.slide-in{
+.slide-in {
   position: fixed;
   top: 0;
   left: 0;
@@ -408,7 +400,7 @@
   color: white;
 }
 
-.slide-out{
+.slide-out {
   position: fixed;
   top: 0;
   left: 0;
@@ -418,8 +410,6 @@
   color: white;
   transform-origin: top;
 }
-
-
 
 /* LOADING  */
 
@@ -467,7 +457,6 @@
   }
 }
 
-
 /* POSTFORM */
 
 .modalBox::-webkit-scrollbar {
@@ -508,7 +497,8 @@
   margin-bottom: 6px;
 }
 
-.banter-loader__box:nth-child(1):before, .banter-loader__box:nth-child(4):before {
+.banter-loader__box:nth-child(1):before,
+.banter-loader__box:nth-child(4):before {
   margin-left: 26px;
 }
 
@@ -1037,4 +1027,28 @@
 }
 #sendButton svg path {
   transition: all 0.3s;
+}
+
+/* logout popup  */
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  z-index: 999;
+  pointer-events: none;
+}
+
+.logout-popup {
+  background-color: white;
+  width: 30%;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
 }

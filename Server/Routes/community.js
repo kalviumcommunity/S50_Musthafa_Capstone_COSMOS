@@ -49,7 +49,7 @@ router.get("/details/:id", async (req, res) => {
 
     const community = await communitymodel.findById(communityID).populate({
       path: "members",
-      select: "name bio",
+      select: "name bio profilePic",
       options: {
         limit: perPage,
         skip: (page - 1) * perPage,
@@ -81,7 +81,6 @@ router.get("/mycommunities/:id", async (req, res) => {
       _id: { $in: communityIds },
     });
 
-    console.log(communities)
     res.status(200).json(communities);
   } catch (error) {
     console.error("An error occurred while fetching community data:", error);

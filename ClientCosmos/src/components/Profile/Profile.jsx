@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Cookies from "js-cookie";
-import PostForm from "./Forms/PostForm";
+import PostForm from "../Forms/PostForm";
 import axios from "axios";
-import commenticon from "../Assets/commenticon.png";
-import swal from "sweetalert";
+import commenticon from "../../Assets/commenticon.png";
 import { ShimmerPostItem } from "react-shimmer-effects";
 import { useNavigate } from "react-router-dom";
-import PostEditForm from "./Forms/PostEditForm";
-import PostComments from "./PostComments";
-import { imDB } from "./Firebase/firebase";
+import PostEditForm from "../Forms/PostEditForm";
+import PostComments from "../Comment/PostComments";
+import { imDB } from "../Firebase/firebase";
 import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { MoonLoader } from "react-spinners";
 
 function Profile() {
   const [userData, setUserData] = useState("");
@@ -23,12 +23,15 @@ function Profile() {
   const [selectedPost, setSelectedPost] = useState(null);
   const [commentModal, setCommentModal] = useState(false);
   const [commentPostID, setcommentPostID] = useState("");
+  const [profilePicChanging, setprofilePicChanging] = useState(false);
+  const [deletePostId, setDeletePostId] = useState(null);
+  const [selectedComp, setselectedComp] = useState("POSTS");
 
   const navigate = useNavigate();
 
   const handleSaveClick = async () => {
     try {
-      const response = await axios.patch(
+      const response = await axios.put(
         `http://localhost:3000/users/editBio/${userData._id}`,
         { bioText }
       );
@@ -36,7 +39,7 @@ function Profile() {
         console.log(response.data);
         setBioText(response.data.bio);
         setEditMode(false);
-        window.relaod;
+        window.location.reload();
       } else {
         console.log("Response is not there");
       }
@@ -55,7 +58,9 @@ function Profile() {
 
   const getUserdata = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3000/users/${id}`);
+      const response = await axios.get(
+        `http://localhost:3000/users/getAsingleUser/${id}`
+      );
       setBioText(response.data.bio);
       setUserData(response.data);
     } catch (err) {
@@ -124,30 +129,18 @@ function Profile() {
       console.error("Error fetching profile data:", error);
     }
   };
-  
-  const DeleteMyPost = (postId) => {
-    swal({
-      title: "Are you sure?",
-      text: "Once deleted, you will not be able to recover this post!",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        axios
-          .delete(`http://localhost:3000/posts/${postId}`)
-          .then((res) => {
-            console.log(res.data);
-            mypostFetch();
-          })
-          .catch((err) => {
-            console.log("Error while deleting the Post", err);
-          });
-        swal("Poof! Your post has been deleted!", {
-          icon: "success",
-        });
-      }
-    });
+
+  const DeleteMyPost = async () => {
+    await axios
+      .delete(`http://localhost:3000/posts/${deletePostId}`)
+      .then((res) => {
+        console.log(res.data);
+        setDeletePostPopUp(false);
+        mypostFetch();
+      })
+      .catch((err) => {
+        console.log("Error while deleting the Post", err);
+      });
   };
 
   const navigateBack = () => {
@@ -159,15 +152,14 @@ function Profile() {
     setCommentModal(!commentModal);
   };
 
-  const [image, setImage] = useState(
-    "https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
-  );
-
   const handleFileChange = async (event) => {
+    setprofilePicChanging(true);
     const file = event.target.files[0];
-    const imgS = ref(storage, `images/${uuidv4()}`);
+    const imgS = ref(imDB, `images${v4()}`);
     const uploadData = await uploadBytes(imgS, file);
     const imageUrl = await getDownloadURL(uploadData.ref);
+
+    console.log(imageUrl);
 
     if (imageUrl) {
       try {
@@ -176,14 +168,104 @@ function Profile() {
           { imageUrl }
         );
         console.log(response.data);
+        setprofilePicChanging(false);
+        window.location.reload();
       } catch (err) {
         console.log("Error while updating the profile picture", err);
       }
     }
   };
 
+  const handleCheckboxChange = async (event, postId) => {
+    const action = event.target.checked ? "liked" : "unliked";
+    console.log(`Post ID: ${postId}, Action: ${action}`);
+    const userId = userData._id;
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/posts/like/${postId}`,
+        {
+          userId: userId,
+          action: action,
+        }
+      );
+      console.log("Post updated:", response.data);
+
+      // Update the local state immediately
+      const updatedPosts = myPosts.map((post) => {
+        if (post._id === postId) {
+          if (action === "liked") {
+            return {
+              ...post,
+              likes: [...post.likes, userId],
+            };
+          } else {
+            return {
+              ...post,
+              likes: post.likes.filter((id) => id !== userId),
+            };
+          }
+        }
+        return post;
+      });
+      setMyPosts(updatedPosts);
+    } catch (error) {
+      console.error(
+        "Error updating post:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const [DeletePostPopUp, setDeletePostPopUp] = useState(false);
+
+  useEffect(() => {
+    if (DeletePostPopUp) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [DeletePostPopUp]);
+
+  const handleLogout = (e) => {
+    setDeletePostId(e);
+    setDeletePostPopUp(true);
+  };
+
+  const handleCancel = () => {
+    setDeletePostId(null);
+    setDeletePostPopUp(false);
+  };
+
   return (
     <>
+      {DeletePostPopUp && (
+        <div>
+          <div className="overlay"></div>
+          <div className="border logout-popup p-5 rounded flex flex-col justify-around text-center">
+            <h2 className="text-xl mb-5 font-poppins">
+              Are you sure you want to delete this post ?
+            </h2>
+            <div className="flex justify-evenly">
+              <button
+                className="py-3 px-5 rounded bg-black text-white font-semibold tracking-wider "
+                onClick={() => DeleteMyPost()}
+              >
+                Delete
+              </button>
+              <button
+                className="py-3 px-5 border rounded text-black font-semibold tracking-wider hover:bg-gray-50"
+                onClick={handleCancel}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="w-full h-screen flex flex-col lg:flex-row">
         <div className="lg:w-3/4 w-full lg:block grid justify-center  px-10">
           <div className="flex items-center gap-3">
@@ -211,7 +293,7 @@ function Profile() {
             </h2>
           </div>
           <div className="grid justify-center text-center">
-            <div>
+            <div className="grid justify-center">
               <input
                 type="file"
                 id="file-input"
@@ -219,22 +301,32 @@ function Profile() {
                 onChange={handleFileChange}
               />
               <label htmlFor="file-input">
-                <div
-                  className="w-52 h-52 bg-cover hover:cursor-pointer hover:grayscale rounded-full"
-                  style={{
-                    backgroundImage: `url(${image})`,
-                  }}
-                ></div>
+                {profilePicChanging ? (
+                  <div className="w-52 h-52 border items-center grid justify-center rounded-full">
+                    <MoonLoader
+                      color="#000000"
+                      size={50}
+                      speedMultiplier={0.6}
+                    />
+                  </div>
+                ) : (
+                  <div
+                    className="w-52 h-52 bg-cover hover:cursor-pointer hover:grayscale rounded-full"
+                    style={{
+                      backgroundImage: `url(${userData.profilePic})`,
+                      backgroundPosition: "center",
+                    }}
+                  ></div>
+                )}
               </label>
             </div>
             <h2 className="text-3xl  font font-bold tracking-widest my-3">
-              {userData.username}
+              {userData.name}
             </h2>
           </div>
           <div className="lg:overflow-auto myPosts lg:h-72">
             <div className="my-5">
               <h2 className="text-lg tracking-wider">NAME</h2>
-
               <input
                 type="text"
                 className="w-full font-light border mt-2 p-3 outline-none bg-white rounded-md"
@@ -258,20 +350,44 @@ function Profile() {
             </div>
           </div>
         </div>
-        <div className="w-full lg:mt-0 myPosts mt-10 lg:overflow-auto bg-gray-200 px-10">
-          <div className="z-50 w-full flex justify-between items-center px-5">
-            <h2 className="text-4xl font-bold tracking-widest my-8">
-              YOUR POSTS
-            </h2>
+        <div className="w-full lg:mt-0 myPosts mt-10  bg-gray-200 px-10">
+          <div className="z-50 w-full flex py-6 justify-between items-center px-5">
+            <div className="flex gap-2 items-center">
+              {/* <h2
+                className="text-4xl font-bold bg-yellow-300 p-2 tracking-widest cursor-pointer"
+                onClick={() => {
+                  setselectedComp("POSTS");
+                }}
+              >
+                YOUR POSTS
+              </h2>
+              {/*
+              <h2
+                className="text-4xl font-bold bg-yellow-300 p-2 tracking-widest cursor-pointer"
+                onClick={() => {
+                  setselectedComp("BLOGS");
+                }}
+              >
+                YOUR BLOGS
+              </h2> */}
+               <h2
+                className="text-4xl font-bold tracking-widest cursor-pointer"
+                onClick={() => {
+                  setselectedComp("POSTS");
+                }}
+              >
+                YOUR POSTS
+              </h2>
+            </div>
             <button
               onClick={openModal}
-              className="text-lg tracking-wider border bg-white shadow-lg px-5 py-2 h-fit"
+              className="py-2 px-4 text-lg  text-white font-semibold rounded-sm bg-black tracking-wider duration-500"
             >
               Create Post
             </button>
           </div>
 
-          <div className="overflow-auto myPosts">
+          <div className="overflow-auto h-[85vh] myPosts">
             {myPosts.length === 0 && !Loading ? (
               <div className="text-center text-3xl font-bold font-poppins mt-40 mb-40 lg:mb-0 lg:mt-64 text-gray-700">
                 You Hav'nt posted yet
@@ -302,7 +418,7 @@ function Profile() {
                   >
                     <div className="flex pt-7 justify-between">
                       <h1 className="font-bold font-poppins tracking-wider text-2xl">
-                        {post.username}
+                        {post.name}
                       </h1>
 
                       <div className="dropdown dropdown-end">
@@ -327,7 +443,7 @@ function Profile() {
                           <li>
                             <a
                               className="rounded-sm tracking-wider"
-                              onClick={() => DeleteMyPost(post._id)}
+                              onClick={() => handleLogout(post._id)}
                             >
                               DELETE
                             </a>
@@ -342,27 +458,36 @@ function Profile() {
                     </h2>
 
                     <div className="flex items-center justify-between mt-3 gap-5">
-                      <div className="flex gap-4 items-center">
-                        <label className="ui-bookmark">
-                          <input type="checkbox" />
-                          <div className="bookmark z-0">
-                            <svg
-                              viewBox="0 0 16 16"
-                              style={{ marginTop: "4px" }}
-                              className="bi bi-heart-fill mt-10"
-                              height="25"
-                              width="25"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                                fillRule="evenodd"
-                              ></path>
-                            </svg>
-                          </div>
-                        </label>
+                      <div className="flex gap-4">
+                        <div>
+                          <label className="ui-bookmark">
+                            <input
+                              type="checkbox"
+                              onChange={(event) =>
+                                handleCheckboxChange(event, post._id)
+                              }
+                              checked={post.likes.includes(userData._id)}
+                            />
+                            <div className="bookmark z-0">
+                              <svg
+                                viewBox="0 0 16 16"
+                                style={{ marginTop: "4px" }}
+                                className="bi bi-heart-fill mt-10"
+                                height="25"
+                                width="25"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                  fillRule="evenodd"
+                                ></path>
+                              </svg>
+                            </div>
+                          </label>
+                          <h2 className="text-center">{post.likes.length}</h2>
+                        </div>
 
-                        <div className="drawer drawer-end w-fit ">
+                        <div className="drawer mt-1 cursor-pointer drawer-end w-fit">
                           <input
                             id="my-drawer-4"
                             type="checkbox"
