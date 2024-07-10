@@ -71,29 +71,23 @@ router.get("/getmyposts/:id", async (req, res) => {
   try {
     const userId = req.params.id;
 
-    // Check if userId is a valid ObjectId
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid user ID format" });
-    }
-
     const posts = await Post.find({ createdBy: userId });
 
-    // Check if posts were found
-    if (!posts || posts.length === 0) {
-      return res.status(404).json({ message: "No posts found for this user" });
+    if (posts.length == 0) {
+      return res.status(200).json([]);
     }
-
     res.status(200).json(posts);
   } catch (error) {
     console.error("Error fetching posts:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-//* to get all of the comments of a particular post
-router.get("/getcomments", (req, res) => {
-  const postId = req.headers.postid;
 
-  Post.findById(postId)
+//* to get all of the comments of a particular post
+router.get("/getAllComments/:id", (req, res) => {
+  const  post_id = req.params.id;
+  Post.findById(post_id)
     .then((post) => {
       if (!post) {
         return res.status(404).json({ error: "Post not found" });

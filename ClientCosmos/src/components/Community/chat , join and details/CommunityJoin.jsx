@@ -47,7 +47,7 @@ function Community() {
   }, []);
 
   const goBack = () => {
-    navigate("/allcommunities");
+    navigate("/communities");
   };
 
   const JoiningtoCommunity = async () => {

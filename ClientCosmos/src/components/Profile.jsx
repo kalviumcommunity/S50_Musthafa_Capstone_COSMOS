@@ -5,16 +5,26 @@ import axios from "axios";
 import commenticon from "../Assets/commenticon.png";
 import swal from "sweetalert";
 import { ShimmerPostItem } from "react-shimmer-effects";
+import { useNavigate } from "react-router-dom";
+import PostEditForm from "./Forms/PostEditForm";
+import PostComments from "./PostComments";
+import { imDB } from "./Firebase/firebase";
+import { v4 } from "uuid";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 function Profile() {
   const [userData, setUserData] = useState("");
   const [myPosts, setMyPosts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
-  const [comments, setComments] = useState([]);
-  const [yourComment, setYourComment] = useState([]);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [Loading, setLoading] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [bioText, setBioText] = useState("");
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [commentModal, setCommentModal] = useState(false);
+  const [commentPostID, setcommentPostID] = useState("");
+
+  const navigate = useNavigate();
 
   const handleSaveClick = async () => {
     try {
@@ -24,7 +34,7 @@ function Profile() {
       );
       if (response) {
         console.log(response.data);
-        setBioText(response.data.bio)
+        setBioText(response.data.bio);
         setEditMode(false);
         window.relaod;
       } else {
@@ -46,7 +56,7 @@ function Profile() {
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(`http://localhost:3000/users/${id}`);
-      setBioText(response.data.bio)
+      setBioText(response.data.bio);
       setUserData(response.data);
     } catch (err) {
       console.log("Error while getting the profile data", err);
@@ -88,26 +98,36 @@ function Profile() {
     setModalOpen(true);
   };
 
-  const closeModal = () => {
-    setModalOpen(false);
+  const openEditModal = (post) => {
+    setSelectedPost(post);
+    setEditModalOpen(true);
   };
 
-  const mypostFetch = () => {
+  const mypostFetch = async () => {
     const id = userData._id;
-    axios
-      .get(`http://localhost:3000/posts/getmyposts/${id}`)
-      .then((response) => {
+    if (!id) {
+      console.error("User ID is undefined or null.");
+      return;
+    }
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/posts/getmyposts/${id}`
+      );
+      if (response.status === 200) {
         setMyPosts(response.data);
         setLoading(false);
-      })
-      .catch((error) => {
-        console.error("Error fetching profile data:", error);
-      });
+      } else {
+        setLoading(false);
+        console.log(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching profile data:", error);
+    }
   };
-
-  const DeleteMyPost = (e) => {
+  
+  const DeleteMyPost = (postId) => {
     swal({
-      title: "Are you sure ?",
+      title: "Are you sure?",
       text: "Once deleted, you will not be able to recover this post!",
       icon: "warning",
       buttons: true,
@@ -115,7 +135,7 @@ function Profile() {
     }).then((willDelete) => {
       if (willDelete) {
         axios
-          .delete(`http://localhost:3000/posts/${e}`)
+          .delete(`http://localhost:3000/posts/${postId}`)
           .then((res) => {
             console.log(res.data);
             mypostFetch();
@@ -129,52 +149,84 @@ function Profile() {
       }
     });
   };
-  const takeComment = (e) => {
-    setYourComment(e.target.value);
+
+  const navigateBack = () => {
+    navigate("/HomePage");
   };
 
-  const profilepic =
-    "https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220";
-  const AddComment = (e) => {
-    console.log(e);
-    const com = {
-      postid: e,
-      comment: yourComment,
-      name: userData.username,
-      profilepic: profilepic,
-    };
-
-    axios
-      .post("http://localhost:3000/posts/addcomment", com)
-      .then((response) => {
-        console.log("Comment added successfully:", response.data);
-        window.relaod;
-      })
-      .catch((error) => {
-        console.error("Error adding comment:", error);
-      });
-
-    setYourComment("");
+  const toggleCommentModal = (post) => {
+    setcommentPostID(post);
+    setCommentModal(!commentModal);
   };
 
-  const commentsClick = (e) => {
-    setComments(e.comments);
+  const [image, setImage] = useState(
+    "https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
+  );
+
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    const imgS = ref(storage, `images/${uuidv4()}`);
+    const uploadData = await uploadBytes(imgS, file);
+    const imageUrl = await getDownloadURL(uploadData.ref);
+
+    if (imageUrl) {
+      try {
+        const response = await axios.patch(
+          `http://localhost:3000/users/updateProfilePic/${userData._id}`,
+          { imageUrl }
+        );
+        console.log(response.data);
+      } catch (err) {
+        console.log("Error while updating the profile picture", err);
+      }
+    }
   };
 
   return (
     <>
       <div className="w-full h-screen flex flex-col lg:flex-row">
         <div className="lg:w-3/4 w-full lg:block grid justify-center  px-10">
-          <h2 className="text-4xl  font font-bold tracking-widest my-8">
-            PROFILE
-          </h2>
-          <div className="w-full mt-8 flex flex-col items-center">
-            <div
-              className="w-52 h-52 bg-cover rounded-full"
-              style={{
-                backgroundImage: `url(https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220)`,
-              }}
-            ></div>
+          <div className="flex items-center gap-3">
+            <span
+              className="mr-2 hover:cursor-pointer"
+              onClick={() => navigateBack()}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-10 h-10 transform rotate-180"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+                ></path>
+              </svg>
+            </span>
+            <h2 className="text-4xl  font font-bold tracking-widest my-8">
+              PROFILE
+            </h2>
+          </div>
+          <div className="grid justify-center text-center">
+            <div>
+              <input
+                type="file"
+                id="file-input"
+                style={{ display: "none" }}
+                onChange={handleFileChange}
+              />
+              <label htmlFor="file-input">
+                <div
+                  className="w-52 h-52 bg-cover hover:cursor-pointer hover:grayscale rounded-full"
+                  style={{
+                    backgroundImage: `url(${image})`,
+                  }}
+                ></div>
+              </label>
+            </div>
             <h2 className="text-3xl  font font-bold tracking-widest my-3">
               {userData.username}
             </h2>
@@ -228,11 +280,12 @@ function Profile() {
               <div className="">
                 {[...Array(3)].map((_, index) => (
                   <ShimmerPostItem
+                    key={index}
                     card
                     title
                     cta
                     imageType="thumbnail"
-                    imageWidth={700}
+                    imageWidth={685}
                     imageHeight={300}
                     contentCenter
                   />
@@ -264,7 +317,12 @@ function Profile() {
                           className="dropdown-content z-[1] menu p-2 bg-white shadow-lg rounded-sm w-52"
                         >
                           <li>
-                            <a className="rounded-sm tracking-wider">EDIT</a>
+                            <a
+                              className="rounded-sm tracking-wider"
+                              onClick={() => openEditModal(post)}
+                            >
+                              EDIT
+                            </a>
                           </li>
                           <li>
                             <a
@@ -279,7 +337,9 @@ function Profile() {
                     </div>
 
                     <img className="mt-2 w-full" src={post.image} alt="" />
-                    <h2 className="text-xl font-semibold mt-2">{post.caption}</h2>
+                    <h2 className="text-xl font-semibold mt-2">
+                      {post.caption}
+                    </h2>
 
                     <div className="flex items-center justify-between mt-3 gap-5">
                       <div className="flex gap-4 items-center">
@@ -309,85 +369,10 @@ function Profile() {
                             className="drawer-toggle"
                           />
                           <div
-                            onClick={() => commentsClick(post)}
+                            onClick={() => toggleCommentModal(post._id)}
                             className="drawer-content z-30 w-fit"
                           >
-                            <label
-                              htmlFor="my-drawer-4"
-                              className="cursor-pointer"
-                            >
-                              <img src={commenticon} className="w-6" alt="" />
-                            </label>
-                          </div>
-                          <div className="drawer-side z-50">
-                            <label
-                              htmlFor="my-drawer-4"
-                              aria-label="close sidebar"
-                              className="drawer-overlay"
-                            ></label>
-                            <ul className="menu p-4 w-2/4 min-h-full bg-black text-base-content">
-                              <h2 className="text-3xl text-white tracking-wider font-bold p-10">
-                                COMMENTS
-                              </h2>
-
-                              <div className="flex bg-white rounded-lg outline-none text-black mx-10 px-3 py-3 justify-between">
-                                <input
-                                  required
-                                  placeholder="Comment here..."
-                                  value={yourComment}
-                                  onChange={takeComment}
-                                  type="text"
-                                  id="messageInput"
-                                  className="w-full bg-transparent outline-none  pl-4"
-                                />
-                                <button
-                                  id="sendButton"
-                                  className="flex items-center justify-center"
-                                  onClick={() => AddComment(post._id)}
-                                >
-                                  <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="none"
-                                    viewBox="0 0 664 663"
-                                    className="h-6"
-                                  >
-                                    <path
-                                      fill="none"
-                                      d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
-                                    ></path>
-                                    <path
-                                      strokeLinejoin="round"
-                                      strokeLinecap="round"
-                                      strokeWidth="33.67"
-                                      stroke="#6c6c6c"
-                                      d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
-                                    ></path>
-                                  </svg>
-                                </button>
-                              </div>
-                              <div className="mx-7 mt-6 h-96 overflow-auto myPosts">
-                                {comments.map((comment) => {
-                                  return (
-                                    <div className="bg-gray-100 text-black p-5 mb-6">
-                                      <div className="flex gap-4 items-center">
-                                        <img
-                                          className="w-10 h-10 rounded-full"
-                                          src={comment.profilepic}
-                                          alt=""
-                                        />
-                                        <h2 className="text-xl font-semibold">
-                                          {comment.name}
-                                        </h2>
-                                      </div>
-
-                                      <h2 className="mt-3">
-                                        {comment.comment}
-                                      </h2>
-                                    </div>
-                                  );
-                                })}
-                              </div>
-                            </ul>
+                            <img src={commenticon} className="w-6" alt="" />
                           </div>
                         </div>
                       </div>
@@ -408,11 +393,28 @@ function Profile() {
             )}
           </div>
         </div>
-        <PostForm
-          Modal={modalOpen}
-          setModalOpen={setModalOpen}
-          mypostFetch={mypostFetch}
+        <PostComments
+          post_id={commentPostID}
+          userData={userData}
+          commentModal={commentModal}
+          toggleCommentModal={toggleCommentModal}
         />
+
+        {modalOpen && !editModalOpen && (
+          <PostForm
+            Modal={modalOpen}
+            setModalOpen={setModalOpen}
+            mypostFetch={mypostFetch}
+          />
+        )}
+        {editModalOpen && !modalOpen && (
+          <PostEditForm
+            EditModal={editModalOpen}
+            setEditModalOpen={setEditModalOpen}
+            mypostFetch={mypostFetch}
+            post={selectedPost}
+          />
+        )}
       </div>
     </>
   );

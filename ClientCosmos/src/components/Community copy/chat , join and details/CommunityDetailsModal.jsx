@@ -1,13 +1,19 @@
-import axios from "axios";
-import React, { useState, useEffect, useRef, useCallback, useId } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import axios from "axios";
+import swal from "sweetalert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import { UserIcon } from "evergreen-ui";
 
-function CommunityDetails() {
-  const { id } = useParams();
+function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
+  useEffect(() => {
+    if (isOpen) {
+      document.getElementById("modal").showModal();
+    } else {
+      document.getElementById("modal").close();
+    }
+  }, [isOpen]);
 
   const [communityData, setCommunityData] = useState(null);
   const [userData, setUserData] = useState(null);
@@ -33,9 +39,10 @@ function CommunityDetails() {
   );
 
   const fetchCommunityData = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/community/details/${id}?page=${page}`
+        `http://localhost:3000/community/details/${communityID}?page=${page}`
       );
       setCommunityData((prevData) => {
         if (prevData) {
@@ -80,12 +87,11 @@ function CommunityDetails() {
   }, [page]);
 
   const goBack = () => {
-    navigate(`/communitychat/${id}`);
+    navigate(`/communities`);
   };
 
   const ExitCommunity = () => {
     const userID = userData._id;
-    console.log(userID);
 
     swal({
       title: "Are you sure?",
@@ -97,11 +103,11 @@ function CommunityDetails() {
         axios
           .post(`http://localhost:3000/community/exit`, {
             userId: userID,
-            communityId: id,
+            communityId: communityID,
           })
           .then((res) => {
             console.log(res.data);
-            navigate("/allcommunities");
+            navigate("/communities");
             swal("Poof! You've successfully exited!", {
               icon: "success",
             });
@@ -117,86 +123,65 @@ function CommunityDetails() {
   };
 
   return (
-    <div className="bg-black text-white">
-      <div className="relative h-72 mx-auto">
-        <div
-          className="absolute inset-0 bg-black bg-opacity-50"
-          style={{
-            backgroundImage: `url(${
-              communityData?.communityprofile ||
-              "https://via.placeholder.com/150"
-            })`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-          }}
-        ></div>
-        <div className="relative z-10 flex h-full items-end py-8">
-          <h1 className="text-5xl ml-4 font-semibold text-white">
-            {communityData?.name}
-          </h1>
-        </div>
-      </div>
-      <div className="px-10 py-5">
-        <div className="">
-          <h1 className=" text-2xl font-semibold">DESCRIPTION</h1>
-          <p className="mt-2 text-lg">{communityData?.description}</p>
-        </div>
-
-        <h2 className="text-2xl font-semibold mt-3 mb-4">Members</h2>
-        <ul>
-          {communityData &&
-            communityData.members.map((member, index) => {
-              if (communityData.members.length === index + 1) {
+    <dialog id="modal" className="modal">
+      <div className="modal-box bg-white modalBox">
+        <button
+          type="button"
+          className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+          onClick={closeModal}
+        >
+          ✕
+        </button>
+        {communityData ? (
+          <>
+            <div className="grid justify-center">
+              <div className="flex justify-center">
+                <img
+                  className="rounded-full w-44 h-44"
+                  src={communityData.communityprofile}
+                  alt=""
+                />
+              </div>
+              <h2 className="text-3xl mt-2 font-semibold text-center">
+                {communityData.name}
+              </h2>
+              <h2 className="text-xl mt-2 font-semibold text-center">
+                {communityData.description}
+              </h2>
+            </div>
+            <h2 className="pl-5 pt-2 text-lg">Members</h2>
+            <ul className=" overflow-auto h-64">
+              {communityData.members.map((member, index) => {
                 return (
                   <li
                     ref={lastMemberRef}
                     key={index}
-                    className="mb-2 hover:border p-5 duration-100 cursor-pointer w-96"
+                    className="p-5 duration-100 cursor-pointer w-96"
                   >
                     <div className="flex items-center">
                       <img
                         className="w-11 h-11 rounded-full mr-4"
-                        src="https://via.placeholder.com/100"
+                        src={member.profilePic}
                         alt=""
                       />
                       <div>
-                        <span className="text-base">{member.name}</span>
-                        <p className="text-gray-100 line-clamp-1">
-                          {member.bio}
-                        </p>
+                        <span className="">{member.name}</span>
+                        <p className="line-clamp-1">{member.bio}</p>
                       </div>
                     </div>
                   </li>
                 );
-              } else {
-                return (
-                  <li
-                    key={index}
-                    className="mb-2 hover:border p-5 duration-100 cursor-pointer w-96"
-                  >
-                    <div className="flex items-center">
-                      <img
-                        className="w-11 h-11 rounded-full mr-4"
-                        src="https://via.placeholder.com/100"
-                        alt=""
-                      />
-                      <div>
-                        <span className="text-base">{member.name}</span>
-                        <p className="text-gray-100 line-clamp-1">
-                          {member.bio}
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                );
-              }
-            })}
-        </ul>
-        <div className="mt-10 mb-20">
+              })}
+            </ul>
+          </>
+        ) : (
+          <p>Loading community data...</p>
+        )}
+        <div className="mt-5">
           <button
             type="button"
             className="px-4 py-2 mr-4 text-sm font-semibold text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600"
-            onClick={() => ExitCommunity()}
+            onClick={ExitCommunity}
           >
             Exit Community
           </button>
@@ -207,13 +192,13 @@ function CommunityDetails() {
               console.log("Reporting community...");
             }}
           >
-            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />{" "}
+            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
             Report
           </button>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }
 
-export default CommunityDetails;
+export default CommunityDetailsModal;

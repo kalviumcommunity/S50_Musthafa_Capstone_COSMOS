@@ -23,6 +23,8 @@ import YourCommunity from "./components/Community/sections/YourCommunity";
 import AllCommunity from "./components/Community/sections/AllCommunity";
 import CommunityChat from "./components/Community/chat , join and details/CommunityChat";
 import CommunityDetails from "./components/Community/chat , join and details/CommunityDetails";
+import PostComments from "./components/PostComments";
+import Communities from "./components/Community/Communties";
 
 function App() {
   const location = useLocation();
@@ -40,10 +42,10 @@ function App() {
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/userPosts" element={<UserPosts />} />
-        <Route path="/mycommunities" element={<YourCommunity />} />
-        <Route path="/allcommunities" element={<AllCommunity />} />
+        <Route path="/communities" element={<Communities />} />
         <Route path="/communitychat/:id" element={<CommunityChat />} />
         <Route path="/communitydetails/:id" element={<CommunityDetails />} />
+        <Route path="/postComments" element={<PostComments />} />
         <Route
           path="/news"
           element={<News setSelectedNews={setSelectedNews} />}
@@ -62,13 +64,31 @@ function App() {
             )
           }
         />
-        <Route path="/galaxies" element={<Galaxies setSelectedNews={setSelectedNews}/>} />
-        <Route path="/nebulas" element={<Nebulas setSelectedNews={setSelectedNews}/>} />
-        <Route path="/stars" element={<Stars setSelectedNews={setSelectedNews}/>} />
-        <Route path="/blackholes" element={<BlackHoles setSelectedNews={setSelectedNews} />} />
-        <Route path="/solarsystem" element={<SolarSystem setSelectedNews={setSelectedNews}/>} />
-        <Route path="/earth" element={<Earth setSelectedNews={setSelectedNews}/>} />
-        <Route path="/loading" element={<Loading/>} />
+        <Route
+          path="/galaxies"
+          element={<Galaxies setSelectedNews={setSelectedNews} />}
+        />
+        <Route
+          path="/nebulas"
+          element={<Nebulas setSelectedNews={setSelectedNews} />}
+        />
+        <Route
+          path="/stars"
+          element={<Stars setSelectedNews={setSelectedNews} />}
+        />
+        <Route
+          path="/blackholes"
+          element={<BlackHoles setSelectedNews={setSelectedNews} />}
+        />
+        <Route
+          path="/solarsystem"
+          element={<SolarSystem setSelectedNews={setSelectedNews} />}
+        />
+        <Route
+          path="/earth"
+          element={<Earth setSelectedNews={setSelectedNews} />}
+        />
+        <Route path="/loading" element={<Loading />} />
       </Routes>
     </>
   );
