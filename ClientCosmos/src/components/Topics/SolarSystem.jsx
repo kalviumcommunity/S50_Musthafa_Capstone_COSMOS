@@ -1,11 +1,54 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BHAM from "../../Assets/BHAM.png";
+import Cookies from "js-cookie";
+import axios from "axios";
 
 function SolarSystem({ setSelectedNews }) {
   const [showAnswerIndex, setShowAnswerIndex] = useState(-1);
-
   const navigate = useNavigate();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  const [userData, setUserData] = useState(null);
+
+  const getUserdata = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/users/getAsingleUser/${id}`
+      );
+      setUserData(response.data);
+    } catch (err) {
+      console.log("Error while getting the profile data", err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      if (token) {
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/users/tokenvalidate",
+            { token }
+          );
+          const { user, valid } = response.data;
+          if (user) {
+            getUserdata(user._id);
+          }
+        } catch (error) {
+          Cookies.remove("token");
+          console.error("Error in post request", error);
+        }
+      } else {
+        console.log("Token is not there");
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const ProfileClick = (index) => {
     setShowAnswerIndex(showAnswerIndex === index ? -1 : index);
@@ -138,10 +181,10 @@ function SolarSystem({ setSelectedNews }) {
         navigate("/profile");
         break;
       case "HOME":
-        navigate("/earth");
+        navigate("/HomePage");
         break;
-      case "SOLAR SYSTEM":
-        navigate("/solarsystem");
+      case "EARTH":
+        navigate("/earth");
         break;
       case "STARS":
         navigate("/stars");
@@ -167,49 +210,49 @@ function SolarSystem({ setSelectedNews }) {
     <>
       <div className="py-10 px-10 bg-black">
         <nav className="flex px-10 items-center bg-gray-200 justify-between py-3 ">
-          <img src={BHAM} className="w-10 cursor-pointer" alt="" />
-          <div className="w-full">
-            <div className="flex bg-slate-100 w-2/4 ml-20 rounded-lg shadow-sm">
-              <input
-                type="text"
-                id="hs-trailing-button-add-on-with-icon"
-                name="hs-trailing-  button-add-on-with-icon"
-                placeholder="Search here"
-                className="py-3 px-4 block w-full shadow-lg rounded-s-lg text-sm focus:z-10 disabled:opacity-50 bg-white disabled:pointer-events-none dark:bg-white outline-none"
-              />
-              <button
-                type="button"
-                className="w-[2.875rem] h-[2.875rem] flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-black text-white hover:bg-gray-800 duration-500 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-              >
-                <svg
-                  className="flex-shrink-0 size-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
-              </button>
-            </div>
-          </div>
-          <div
-            onClick={() => Naviagtion("profile")}
-            className="flex items-center gap-3 justify-between cursor-pointer bg-gray-300 px-3 py-2 rounded-xl"
-          >
+          <ul className="flex gap-10 text-lg ml-6">
+            <li
+              onClick={() => discoverTopics("HOME")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              HOME
+            </li>
+            <li
+              onClick={() => discoverTopics("EARTH")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              EARTH
+            </li>
+            <li
+              onClick={() => discoverTopics("STARS")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              STARS
+            </li>
+            <li
+              onClick={() => discoverTopics("GALAXIES")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              GALAXIES
+            </li>
+            <li
+              onClick={() => discoverTopics("NEBULAS")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              NEBULAE
+            </li>
+            <li
+              onClick={() => discoverTopics("BLACK HOLE")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              BLACK HOLE
+            </li>
+          </ul>
+          <div className="flex items-center gap-3 justify-between cursor-pointer bg-gray-300 px-3 py-2 rounded-xl">
             <div onClick={() => discoverTopics("profile")} className="rounded">
-              <img
-                className="rounded-lg h-8"
-                src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
-              />
+              <img className="rounded-lg h-8" src={userData?.profilePic} />
             </div>
-            <div className="font-poppins text-sm">Musthafaaa</div>
+            <div className="font-poppins text-sm">{userData?.name}</div>
           </div>
         </nav>
 
@@ -453,7 +496,7 @@ function SolarSystem({ setSelectedNews }) {
                     <h2 className="text-3xl mt-3 font-semibold line-clamp-2 font-poppins">
                       {news.title}
                     </h2>
-                    <p className="line-clamp-4 text-lg leading-8 mt-2">
+                    <p className="line-clamp-4 font-light text-lg leading-8 mt-2">
                       {news.description}
                     </p>
                   </div>

@@ -10,51 +10,26 @@ function HomePage({ setSelectedNews }) {
   const navigate = useNavigate();
   const [valid, setValid] = useState("");
   const [user, setUser] = useState([]);
+  const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const newsData = [
-    {
-      imageUrl:
-        "https://cdn.mos.cms.futurecdn.net/jXP7m9jGGM2XPS74BHoJq3-1200-80.jpg.webp",
-      title:
-        "The James Webb Space Telescope is digging deep into the mysteries of gas planets",
-      description:
-        "Some of the senior researchers thought that it would never be possible to do this, but with some more rigorous tests for a few months, we confirmed that we have done it",
-      datePosted: "13/03/2024",
-    },
-    {
-      imageUrl:
-        "https://cdn.mos.cms.futurecdn.net/UsyVTcvivR63vNJx7NVf6D-970-80.jpg.webp",
-      title: `SpaceX's Starship will go interstellar someday, Elon Musk says`,
-      description: `A future iteration of Starship, which conducted its third-ever test flight last week, will go interstellar, according to SpaceX founder and CEO Elon Musk.
-          "This Starship is designed to traverse our entire solar system and beyond to the cloud of objects surrounding us. A future Starship, much larger and more advanced, will travel to other star systems," Musk said via X early Monday morning (March 18).`,
-      datePosted: "10/01/2024",
-    },
-
-    {
-      imageUrl:
-        "https://cdn.mos.cms.futurecdn.net/WgwHfgLumAtmUDDt98cU3J-650-80.jpg",
-      title:
-        "SpaceX launches 22 Starlink satellites from California in dusky evening liftoff ",
-      description: `A Falcon 9 rocket carrying 22 Starlink spacecraft lifted off tonight from California's Vandenberg Space Force Base at 10:28 p.m. EDT (7:28 p.m. local California time; 0228 GMT on March 19).
-                The Falcon 9's first stage came back to Earth about 8.5 minutes after liftoff as planned. It landed vertically on the droneship "Of Course I Still Love You," which was stationed in the Pacific Ocean.`,
-      datePosted: "13/03/2024",
-    },
-    {
-      imageUrl:
-        "https://cdn.mos.cms.futurecdn.net/vjqUkRzRofzvfL5HxE8rdB-650-80.jpg.webp",
-      title:
-        "Thomas Stafford, NASA astronaut who led Apollo-Soyuz joint mission, dies at 93",
-      description: `Former NASA astronaut Thomas Stafford, who flew to the moon before leading the first international space mission carried out by the United States and Russia, has died at the age of 93.
-          Stafford's death on Monday (March 18) came after an extended illness, according to Max Ary, director of the Stafford Air and Space Museum in Oklahoma.
-          `,
-      datePosted: "02/02/2024",
-    },
-  ];
+  const [apod, setAPOD] = useState([]);
+  const [newsData, setNewsData] = useState([]);
+  const [isLogoutPopupOpen, setLogoutPopupOpen] = useState(false);
 
   const selectedNews = (e) => {
     setSelectedNews(e);
     navigate("/selenews");
+  };
+
+  const getUserdata = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/users/getAsingleUser/${id}`
+      );
+      setUserData(response.data);
+    } catch (err) {
+      console.log("Error while getting the profile data", err);
+    }
   };
 
   useEffect(() => {
@@ -68,6 +43,9 @@ function HomePage({ setSelectedNews }) {
           );
           const { user, valid } = response.data;
           setUser(user);
+          if (user) {
+            getUserdata(user._id);
+          }
           setValid(valid);
         } catch (error) {
           Cookies.remove("token");
@@ -78,10 +56,32 @@ function HomePage({ setSelectedNews }) {
       }
     };
 
+    const fetchAstronomicPictureOfTheDay = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/news/apod");
+        setAPOD(response.data);
+      } catch (err) {
+        console.log("Error while fetching APOD", err);
+      }
+    };
+
+    const fetchNewsData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/news/getrandomnews"
+        );
+        setNewsData(response.data);
+      } catch (err) {
+        console.log("Error while fetching the news data", err);
+      }
+    };
+
     const timer = setTimeout(() => {
       setLoading(false);
     }, 1000);
 
+    fetchAstronomicPictureOfTheDay();
+    fetchNewsData();
     fetchData();
     return () => clearTimeout(timer);
   }, []);
@@ -108,7 +108,7 @@ function HomePage({ setSelectedNews }) {
       case "GALAXIES":
         navigate("/galaxies");
         break;
-      case "NEBULAS":
+      case "NEBULAE":
         navigate("/nebulas");
         break;
       case "BLACK HOLES":
@@ -120,35 +120,21 @@ function HomePage({ setSelectedNews }) {
   };
 
   const LogOut = async () => {
-    swal({
-      title: "Are you sure?",
-      text: "Any unsaved changes will be lost.",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willExit) => {
-      if (willExit) {
-        axios
-          .get("http://localhost:3000/auth/logout")
-          .then((res) => {
-            if (res.status === 200) {
-              Cookies.remove("token");
-              window.location.reload();
-              swal("Poof! You've successfully logged out!", {
-                icon: "success",
-              });
-            } else {
-              console.error("Error while logging out:", response.data);
-            }
-          })
-          .catch((err) => {
-            console.log("Error while loggin out", err);
-            swal("Error while logging out", {
-              icon: "error",
-            });
-          });
-      }
-    });
+    await axios
+      .get("http://localhost:3000/auth/logout")
+      .then((res) => {
+        setLogoutPopupOpen(false);
+        if (res.status === 200) {
+          Cookies.remove("token");
+          Cookies.remove("passwordisthere");
+          window.location.reload();
+        } else {
+          console.error("Error while logging out:", response.data);
+        }
+      })
+      .catch((err) => {
+        console.log("Error while loggin out", err);
+      });
   };
 
   const ProfileClick = (e) => {
@@ -165,6 +151,9 @@ function HomePage({ setSelectedNews }) {
       case "news":
         navigate("/news");
         break;
+      case "settings":
+        navigate("/settings");
+        break;
       case "logout":
         LogOut();
         break;
@@ -172,6 +161,17 @@ function HomePage({ setSelectedNews }) {
         break;
     }
   };
+
+  useEffect(() => {
+    if (isLogoutPopupOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isLogoutPopupOpen]);
 
   const topics = [
     {
@@ -184,8 +184,7 @@ function HomePage({ setSelectedNews }) {
     },
     {
       name: "STARS",
-      imageUrl:
-        "https://images.pexels.com/photos/816608/pexels-photo-816608.jpeg?auto=compress&cs=tinysrgb&w=600",
+      imageUrl: "https://cdn.mos.cms.futurecdn.net/xKkFJqojdSd8vJuvCLs5mU.jpg",
     },
     {
       name: "GALAXIES",
@@ -193,7 +192,7 @@ function HomePage({ setSelectedNews }) {
         "https://images.pexels.com/photos/2150/sky-space-dark-galaxy.jpg?auto=compress&cs=tinysrgb&w=600",
     },
     {
-      name: "NEBULAS",
+      name: "NEBULAE",
       imageUrl:
         "https://media.istockphoto.com/id/1351809486/photo/abstract-deep-space-nebula-background.jpg?b=1&s=612x612&w=0&k=20&c=v3xgQPFBKo6d_EO9Qqb5jGb7k7vPCkba6NsZEPZdwZQ=",
     },
@@ -216,8 +215,40 @@ function HomePage({ setSelectedNews }) {
     );
   }
 
+  const handleLogout = () => {
+    setLogoutPopupOpen(true);
+  };
+
+  const handleCancel = () => {
+    setLogoutPopupOpen(false);
+  };
+
   return (
     <>
+      {isLogoutPopupOpen && (
+        <div>
+          <div className="overlay"></div>
+          <div className="border logout-popup p-5 rounded flex flex-col justify-around text-center">
+            <h2 className="text-xl mb-5 font-poppins">
+              Are you sure you want to logout ?
+            </h2>
+            <div className="flex justify-evenly">
+              <button
+                className="py-3 px-5 rounded bg-black text-white font-bold "
+                onClick={() => LogOut()}
+              >
+                Yes
+              </button>
+              <button
+                className="py-3 px-5 border rounded text-black font-bold hover:bg-gray-50"
+                onClick={handleCancel}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="bg-black  py-10 px-10">
         <nav className="flex px-10 items-center justify-between py-3 bg-gray-100">
           <div className="w-full">
@@ -259,11 +290,11 @@ function HomePage({ setSelectedNews }) {
               >
                 <div className="rounded">
                   <img
-                    className="rounded-lg h-8"
-                    src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
+                    className="rounded-lg w-12 h-8"
+                    src={userData.profilePic}
                   />
                 </div>
-                <div className="font-poppins text-sm">{user.name}</div>
+                <div className="font-poppins text-sm">{userData.name}</div>
               </div>
             ) : (
               <>
@@ -307,7 +338,7 @@ function HomePage({ setSelectedNews }) {
                   {/* Profile picture */}
                   <img
                     className="w-16 h-16 rounded-lg mb-2"
-                    src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
+                    src={userData.profilePic}
                     alt="Profile"
                   />
 
@@ -376,7 +407,12 @@ function HomePage({ setSelectedNews }) {
                   COMMUNITIES
                 </button>
               </li>
-              <li className="w-full" onClick={() => ProfileClick("logout")}>
+              <li className="w-full" onClick={() => ProfileClick("settings")}>
+                <button className=" text-black font-poppins mt-4 py-3 border shadow-md rounded-sm">
+                  SETTINGS
+                </button>
+              </li>
+              <li className="w-full" onClick={() => handleLogout()}>
                 <button className=" text-black font-poppins mt-4 py-3 border shadow-md rounded-sm">
                   LOGOUT
                 </button>
@@ -384,6 +420,44 @@ function HomePage({ setSelectedNews }) {
             </ul>
           </div>
         </div>
+
+        {/* Astronimc picture of the day */}
+        {apod.length != 0 ? (
+          <div>
+            <h1 className="text-3xl mt-7 text-white font-bold font-poppins">
+              ASTRONOMIC PICTURE OF THE DAY
+            </h1>
+            <div className="flex justify-center">
+              <div className="w-3/4">
+                <h2 className="text-2xl mt-2 text-white font-semi-bold">
+                  {apod.title}
+                </h2>
+                {apod.media_type === "image" ? (
+                  <img className="mt-5" src={apod.hdurl} alt={apod.title} />
+                ) : (
+                  <iframe
+                    className="mt-5 h-lvh w-full"
+                    src={apod.url}
+                    title={apod.title}
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                )}
+                <div className="mt-2 flex justify-between">
+                  <p className="font-light text-white">Credits : NASA</p>
+                  <p className="font-light text-white">Date : {apod.date}</p>
+                </div>
+              </div>
+            </div>
+            <p className="font-light mt-6 text-white">
+              <strong>Explanation :</strong> {apod.explanation}
+            </p>
+          </div>
+        ) : (
+          <div></div>
+        )}
+
+        {/* latest news */}
         <div className="mt-10">
           <h2 className="text-3xl mt-7 text-white font-bold font-poppins">
             LATEST NEWS
@@ -395,7 +469,7 @@ function HomePage({ setSelectedNews }) {
                 onClick={() => selectedNews(news)}
                 className="bg-white cursor-pointer overflow-auto  hover:rounded-md duration-500"
               >
-                <img className="" src={news.imageUrl} alt="" />
+                <img className="w-full h-52" src={news.imageUrl} alt="" />
                 <div className="my-3 mx-5">
                   <h2 className="text-xl font-semibold line-clamp-2 font-poppins">
                     {news.title}
@@ -407,6 +481,7 @@ function HomePage({ setSelectedNews }) {
           </div>
         </div>
 
+        {/* topics  */}
         <div className="mt-20">
           <h2 className="text-3xl mt-7 text-white font-bold font-poppins">
             EXPLORE TOPICS
@@ -417,7 +492,10 @@ function HomePage({ setSelectedNews }) {
                 key={index}
                 onClick={() => NavigateTopics(topic.name)}
                 className="h-36 shadow-sm cursor-pointer rounded-sm text-2xl font-bold bg-cover text-white pl-2 pt-24 transition duration-300 transform hover:scale-110"
-                style={{ backgroundImage: `url(${topic.imageUrl})` }}
+                style={{
+                  backgroundImage: `url(${topic.imageUrl})`,
+                  backgroundPosition: "center",
+                }}
               >
                 {topic.name}
               </div>
@@ -425,6 +503,8 @@ function HomePage({ setSelectedNews }) {
           </div>
         </div>
       </div>
+
+      {/* footer about */}
       <footer className="bg-black pt-20 text-white py-8">
         <div className="container mx-auto">
           <div className="flex flex-wrap justify-between items-center">

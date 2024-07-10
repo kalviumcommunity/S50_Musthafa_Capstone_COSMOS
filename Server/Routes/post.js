@@ -6,7 +6,6 @@ const multer = require("multer");
 const fs = require("fs");
 
 // MIDDLEWARES
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/");
@@ -17,7 +16,6 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-
 const authenticate = async (req, res, next) => {
   try {
     const profileHeader = req.headers["x-profile"];
@@ -44,7 +42,7 @@ const authenticate = async (req, res, next) => {
     }
 
     req.userProfileId = profile._id;
-    req.username = profile.username;
+    req.name = profile.name;
 
     next();
   } catch (error) {
@@ -105,15 +103,17 @@ router.post("/newpost", authenticate, upload.any(), async (req, res) => {
   try {
     const { caption, topic, image } = req.body;
     const createdBy = req.userProfileId;
-    const username = req.username;
     const comments = [];
+    const name = req.name
+    const likes = []
     const post = new Post({
-      username,
+      name,
       caption,
       image,
       topic,
       createdBy,
       comments,
+      likes
     });
 
     await Profile.updateOne({ _id: createdBy }, { $push: { posts: post._id } });
@@ -125,6 +125,49 @@ router.post("/newpost", authenticate, upload.any(), async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
+//*get all my saved posts
+router.get('/getmysavedPosts/:id', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const profile = await Profile.findById(id);
+    if (!profile) {
+      return res.status(404).json({ message: 'Profile not found' });
+    }
+
+    const savedPostIds = profile.saved_posts;
+
+    const savedPosts = await Post.find({ _id: { $in: savedPostIds } });
+    res.status(200).json(savedPosts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ADD Like 
+router.post('/like/:id', async (req, res) => {
+  const { id } = req.params;
+  const { userId, action } = req.body;
+
+  try {
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    if (action === 'liked') {
+      await Post.updateOne({ _id: id }, { $push: { likes: userId } });
+    } else {
+      await Post.updateOne({ _id: id }, { $pull: { likes: userId } });
+    }
+
+    const updatedPost = await Post.findById(id);
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 router.post("/addcomment", async (req, res) => {
   try {
@@ -168,8 +211,9 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE REQUESTS
 
+
+// DELETE REQUESTS
 router.delete("/:id", async (req, res) => {
   try {
     const id = req.params.id;

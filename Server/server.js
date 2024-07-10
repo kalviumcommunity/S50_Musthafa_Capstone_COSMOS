@@ -12,6 +12,7 @@ const postrouter = require("./Routes/post");
 const authrouter = require("./GoogleAuth/auth");
 const communityrouter = require("./Routes/community");
 const chatrouter = require("./Routes/chat");
+const newsrouter = require("./Routes/news");
 
 const port = 3000;
 const app = express();
@@ -37,6 +38,7 @@ app.use(passport.session());
 app.use(
   cors({
     origin: "http://localhost:5173",
+    // origin:"https://cosmos-weld.vercel.app",
     credentials: true,
   })
 );
@@ -49,6 +51,7 @@ app.use("/posts", postrouter);
 app.use("/auth", authrouter);
 app.use("/community", communityrouter);
 app.use("/chat", chatrouter);
+app.use("/news", newsrouter);
 
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

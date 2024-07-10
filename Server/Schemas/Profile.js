@@ -2,27 +2,34 @@ const mongoose = require("mongoose");
 
 const profileSchema = new mongoose.Schema({
   name: {
-    type: String
-  },
-  username: {
-    type: String
+    type: String,
   },
   email: {
-    type: String
+    type: String,
   },
   posts: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'Post'
+    ref: "Post",
   },
-  communities : {
+  communities: {
     type: [mongoose.Schema.Types.ObjectId],
-    ref: 'community'
+    ref: "community",
   },
-  bio:{
-    type : String
+  saved_posts : {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Post",
+  },
+  bio: {
+    type: String,
+  },
+  profilePic: {
+    type: String,
+  },
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
   }
 });
 
 const profile = mongoose.model("Profile", profileSchema);
-
 module.exports = profile;

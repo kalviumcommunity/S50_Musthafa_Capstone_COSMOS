@@ -1,7 +1,16 @@
 const mongoose = require("mongoose");
 
+const commentSchema = new mongoose.Schema({
+  name: String,
+  comment: String,
+  profilepic: {
+    type: String,
+    ref: "Profile"
+  }
+});
+
 const postSchema = new mongoose.Schema({
-  username: {
+  name: {
     type: String,
   },
   caption: {
@@ -15,15 +24,11 @@ const postSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  comments: [
-    {
-      type: {
-        name: String,
-        comment: String,
-        profilepic: String,
-      },
-    },
-  ],
+  likes: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Profile",
+  },
+  comments: [commentSchema],
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Profile",

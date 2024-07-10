@@ -1,16 +1,60 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import WHAM from "../Assets/WHAM.png";
 import BHAM from "../../Assets/BHAM.png";
 import blackhole from "../../Assets/blackhole.webp";
+import Cookies from "js-cookie";
+import axios from "axios";
+
 function BlackHoles({ setSelectedNews }) {
   const [showAnswerIndex, setShowAnswerIndex] = useState(-1);
 
   const navigate = useNavigate();
-
   const ProfileClick = (index) => {
     setShowAnswerIndex(showAnswerIndex === index ? -1 : index);
   };
+
+  const [userData, setUserData] = useState(null);
+
+  const getUserdata = async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/users/getAsingleUser/${id}`
+      );
+      setUserData(response.data);
+    } catch (err) {
+      console.log("Error while getting the profile data", err);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = Cookies.get("token");
+      if (token) {
+        try {
+          const response = await axios.post(
+            "http://localhost:3000/users/tokenvalidate",
+            { token }
+          );
+          const { user, valid } = response.data;
+          if (user) {
+            getUserdata(user._id);
+          }
+        } catch (error) {
+          Cookies.remove("token");
+          console.error("Error in post request", error.response.data.error);
+        }
+      } else {
+        console.log("Token is not there");
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const data = [
     {
@@ -35,12 +79,15 @@ function BlackHoles({ setSelectedNews }) {
     },
   ];
 
-  const discoverTOpics = (e) => {
+  const discoverTopics = (e) => {
     switch (e) {
       case "profile":
         navigate("/profile");
         break;
       case "HOME":
+        navigate("/HomePage");
+        break;
+      case "EARTH":
         navigate("/earth");
         break;
       case "SOLAR SYSTEM":
@@ -139,49 +186,49 @@ function BlackHoles({ setSelectedNews }) {
     <>
       <div className="py-10 px-10 bg-black">
         <nav className="flex px-10 items-center bg-gray-200 justify-between py-3 ">
-          <img src={BHAM} className="w-10 cursor-pointer" alt="" />
-          <div className="w-full">
-            <div className="flex bg-slate-100 w-2/4 ml-20 rounded-lg shadow-sm">
-              <input
-                type="text"
-                id="hs-trailing-button-add-on-with-icon"
-                name="hs-trailing-  button-add-on-with-icon"
-                placeholder="Search here"
-                className="py-3 px-4 block w-full shadow-lg rounded-s-lg text-sm focus:z-10 disabled:opacity-50 bg-white disabled:pointer-events-none dark:bg-white outline-none"
-              />
-              <button
-                type="button"
-                className="w-[2.875rem] h-[2.875rem] flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-black text-white hover:bg-gray-800 duration-500 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
-              >
-                <svg
-                  className="flex-shrink-0 size-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
-              </button>
+          <ul className="flex gap-10 text-lg ml-6">
+            <li
+              onClick={() => discoverTopics("HOME")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              HOME
+            </li>
+            <li
+              onClick={() => discoverTopics("EARTH")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              EARTH
+            </li>
+            <li
+              onClick={() => discoverTopics("SOLAR SYSTEM")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              SOLAR SYSTEM
+            </li>
+            <li
+              onClick={() => discoverTopics("STARS")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              STARS
+            </li>
+            <li
+              onClick={() => discoverTopics("GALAXIES")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              GALAXIES
+            </li>
+            <li
+              onClick={() => discoverTopics("NEBULAS")}
+              className=" cursor-pointer hover:scale-105 duration-300"
+            >
+              NEBULAE
+            </li>
+          </ul>
+          <div className="flex items-center gap-3 justify-between cursor-pointer bg-gray-300 px-3 py-2 rounded-xl">
+            <div onClick={() => discoverTopics("profile")} className="rounded">
+              <img className="rounded-lg h-8" src={userData?.profilePic} />
             </div>
-          </div>
-          <div
-            onClick={() => discoverTOpics("profile")}
-            className="flex items-center gap-3 justify-between cursor-pointer bg-gray-300 px-3 py-2 rounded-xl"
-          >
-            <div className="rounded">
-              <img
-                className="rounded-lg h-8"
-                src="https://tse2.mm.bing.net/th?id=OIP.TVzo903QcUOlnjHHyeWrDQHaE6&pid=Api&P=0&h=220"
-              />
-            </div>
-            <div className="font-poppins text-sm">Musthafaaa</div>
+            <div className="font-poppins text-sm">{userData?.name}</div>
           </div>
         </nav>
 
@@ -195,46 +242,20 @@ function BlackHoles({ setSelectedNews }) {
             What is Black Hole ?
           </h2>
         </div>
+
         <div className="mx-auto px-4 pb-12">
-          <div className="mb-10">
-            <p className="mt-7 text-white">
-              Here's a video for Exploring the Enigmatic World of Black Holes: A
-              Scientific Journey
+          <div className="my-5">
+            <p className="text-xl font-light text-white  ">
+              A black hole is a region of spacetime where gravity is so strong
+              that nothing, not even light and other electromagnetic waves, is
+              capable of possessing enough energy to escape it.
             </p>
-            <iframe
-              className="mt-3"
-              width="650"
-              height="450"
-              src="https://www.youtube.com/embed/kOEDG3j1bjs?si=sZG9O5PgntbaoiH1"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerpolicy="strict-origin-when-cross-origin"
-              allowfullscreen
-            ></iframe>
-
-            <div className="flex mt-7 gap-8">
-              <div className="mb-10">
-                <p className="text-white">
-                  A black hole is a region of spacetime where gravity is so
-                  strong that nothing, including light and other electromagnetic
-                  waves, is capable of possessing enough energy to escape it.
-                  <span className="ml-2">
-                    <a
-                      href="https://en.wikipedia.org/wiki/Black_hole"
-                      className="text-blue-500"
-                    >
-                      See more
-                    </a>
-                  </span>
-                </p>
-              </div>
-            </div>
-
-            <h2 className="text-4xl mb-5 font-semibold text-white">
+          </div>
+          <div className="mb-10">
+            <h2 className="text-4xl mb-5 font-semibold mt-6 text-white">
               Einstein's theory of blackhole
             </h2>
-            <p className="text-xl font-light text-white">
+            <p className="text-xl font-light text-white  ">
               Einstein's theory of general relativity predicts that a
               sufficiently compact mass can deform spacetime to form a black
               hole. The boundary of no escape is called the event horizon. A
@@ -249,7 +270,213 @@ function BlackHoles({ setSelectedNews }) {
               making it essentially impossible to observe directly.
             </p>
           </div>
+
+          <div className="mb-6">
+            <div className="mb-4">
+              <h2 className="font-semibold text-4xl text-white my-3">
+                Event Horizon
+              </h2>
+              <div className="flex justify-center my-4">
+                <img
+                  src="https://www.syfy.com/sites/syfy/files/styles/scale_600/public/blackhole_diagram.jpg"
+                  alt=""
+                />
+              </div>
+
+              <p className="font-light text-white text-xl  ">
+                The boundary surrounding a black hole is called the event
+                horizon. Once an object crosses this boundary, it cannot escape
+                the black hole's gravitational pull. The event horizon is often
+                described as the point of no return.
+              </p>
+            </div>
+            <div className="mb-4">
+              <h2 className="font-semibold text-4xl text-white my-3">
+                Singularity
+              </h2>
+              <div className="flex justify-center my-4">
+                <img
+                  src="https://www.researchgate.net/profile/Jose-Collazos-Rozo/publication/370901965/figure/fig3/AS:11431281159967675@1684562028991/Illustration-of-a-black-hole-we-can-appreciate-the-event-horizon-and-singularity.jpg"
+                  alt=""
+                />
+              </div>
+              <p className="font-light text-white text-xl  ">
+                At the very center of a black hole lies a singularity, a point
+                where matter is thought to be infinitely dense and the
+                gravitational forces are infinitely strong. The laws of physics
+                as we currently understand them break down at this point.
+              </p>
+            </div>
+            <div className="mb-6">
+              <h2 className="font-semibold text-4xl text-white">Formation</h2>
+              <div className="flex justify-center my-4">
+                <img
+                  className="w-2/4 "
+                  src="https://cdn.britannica.com/50/62750-050-C12B4D5F/evolution.jpg"
+                  alt=""
+                />
+              </div>
+              <p className="font-light text-white text-xl  ">
+                Black holes can form in several ways. The most common process is
+                through the collapse of a massive star after it has exhausted
+                its nuclear fuel. This type of black hole is known as a stellar
+                black hole. Other types include supermassive black holes, which
+                are found at the centers of galaxies, and primordial black
+                holes, which are hypothesized to have formed in the early
+                universe.
+              </p>
+            </div>
+            <div className="mb-4">
+              <h2 className="font-semibold text-4xl text-white">Detection</h2>
+              <div className="my-4 flex justify-center">
+                <img
+                  className="w-2/4"
+                  src="https://news.stanford.edu/__data/assets/image/0023/42746/ATT00001.png"
+                  alt=""
+                />
+              </div>
+              <p className="font-light text-white text-xl  ">
+                Although black holes cannot be observed directly (since light
+                cannot escape them), their presence can be inferred by observing
+                the behavior of nearby objects. For instance, scientists can
+                detect X-rays emitted by material as it is heated and
+                accelerated while falling into a black hole, or they can observe
+                the gravitational effects on nearby stars and gas clouds.
+              </p>
+            </div>
+
+            <h2 className="text-4xl mt-7 font-semibold text-white mb-6">
+              Types of Black Holes:
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="table-auto w-full">
+                <thead>
+                  <tr className="bg-gray-900 text-white text-xl">
+                    <th className="py-4 px-6 text-left">Name</th>
+                    <th className="py-4 px-6 text-left">Explanation</th>
+                    <th className="py-4 px-6 text-center">Image</th>
+                  </tr>
+                </thead>
+                <tbody className="text-white text-xl font-light">
+                  <tr>
+                    <td className="py-4 px-6">Stellar Black Holes</td>
+                    <td className="py-4 px-6">
+                      Formed by the gravitational collapse of a massive star
+                      after a supernova.
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSzBeDW0jdejnBt60bdb_wiGvCKEkiqt3xoRQ&s"
+                        alt="Stellar Black Hole"
+                        className="w-44"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-4 px-6">Supermassive Black Holes</td>
+                    <td className="py-4 px-6">
+                      Found at the centers of galaxies, including our own Milky
+                      Way. They contain millions to billions of times the mass
+                      of our sun.
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      <img
+                        src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmz1Ov6RTb-NQy2pU-9jbpv64rdvoxQBU4bA&s"
+                        alt="Supermassive Black Hole"
+                        className="w-44"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-4 px-6">Intermediate Black Holes</td>
+                    <td className="py-4 px-6">
+                      A potential class that lies between stellar and
+                      supermassive black holes, though their existence is still
+                      a subject of research.
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      <img
+                        src="https://www.astronomy.com/wp-content/uploads/sites/2/2023/02/image_4606e47TucanaeBlackHole.jpg"
+                        alt="Intermediate Black Hole"
+                        className="w-44"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
+                    <td className="py-4 px-6">Primordial Black Holes</td>
+                    <td className="py-4 px-6">
+                      Hypothetical black holes that might have formed soon after
+                      the Big Bang.
+                    </td>
+                    <td className="py-4 px-6 text-center">
+                      <img
+                        src="https://www.astronomy.com/uploads/2021/09/BlackHole-6.jpg"
+                        alt="Primordial Black Hole"
+                        className="w-44"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div className="mb-4 mt-3 ">
+              <h2 className="font-semibold text-4xl my-5 text-white">
+                Hawking Radiationw-44
+              </h2>
+              <p className="font-light text-white text-xl  ">
+                Theoretical physicist Stephen Hawking proposed that black holes
+                can emit radiation due to quantum effects near the event
+                horizon. This radiation, known as Hawking radiation, could cause
+                black holes to lose mass and eventually evaporate over time.
+              </p>
+            </div>
+            <div className="mb-4 mt-3 ">
+              <h2 className="font-semibold text-4xl my-5 text-white">
+                Impact on Time
+              </h2>
+              <p className="font-light text-white text-xl  ">
+                According to Einstein's theory of general relativity, the
+                immense gravitational pull of a black hole significantly warps
+                spacetime. This warping causes time to pass differently near a
+                black hole compared to regions far from its influence. An
+                observer near a black hole would experience time more slowly
+                relative to an observer far away.
+              </p>
+            </div>
+            <div>
+              <h2 className="font-semibold text-4xl my-7 text-white">
+                Role in the Universe
+              </h2>
+              <p className="font-light text-white text-xl  ">
+                Black holes play a crucial role in the dynamics of galaxies.
+                Supermassive black holes, in particular, are believed to
+                influence the formation and evolution of galaxies through their
+                gravitational interactions and energetic phenomena such as jets
+                and outflows.
+              </p>
+            </div>
+          </div>
+
           <div>
+            <p className="mt-7 font-light text-white  ">
+              Here's a video for Exploring the Enigmatic World of Black Holes: A
+              Scientific Journey
+            </p>
+            <iframe
+              className="mt-3"
+              width="650"
+              height="450"
+              src="https://www.youtube.com/embed/kOEDG3j1bjs?si=sZG9O5PgntbaoiH1"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowfullscreen
+            ></iframe>
+          </div>
+
+          <div className="mt-10">
             <h2 className="text-4xl text-white font-poppins">
               Essential Black hole Facts
             </h2>
@@ -396,7 +623,7 @@ function BlackHoles({ setSelectedNews }) {
             {discovermore.map((item, index) => (
               <div
                 key={index}
-                onClick={() => discoverTOpics(item.title)}
+                onClick={() => discoverTopics(item.title)}
                 className="h-96 w-80 bg-black border-gray-700 border cursor-pointer flex items-end bg-cover bg-no-repeat"
                 style={{
                   backgroundImage: `url(${item.imageUrl})`,

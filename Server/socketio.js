@@ -13,6 +13,7 @@ const setupSocket = (server) => {
     console.log("New client connected", socket.id);
 
     socket.on("joinCommunity", async (communityId) => {
+      console.log("client joined the community",communityId)
       socket.join(communityId);
       const communityMessages = await Message.findOne({ communityId });
       socket.emit("message", communityMessages ? communityMessages.messages : []);
@@ -21,24 +22,17 @@ const setupSocket = (server) => {
     socket.on("message", async (message) => {
       console.log("Message received:", message);
 
-      const newMessage = {
-        username: message.username,
-        message: message.message,
-        date: message.date,
-        profile_picture: message.profile_picture,
-      };
-
       // Update the messages array for the community
       const result = await Message.updateOne(
         { communityId: message.communityId },
-        { $push: { messages: newMessage } },
+        { $push: { messages: message } },
         { upsert: true }
       );
 
       console.log("Database update result:", result);
 
       // Emit the message to all clients in the community room
-      io.to(message.communityId).emit("message", newMessage);
+      io.to(message.communityId).emit("message", message);
     });
 
     socket.on("disconnect", () => {

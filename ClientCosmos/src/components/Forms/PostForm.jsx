@@ -6,14 +6,16 @@ import Swal from "sweetalert2";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Pane, FileUploader, FileCard } from "evergreen-ui";
-import { imDB} from "../Firebase/firebase"
-import { v4 } from "uuid"
+import { imDB } from "../Firebase/firebase";
+import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { PulseLoader } from "react-spinners";
 
 function PostForm({ Modal, setModalOpen, mypostFetch }) {
   const [iv, setisv] = useState(false);
   const [files, setFiles] = React.useState([]);
   const [profile, setProfile] = useState([]);
+  const [postLoading, setPostLoading] = useState(false);
   const [fileRejections, setFileRejections] = React.useState([]);
   const handleChange = React.useCallback((files) => setFiles([files[0]]), []);
   const handleRejected = React.useCallback(
@@ -56,8 +58,7 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
     };
 
     fetchData();
-
-  })
+  });
 
   const {
     register,
@@ -65,15 +66,16 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
     formState: { errors },
   } = useForm();
   const onSubmit = async (data) => {
+    setPostLoading(true);
     try {
       const imgS = ref(imDB, `images${v4()}`);
       const uploadData = await uploadBytes(imgS, files[0]);
       const imageUrl = await getDownloadURL(uploadData.ref);
-      
-      console.log(imageUrl)
+
+      console.log(imageUrl);
       const requestData = {
         ...data,
-        image: imageUrl
+        image: imageUrl,
       };
 
       setModalOpen(false);
@@ -91,6 +93,7 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
         title: "You created a post successfully",
       });
       mypostFetch();
+      setPostLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -117,7 +120,10 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
             </h2>
 
             <div className="mt-5">
-              <label htmlFor="caption" className="block text-sm mb-2 text-black">
+              <label
+                htmlFor="caption"
+                className="block text-sm mb-2 text-black"
+              >
                 Caption
               </label>
               <input
@@ -131,7 +137,9 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
               />
               <p className="text-red-500 text-xs">
                 {errors.caption && (
-                  <span className="error-message">{errors.caption.message}</span>
+                  <span className="error-message">
+                    {errors.caption.message}
+                  </span>
                 )}
               </p>
             </div>
@@ -198,7 +206,13 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
               type="submit"
               className="w-full py-3 px-4 mt-8 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-black text-white hover:bg-gray-900 duration-300 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
             >
-              CREATE POST
+              {postLoading ? (
+                <div>
+                  <PulseLoader color="#ffffff" size={11}/>
+                </div>
+              ) : (
+                <h2>CREATE POST</h2>
+              )}
             </button>
           </form>
         </div>
