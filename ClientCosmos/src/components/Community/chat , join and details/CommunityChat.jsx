@@ -187,13 +187,13 @@ function CommunityChat({
 
   return (
     <>
-      <div className="px-6 h-screen">
-        <Link
+      <div className="px-6">
+        <div
           onClick={() => ShowCommunityDetails(id)}
-          className="pl-5 pr-10 cursor-pointer flex justify-between items-center py-4 border-b-2"
+          className="pl-5 pr-10 cursor-pointer flex justify-between items-center py-2 border-b-2"
         >
-          <div className="flex items-center gap-5">
-            <Link
+          <div className="flex items-center gap-2">
+            <div
               onClick={() => {
                 setCommunityChatID("");
                 setSelectedChat("");
@@ -217,19 +217,19 @@ function CommunityChat({
                 </svg>
               </span>
               <img
-                className="w-14 rounded-full h-14"
+                className="w-10 rounded-full h-10"
                 src={communityData.communityprofile}
                 alt=""
               />
-            </Link>
-            <h2 className="text-2xl font-semibold">{communityData.name}</h2>
+            </div>
+            <h2 className="text-xl font-semibold">{communityData.name}</h2>
           </div>
           <img
             src="https://seekicon.com/free-icon-download/three-dots-vertical_1.png"
             className="text-end flex cursor-pointer h-5"
           />
-        </Link>
-        <div className="h-3/4 myPosts pb-7 overflow-auto">
+        </div>
+        <div className="h-[66vh] myPosts pb-7 overflow-auto">
           {messages
             .filter((msg) => msg.name && msg.message && msg.date)
             .map((msg, index) => (

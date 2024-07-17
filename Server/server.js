@@ -13,6 +13,7 @@ const authrouter = require("./GoogleAuth/auth");
 const communityrouter = require("./Routes/community");
 const chatrouter = require("./Routes/chat");
 const newsrouter = require("./Routes/news");
+const reviewrouter = require("./Routes/reviews");
 
 const port = 3000;
 const app = express();
@@ -52,6 +53,7 @@ app.use("/auth", authrouter);
 app.use("/community", communityrouter);
 app.use("/chat", chatrouter);
 app.use("/news", newsrouter);
+app.use("/review", reviewrouter);
 
 server.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);

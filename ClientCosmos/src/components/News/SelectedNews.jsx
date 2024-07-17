@@ -61,11 +61,11 @@ function SelectedNews({ setSelectedNews, selectedNews }) {
             </li>
           </ul>
           <div>
-            <input
+            {/* <input
               className="w-96 h-10 rounded-sm bg-white outline-none border pl-3 font-poppins tracking-wide"
               placeholder="Search more news"
               type="text"
-            />
+            /> */}
           </div>
           <div
             onClick={() => ProfileClick("profile")}

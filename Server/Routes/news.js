@@ -125,16 +125,7 @@ const news = [
     topic: "galaxies",
   },
 
-  {
-    imageUrl:
-      "https://science.nasa.gov/wp-content/uploads/2024/04/hubble-ngc2217-potw2052a.jpg?w=1536&format=webp",
-    title: `Hubble Spots a Magnificent Barred Galaxy`,
-    description: `A future iteration of Starship, which conducted its third-ever test flight last week, will go interstellar, according to SpaceX founder and CEO Elon Musk.
-The magnificent central bar of NGC 2217 (also known as AM 0619-271) shines bright in the constellation of Canis Major (The Greater Dog), in this image taken by the NASA/ESA Hubble Space Telescope. Roughly 65 million light-years from Earth, this barred spiral galaxy is a similar size to our Milky Way at 100,000 light-years across. Many stars are concentrated in its central region forming the luminous bar, surrounded by a set of tightly wound spiral arms.
-The central bar in these types of galaxies plays an important role in their evolution, helping to funnel gas from the disk into the middle of the galaxy. The transported gas and dust are then either formed into new stars or fed to the supermassive black hole at the galaxy's center. Weighing from a few hundred to over a billion times the mass of our Sun, supermassive black holes are present in almost all large galaxies.`,
-    datePosted: "10/01/2024",
-    topic: "galaxies",
-  },
+
   {
     imageUrl:
       "https://science.nasa.gov/wp-content/uploads/2024/04/hubble-ngc3783-potw2416a.jpg?w=1536&format=webp",
@@ -147,16 +138,7 @@ The central bar in these types of galaxies plays an important role in their evol
     datePosted: "13/03/2024",
     topic: "galaxies",
   },
-  {
-    imageUrl:
-      "https://science.nasa.gov/wp-content/uploads/2024/04/hubble-arp72-potw2414a.jpg?w=1536&format=webp",
-    title: "Hubble Peers at Pair of Closely Interacting Galaxies",
-    description: `This image from the NASA/ESA Hubble Space Telescope features Arp 72, a very selective galaxy group that only includes two galaxies interacting due to gravity: NGC 5996 (the large spiral galaxy) and NGC 5994 (its smaller companion, in the lower left of the image). Both galaxies lie approximately 160 million light-years from Earth, and their cores are separated from each other by a distance of about 67,000 light-years. The distance between the galaxies at their closest points is even smaller, closer to 40,000 light-years. While this might sound vast, in galactic separation terms it is really quite close. For comparison, the distance between the Milky Way and its nearest independent galactic neighbor Andromeda is around 2.5 million light-years. Alternatively, the distance between the Milky Way and its largest and brightest satellite galaxy, the Large Magellanic Cloud (satellite galaxies orbit around another galaxy), is about 162,000 light-years.
 
-    Given this and the fact that NGC 5996 is roughly comparable in size to the Milky Way, it is not surprising that NGC 5996 and NGC 5994 — separated by only about 40,000 light-years — are interacting with one another. In fact, the interaction likely distorted NGC 5996’s spiral shape. It also prompted the formation of the very long and faint tail of stars and gas curving away from NGC 5996, up to the top right of the image. This ‘tidal tail’ is a common phenomenon that appears when galaxies closely interact and is visible in other Hubble images of interacting galaxies.`,
-    datePosted: "02/02/2024",
-    topic: "galaxies",
-  },
   {
     imageUrl:
       "https://science.nasa.gov/wp-content/uploads/2024/05/hubble-ngc4951-1ok-flatcrop-final.jpg?w=1536&format=webp",
@@ -182,49 +164,7 @@ The central bar in these types of galaxies plays an important role in their evol
     datePosted: "10/01/2024",
     topic: "galaxies",
   },
-  {
-    imageUrl:
-      "https://science.nasa.gov/wp-content/uploads/2024/04/hubble-ngc3783-potw2416a.jpg?w=1536&format=webp",
-    title: "Hubble Captures a Bright Galactic and Stellar Duo ",
-    description: `This image from the NASA/ESA Hubble Space Telescope features NGC 3783, a bright barred spiral galaxy about 130 million light-years from Earth that also lends its name to the eponymous NGC 3783 galaxy group. Like galaxy clusters, galaxy groups are aggregates of gravitationally bound galaxies. Galaxy groups, however, are less massive and contain fewer members than galaxy clusters do: whereas galaxy clusters can contain hundreds or even thousands of constituent galaxies, galaxy groups do not typically include more than 50. The Milky Way is actually part of a galaxy group, known as the Local Group, which also holds two other large galaxies (Andromeda and the Triangulum galaxy), as well as several dozen satellite and dwarf galaxies. The NGC 3783 galaxy group contains 47 galaxies. It also seems to be at a fairly early stage of its evolution, making it an interesting object to study. 
 
-    While the focus of this image is the spiral galaxy NGC 3783, the eye is equally drawn to the very bright object in the lower right part of this image. This is the star HD 101274. The perspective in this image makes the star and the galaxy look like close companions, but this is an illusion. HD 101274 lies only about 1,530 light-years from Earth, it is about 85,000 times closer than NGC 3783. This explains how a single star can appear to outshine an entire galaxy! 
-    
-    NGC 3783 is a type-1 Seyfert galaxy, which is a galaxy with a bright central region. Hubble captures it in incredible detail, from its glowing central bar to its narrow, winding arms and the dust threaded through them, thanks to five separate images taken in different wavelengths of light. In fact, the galactic center is so bright that it exhibits diffraction spikes, normally only seen on stars such as HD 101274.`,
-    datePosted: "13/03/2024",
-    topic: "galaxies",
-  },
-  {
-    imageUrl:
-      "https://science.nasa.gov/wp-content/uploads/2024/04/hubble-arp72-potw2414a.jpg?w=1536&format=webp",
-    title: "Hubble Peers at Pair of Closely Interacting Galaxies",
-    description: `This image from the NASA/ESA Hubble Space Telescope features Arp 72, a very selective galaxy group that only includes two galaxies interacting due to gravity: NGC 5996 (the large spiral galaxy) and NGC 5994 (its smaller companion, in the lower left of the image). Both galaxies lie approximately 160 million light-years from Earth, and their cores are separated from each other by a distance of about 67,000 light-years. The distance between the galaxies at their closest points is even smaller, closer to 40,000 light-years. While this might sound vast, in galactic separation terms it is really quite close. For comparison, the distance between the Milky Way and its nearest independent galactic neighbor Andromeda is around 2.5 million light-years. Alternatively, the distance between the Milky Way and its largest and brightest satellite galaxy, the Large Magellanic Cloud (satellite galaxies orbit around another galaxy), is about 162,000 light-years.
-
-    Given this and the fact that NGC 5996 is roughly comparable in size to the Milky Way, it is not surprising that NGC 5996 and NGC 5994 — separated by only about 40,000 light-years — are interacting with one another. In fact, the interaction likely distorted NGC 5996’s spiral shape. It also prompted the formation of the very long and faint tail of stars and gas curving away from NGC 5996, up to the top right of the image. This ‘tidal tail’ is a common phenomenon that appears when galaxies closely interact and is visible in other Hubble images of interacting galaxies.`,
-    datePosted: "02/02/2024",
-    topic: "galaxies",
-  },
-  {
-    imageUrl:
-      "https://science.nasa.gov/wp-content/uploads/2024/04/hubble-ngc2217-potw2052a.jpg?w=1536&format=webp",
-    title: `Hubble Spots a Magnificent Barred Galaxy`,
-    description: `The magnificent central bar of NGC 2217 (also known as AM 0619-271) shines bright in the constellation of Canis Major (The Greater Dog), in this image taken by the NASA/ESA Hubble Space Telescope. Roughly 65 million light-years from Earth, this barred spiral galaxy is a similar size to our Milky Way at 100,000 light-years across. Many stars are concentrated in its central region forming the luminous bar, surrounded by a set of tightly wound spiral arms.
-The central bar in these types of galaxies plays an important role in their evolution, helping to funnel gas from the disk into the middle of the galaxy. The transported gas and dust are then either formed into new stars or fed to the supermassive black hole at the galaxy's center. Weighing from a few hundred to over a billion times the mass of our Sun, supermassive black holes are present in almost all large galaxies.`,
-    datePosted: "10/01/2024",
-    topic: "galaxies",
-  },
-  {
-    imageUrl:
-      "https://science.nasa.gov/wp-content/uploads/2024/04/hubble-ngc3783-potw2416a.jpg?w=1536&format=webp",
-    title: "Hubble Captures a Bright Galactic and Stellar Duo ",
-    description: `This image from the NASA/ESA Hubble Space Telescope features NGC 3783, a bright barred spiral galaxy about 130 million light-years from Earth that also lends its name to the eponymous NGC 3783 galaxy group. Like galaxy clusters, galaxy groups are aggregates of gravitationally bound galaxies. Galaxy groups, however, are less massive and contain fewer members than galaxy clusters do: whereas galaxy clusters can contain hundreds or even thousands of constituent galaxies, galaxy groups do not typically include more than 50. The Milky Way is actually part of a galaxy group, known as the Local Group, which also holds two other large galaxies (Andromeda and the Triangulum galaxy), as well as several dozen satellite and dwarf galaxies. The NGC 3783 galaxy group contains 47 galaxies. It also seems to be at a fairly early stage of its evolution, making it an interesting object to study. 
-
-    While the focus of this image is the spiral galaxy NGC 3783, the eye is equally drawn to the very bright object in the lower right part of this image. This is the star HD 101274. The perspective in this image makes the star and the galaxy look like close companions, but this is an illusion. HD 101274 lies only about 1,530 light-years from Earth, it is about 85,000 times closer than NGC 3783. This explains how a single star can appear to outshine an entire galaxy! 
-    
-    NGC 3783 is a type-1 Seyfert galaxy, which is a galaxy with a bright central region. Hubble captures it in incredible detail, from its glowing central bar to its narrow, winding arms and the dust threaded through them, thanks to five separate images taken in different wavelengths of light. In fact, the galactic center is so bright that it exhibits diffraction spikes, normally only seen on stars such as HD 101274.`,
-    datePosted: "13/03/2024",
-    topic: "galaxies",
-  },
   {
     imageUrl:
       "https://science.nasa.gov/wp-content/uploads/2024/04/hubble-arp72-potw2414a.jpg?w=1536&format=webp",
@@ -329,52 +269,52 @@ router.get("/getrandomnews", (req, res) => {
   res.json(randomNews);
 });
 
-// Get all latest news using API
-router.get("/latestnews/api", async (req, res) => {
-  const options = {
-    method: "GET",
-    url: "https://space-news.p.rapidapi.com/news/guardian",
-    headers: {
-      "x-rapidapi-key": "4d57f80c3cmsh220894b8060dac0p183d06jsn2765d1228c85",
-      "x-rapidapi-host": "space-news.p.rapidapi.com",
-    },
-  };
+// // Get all latest news using API
+// router.get("/latestnews/api", async (req, res) => {
+//   const options = {
+//     method: "GET",
+//     url: "https://space-news.p.rapidapi.com/news/guardian",
+//     headers: {
+//       "x-rapidapi-key": "4d57f80c3cmsh220894b8060dac0p183d06jsn2765d1228c85",
+//       "x-rapidapi-host": "space-news.p.rapidapi.com",
+//     },
+//   };
 
-  try {
-    const response = await axios.request(options);
-    console.log(response.data);
-  } catch (error) {
-    console.error(error);
-  }
-});
+//   try {
+//     const response = await axios.request(options);
+//     console.log(response.data);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// });
 
 // Astronomic picture of the day
 router.get("/apod", async (req, res) => {
   const apiKey = "DEMO_KEY";
   const apodUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
   const todayDate = new Date().toISOString().split("T")[0];
+  
   try {
-    const apod = await Apod.findOne({ date: todayDate });
+    // Check if APOD data for today is already in the database
+    let apod = await Apod.findOne({ date: todayDate });
     if (apod) {
-      res.json(apod);
-    } else {
-      const response = await axios.get(apodUrl);
-      const apodData = response.data;
-      const apod = await Apod.findOne({ date: response.data.date });
-      if (apod) {
-        res.json(apodData);
-      } else {
-        const newApod = new Apod(apod);
-        await newApod.save();
-
-        res.json(apodData);
-      }
+      // If found, return the APOD data
+      return res.json(apod);
     }
+    
+    // If not found, fetch it from the NASA API
+    const response = await axios.get(apodUrl);
+    const apodData = response.data;
+
+    // Create a new APOD document and save it to the database
+    const newApod = new Apod(apodData);
+    await newApod.save();
+    
+    // Return the newly saved APOD data
+    res.json(newApod);
+    
   } catch (error) {
-    console.error(
-      "Error fetching APOD:",
-      error.response ? error.response.data : error.message
-    );
+    console.error("Error fetching APOD:", error.response ? error.response.data : error.message);
     res.status(500).json({
       message: "Error fetching APOD",
       error: error.response ? error.response.data : error.message,

@@ -251,13 +251,13 @@ function Profile() {
             </h2>
             <div className="flex justify-evenly">
               <button
-                className="py-3 px-5 rounded bg-black text-white font-semibold tracking-wider "
+                className="py-2 px-5  bg-black text-white  tracking-wider "
                 onClick={() => DeleteMyPost()}
               >
                 Delete
               </button>
               <button
-                className="py-3 px-5 border rounded text-black font-semibold tracking-wider hover:bg-gray-50"
+                className="py-2 px-5 border  text-black  tracking-wider hover:bg-gray-50"
                 onClick={handleCancel}
               >
                 Cancel
@@ -390,7 +390,7 @@ function Profile() {
           <div className="overflow-auto h-[85vh] myPosts">
             {myPosts.length === 0 && !Loading ? (
               <div className="text-center text-3xl font-bold font-poppins mt-40 mb-40 lg:mb-0 lg:mt-64 text-gray-700">
-                You Hav'nt posted yet
+                You haven't posted yet
               </div>
             ) : Loading ? (
               <div className="">

@@ -35,7 +35,7 @@ function Help() {
   );
 }
 
-function Account({ userData, setDeleteAccountPopUp }) {
+function Account({ userData, setDeleteAccountPopUp, GoogleAuth }) {
   const [isEditing, setIsEditing] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -61,7 +61,7 @@ function Account({ userData, setDeleteAccountPopUp }) {
         setNewPassword("");
         setTimeout(() => {
           setSuccessMessage("");
-        }, 4000); 
+        }, 4000);
       } else {
         console.log(response.data);
         setErrorMessage("Current password is incorrect");
@@ -70,14 +70,14 @@ function Account({ userData, setDeleteAccountPopUp }) {
         setNewPassword("");
         setTimeout(() => {
           setErrorMessage("");
-        }, 4000); 
+        }, 4000);
       }
     } catch (error) {
       console.log("Error while changing the password", error);
       setErrorMessage("An error occurred while changing the password.");
       setTimeout(() => {
         setErrorMessage("");
-      }, 4000); 
+      }, 4000);
     }
   };
 
@@ -105,67 +105,76 @@ function Account({ userData, setDeleteAccountPopUp }) {
             />
           </div>
           <hr className="w-full mt-10" />
-          <div className="mt-6">
-            <div className="flex items-center gap-4 mb-4">
-              <h2 className="text-2xl font-bold">Change Password</h2>
-              <img
-                className="w-4 h-4 cursor-pointer"
-                src={editicon}
-                alt="Edit Icon"
-                onClick={() => setIsEditing(!isEditing)}
-              />
-            </div>
-            <div>
-              {errorMessage && (
-                <div className="bg-red-600 w-full py-3 text-center text-white font-semibold mb-4">
-                  {errorMessage}
+
+          {GoogleAuth && (
+            <>
+              <div className="mt-6">
+                <div className="flex items-center gap-4 mb-4">
+                  <h2 className="text-2xl font-bold">Change Password</h2>
+                  <img
+                    className="w-4 h-4 cursor-pointer"
+                    src={editicon}
+                    alt="Edit Icon"
+                    onClick={() => setIsEditing(!isEditing)}
+                  />
                 </div>
-              )}
-              {successMessage && (
-                <div className="bg-green-600 w-full py-3 text-center text-white font-semibold mb-4">
-                  {successMessage}
+                <div>
+                  {errorMessage && (
+                    <div className="bg-red-600 w-full py-3 text-center text-white font-semibold mb-4">
+                      {errorMessage}
+                    </div>
+                  )}
+                  {successMessage && (
+                    <div className="bg-green-600 w-full py-3 text-center text-white font-semibold mb-4">
+                      {successMessage}
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-            <div className="flex gap-3">
-              <div className="w-2/4">
-                <h2 className="text-lg text-gray-400 font-poppins">
-                  Current Password
-                </h2>
-                <input
-                  type="password"
-                  placeholder="........"
-                  className={`bg-white w-full outline-none py-2 px-3 border ${isEditing ? ("border-2 border-black") : ('')}`}
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  disabled={!isEditing}
-                />
+                <div className="flex gap-3">
+                  <div className="w-2/4">
+                    <h2 className="text-lg text-gray-400 font-poppins">
+                      Current Password
+                    </h2>
+                    <input
+                      type="password"
+                      placeholder="........"
+                      className={`bg-white w-full outline-none py-2 px-3 border ${
+                        isEditing ? "border-2 border-black" : ""
+                      }`}
+                      value={currentPassword}
+                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      disabled={!isEditing}
+                    />
+                  </div>
+                  <div className="w-2/4">
+                    <h2 className="text-lg text-gray-400 font-poppins">
+                      New Password
+                    </h2>
+                    <input
+                      type="password"
+                      placeholder="........"
+                      className={`bg-white w-full outline-none py-2 px-3 border ${
+                        isEditing ? "border-2 border-black" : ""
+                      }`}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      disabled={!isEditing}
+                    />
+                  </div>
+                </div>
+                {isEditing && (
+                  <div className="mt-4">
+                    <button
+                      onClick={handleChangePassword}
+                      className="px-5 py-2 bg-blue-600 text-white"
+                    >
+                      Save
+                    </button>
+                  </div>
+                )}
               </div>
-              <div className="w-2/4">
-                <h2 className="text-lg text-gray-400 font-poppins">
-                  New Password
-                </h2>
-                <input
-                  type="password"
-                  placeholder="........"
-                  className={`bg-white w-full outline-none py-2 px-3 border ${isEditing ? ("border-2 border-black") : ('')}`}
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  disabled={!isEditing}
-                />
-              </div>
-            </div>
-            {isEditing && (
-              <div className="mt-4">
-                <button
-                  onClick={handleChangePassword}
-                  className="px-5 py-2 bg-blue-600 text-white"
-                >
-                  Save
-                </button>
-              </div>
-            )}
-          </div>
+            </>
+          )}
           <div>
             <button
               onClick={() => {
@@ -387,6 +396,7 @@ function Settings() {
               <Account
                 setDeleteAccountPopUp={setDeleteAccountPopUp}
                 userData={userData}
+                GoogleAuth={GoogleAuth}
               />
             )}
             {selectedFun === "Help" && <Help />}
