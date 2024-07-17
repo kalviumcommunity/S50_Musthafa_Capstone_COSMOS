@@ -28,7 +28,7 @@ function LoginForm() {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           console.log(response.data);
@@ -45,7 +45,7 @@ function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/users/getone",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
         data
       );
       const { token } = response.data;
@@ -58,7 +58,7 @@ function LoginForm() {
   };
 
   const toLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
   };
 
   return (

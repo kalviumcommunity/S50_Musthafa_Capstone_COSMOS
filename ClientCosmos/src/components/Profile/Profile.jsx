@@ -32,7 +32,7 @@ function Profile() {
   const handleSaveClick = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/users/editBio/${userData._id}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/editBio/${userData._id}`,
         { bioText }
       );
       if (response) {
@@ -59,7 +59,7 @@ function Profile() {
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/users/getAsingleUser/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
       );
       setBioText(response.data.bio);
       setUserData(response.data);
@@ -74,7 +74,7 @@ function Profile() {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { valid, user } = response.data;
@@ -116,7 +116,7 @@ function Profile() {
     }
     try {
       const response = await axios.get(
-        `http://localhost:3000/posts/getmyposts/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/getmyposts/${id}`
       );
       if (response.status === 200) {
         setMyPosts(response.data);
@@ -132,7 +132,7 @@ function Profile() {
 
   const DeleteMyPost = async () => {
     await axios
-      .delete(`http://localhost:3000/posts/${deletePostId}`)
+      .delete(`https://s50-musthafa-capstone-cosmos.onrender.com/posts/${deletePostId}`)
       .then((res) => {
         console.log(res.data);
         setDeletePostPopUp(false);
@@ -164,7 +164,7 @@ function Profile() {
     if (imageUrl) {
       try {
         const response = await axios.patch(
-          `http://localhost:3000/users/updateProfilePic/${userData._id}`,
+          `https://s50-musthafa-capstone-cosmos.onrender.com/users/updateProfilePic/${userData._id}`,
           { imageUrl }
         );
         console.log(response.data);
@@ -183,7 +183,7 @@ function Profile() {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/posts/like/${postId}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/like/${postId}`,
         {
           userId: userId,
           action: action,

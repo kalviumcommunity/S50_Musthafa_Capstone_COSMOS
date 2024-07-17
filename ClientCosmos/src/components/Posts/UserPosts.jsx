@@ -12,7 +12,7 @@ function UserPosts({ userData, setUserData }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/posts`)
+      .get(`https://s50-musthafa-capstone-cosmos.onrender.com/posts`)
       .then((response) => {
         const postsWithBase64Images = response.data;
         const shuffledArray = shuffleArray(postsWithBase64Images);
@@ -43,7 +43,7 @@ function UserPosts({ userData, setUserData }) {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/posts/like/${postId}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/like/${postId}`,
         {
           userId: userId,
           action: action,
@@ -88,7 +88,7 @@ function UserPosts({ userData, setUserData }) {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/users/saveThePost/${userId}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/saveThePost/${userId}`,
         {
           postId: postId,
           action: action,

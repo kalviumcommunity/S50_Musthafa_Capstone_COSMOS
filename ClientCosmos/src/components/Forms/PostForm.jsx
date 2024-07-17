@@ -44,7 +44,7 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { user } = response.data;
@@ -80,7 +80,7 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
 
       setModalOpen(false);
       const response = await axios.post(
-        "http://localhost:3000/posts/newpost",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/posts/newpost",
         requestData,
         {
           headers: {

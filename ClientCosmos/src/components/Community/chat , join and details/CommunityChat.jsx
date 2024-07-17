@@ -20,7 +20,7 @@ function CommunityChat({
   const [isModalOpen, setModalOpen] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const socket = io("http://localhost:3000");
+  const socket = io("https://s50-musthafa-capstone-cosmos.onrender.com");
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -49,7 +49,7 @@ function CommunityChat({
     if (token) {
       try {
         const response = await axios.post(
-          "http://localhost:3000/users/tokenvalidate",
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
           { token }
         );
         const { valid, user } = response.data;
@@ -68,7 +68,7 @@ function CommunityChat({
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/users/getAsingleUser/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
       );
       setUserData(response.data);
     } catch (err) {
@@ -80,7 +80,7 @@ function CommunityChat({
     const fetchCommunityData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/community/${id}`
+          `https://s50-musthafa-capstone-cosmos.onrender.com/community/${id}`
         );
         setCommunityData(response.data);
       } catch (error) {
@@ -90,7 +90,7 @@ function CommunityChat({
 
     const fetchCommunityChatData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/chat/${id}`);
+        const response = await axios.get(`https://s50-musthafa-capstone-cosmos.onrender.com/chat/${id}`);
         setMessages(response.data);
       } catch (error) {
         console.error("Error fetching community data:", error);

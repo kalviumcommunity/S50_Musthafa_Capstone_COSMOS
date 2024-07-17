@@ -25,7 +25,7 @@ function About() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/review/newreview",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/review/newreview",
         { review }
       );
       if (response.data && response.data._id) {
@@ -49,7 +49,7 @@ function About() {
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/users/getAsingleUser/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
       );
       setUserData(response.data);
     } catch (err) {
@@ -86,7 +86,7 @@ function About() {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/review/randomreviews"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/review/randomreviews"
         );
         if (Array.isArray(response.data)) {
           setReviews(response.data);
@@ -103,7 +103,7 @@ function About() {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { user } = response.data;

@@ -27,7 +27,7 @@ function PostEditForm({ EditModal, setEditModalOpen, mypostFetch, post }) {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { user } = response.data;
@@ -60,7 +60,7 @@ function PostEditForm({ EditModal, setEditModalOpen, mypostFetch, post }) {
     try {
       setEditModalOpen(false);
       const response = await axios.put(
-        `http://localhost:3000/posts/${post._id}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/${post._id}`,
         data,
         {
           headers: {

@@ -12,7 +12,7 @@ function News({ setSelectedNews }) {
     const fetchAllNewses = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/news/getallnews"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/news/getallnews"
         );
         console.log(response.data);
         setNews(response.data);

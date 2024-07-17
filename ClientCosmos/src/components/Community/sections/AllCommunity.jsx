@@ -14,7 +14,7 @@ function AllCommunity({ selectedChat, setSelectedChat , setCommunityJoinId }) {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { valid, user } = response.data;
@@ -41,7 +41,7 @@ function AllCommunity({ selectedChat, setSelectedChat , setCommunityJoinId }) {
     setSelectedChat("")
     try {
       const response = await axios.get(
-        `http://localhost:3000/community/getAll/${userData._id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/getAll/${userData._id}`
       );
       setCommunities(response.data);
     } catch (error) {

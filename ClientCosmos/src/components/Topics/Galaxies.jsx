@@ -27,7 +27,7 @@ function Galaxies({ setSelectedNews }) {
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/users/getAsingleUser/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
       );
       setUserData(response.data);
     } catch (err) {
@@ -41,7 +41,7 @@ function Galaxies({ setSelectedNews }) {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { user, valid } = response.data;

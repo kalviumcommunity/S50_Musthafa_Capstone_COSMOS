@@ -42,7 +42,7 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/community/details/${communityID}?page=${page}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/details/${communityID}?page=${page}`
       );
       setCommunityData((prevData) => {
         if (prevData) {
@@ -67,7 +67,7 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
     if (token) {
       try {
         const response = await axios.post(
-          "http://localhost:3000/users/tokenvalidate",
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
           { token }
         );
         const { valid, user } = response.data;
@@ -93,7 +93,7 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
   const ExitCommunity = async () => {
     const userID = userData._id;
     try {
-      const response = await axios.post(`http://localhost:3000/community/exit`, {
+      const response = await axios.post(`https://s50-musthafa-capstone-cosmos.onrender.com/community/exit`, {
         userId: userID,
         communityId: communityID,
       });
