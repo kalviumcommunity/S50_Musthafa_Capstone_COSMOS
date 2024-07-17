@@ -9,6 +9,7 @@ const apodSchema = new mongoose.Schema(
     date: {
       type: String,
       unique: true,
+      required: true,
     },
     explanation: {
       type: String,

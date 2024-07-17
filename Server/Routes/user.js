@@ -93,7 +93,7 @@ router.get("/getusersforuserpost", async (req, res) => {
   try {
     // Get random users and project only the name and profile picture
     const users = await Profilemodel.aggregate([
-      { $sample: { size: 5 } },
+      { $sample: { size: 4 } },
       { $project: { name: 1, profilePic: 1 } },
     ]);
 

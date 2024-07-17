@@ -89,9 +89,9 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
           },
         }
       );
-      Swal.fire({
-        title: "You created a post successfully",
-      });
+      // Swal.fire({
+      //   title: "You created a post successfully",
+      // });
       mypostFetch();
       setPostLoading(false);
     } catch (error) {

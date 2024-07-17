@@ -11,7 +11,6 @@ import About from "./components/About";
 import PostForm from "./components/Forms/PostForm";
 import CommunityJoin from "./components/Community/chat , join and details/CommunityJoin";
 import SelectedNews from "./components/News/SelectedNews";
-import Earth from "./components/Topics/Earth";
 import SolarSystem from "./components/Topics/SolarSystem";
 import BlackHoles from "./components/Topics/BlackHoles";
 import Nebulas from "./components/Topics/Nebulas";
@@ -81,8 +80,6 @@ function App() {
           element={<SolarSystem setSelectedNews={setSelectedNews} />}
         />
         <Route
-          path="/earth"
-          element={<Earth setSelectedNews={setSelectedNews} />}
         />
         <Route path="/loading" element={<Loading />} />
         <Route path="/settings" element={<Settings />} />

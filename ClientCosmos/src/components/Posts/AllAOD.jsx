@@ -44,18 +44,20 @@ function AllAOD() {
         AODS.map((apod, index) => (
           <div key={index} className="mt-5 border px-7 py-5">
             <h2 className="text-2xl font-bold">{apod.title}</h2>
-            <div className="flex justify-center">
-              <div>
+            <div className="flex justify-center w-full">
+              <div className="w-full">
                 {apod.media_type === "image" ? (
                   <img className="mt-5" src={apod.hdurl} alt={apod.title} />
                 ) : (
-                  <iframe
-                    className="mt-5 h-60 w-full"
-                    src={apod.url}
-                    title={apod.title}
-                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  ></iframe>
+                  <div className=" w-full">
+                    <iframe
+                      className="mt-5 h-[40vh] w-full"
+                      src={apod.url}
+                      title={apod.title}
+                      allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                    ></iframe>
+                  </div>
                 )}
                 <div className="mt-2 flex justify-between">
                   <p className="font-light">Credits: NASA</p>

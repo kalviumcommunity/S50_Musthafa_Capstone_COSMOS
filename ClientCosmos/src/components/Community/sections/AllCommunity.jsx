@@ -79,6 +79,10 @@ function AllCommunity({ selectedChat, setSelectedChat , setCommunityJoinId }) {
                 </div>
               </div>
             ))
+          ) : communities.length === 0 ? (
+            <div className="text-center h-96 flex items-center text-2xl font-bold font-poppins text-gray-700">
+              There is no communities created
+            </div>
           ) : (
             <>
               {/* <ShimmerPostItem

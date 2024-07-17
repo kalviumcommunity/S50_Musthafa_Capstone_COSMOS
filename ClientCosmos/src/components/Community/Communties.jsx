@@ -16,14 +16,15 @@ import { PulseLoader } from "react-spinners";
 
 function Communities() {
   const [userData, setUserData] = useState([]);
-  const { register, handleSubmit } = useForm();
   const [CommunityJoinid, setCommunityJoinId] = useState("");
   const [CommunityChatID, setCommunityChatID] = useState("");
   const [files, setFiles] = useState([]);
   const [fileRejections, setFileRejections] = useState([]);
   const [activeButton, setActiveButton] = useState("ALL");
   const [selectedChat, setSelectedChat] = useState("");
-  const [communityCreationLoading, setCommunityCreationLoading] = useState(false);
+  const { register, handleSubmit } = useForm();
+  const [communityCreationLoading, setCommunityCreationLoading] =
+    useState(false);
 
   const handleChange = React.useCallback((files) => setFiles([files[0]]), []);
   const handleRejected = React.useCallback(
@@ -74,7 +75,7 @@ function Communities() {
   }, []);
 
   const onSubmit = async (data) => {
-    setCommunityCreationLoading(true)
+    setCommunityCreationLoading(true);
     try {
       const id = userData._id;
       const imgS = ref(imDB, `images${v4()}`);
@@ -100,34 +101,36 @@ function Communities() {
   };
 
   return (
-    <>
-      <div className="flex">
-        <div className="h-screen w-2/6 border-r-2">
-          <div className="flex items-center cursor-pointer gap-2 pb-4 pt-6 px-5">
-            <span
-              className="mr-2"
-              onClick={() => {
-                navigate("/HomePage");
-              }}
+    <div className="px-10 py-5">
+      <nav className="flex px-5  items-center justify-between py-3 bg-gray-100">
+        <div className="flex items-center cursor-pointer gap-2">
+          <span
+            className="mr-2"
+            onClick={() => {
+              navigate("/HomePage");
+            }}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth="1.5"
+              stroke="currentColor"
+              className="w-9 h-9 transform rotate-180"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-9 h-9 transform rotate-180"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                ></path>
-              </svg>
-            </span>
-            <h2 className="text-4xl font-bold">COMMUNITIES</h2>
-          </div>
-          <div className="flex py-3 px-5 rounded-lg justify-evenly">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+              ></path>
+            </svg>
+          </span>
+          <h2 className="text-4xl font-bold">COMMUNITIES</h2>
+        </div>
+      </nav>
+      <div className="flex mt-4">
+        <div className="w-[30vw] pr-5 border-r-2">
+          <div className="flex py-3 rounded-lg justify-evenly">
             <button
               onClick={onClickAll}
               className={`duration-500 w-full py-2 font-poppins font-medium ${
@@ -150,7 +153,7 @@ function Communities() {
             </button>
           </div>
 
-          <div className="pb-2 overflow-auto myPosts h-[70vh]">
+          <div className="pb-2 overflow-auto myPosts h-[67vh]">
             {activeButton === "ALL" ? (
               <AllCommunities
                 setSelectedChat={setSelectedChat}
@@ -165,7 +168,7 @@ function Communities() {
               />
             )}
           </div>
-          <div className="px-5">
+          <div className="">
             <button
               onClick={() => document.getElementById("my_modal_1").showModal()}
               className=" bg-black text-white w-full py-3 font-semibold"
@@ -248,7 +251,7 @@ function Communities() {
             </dialog>
           </div>
         </div>
-        <div className="w-dvw h-screen">
+        <div className="w-dvw">
           {activeButton === "ALL" ? (
             CommunityJoinid ? (
               <CommunityJoin
@@ -280,7 +283,7 @@ function Communities() {
           ) : null}
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

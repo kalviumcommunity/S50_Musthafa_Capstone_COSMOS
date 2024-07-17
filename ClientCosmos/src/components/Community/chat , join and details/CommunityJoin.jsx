@@ -6,10 +6,18 @@ import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-function Community({ setCommunityJoinId, CommunityJoinid, setActiveButton , setCommunityChatID , selectedChat, setSelectedChat }) {
+function Community({
+  setCommunityJoinId,
+  CommunityJoinid,
+  setActiveButton,
+  setCommunityChatID,
+  selectedChat,
+  setSelectedChat,
+}) {
   const [communityData, setCommunityData] = useState(null);
   const [userData, setUserData] = useState([]);
   const [messages, setMessages] = useState([]);
+  const [isJoinPopUp, setIsJoinPopUp] = useState(false);
 
   const navigate = useNavigate();
 
@@ -46,7 +54,9 @@ function Community({ setCommunityJoinId, CommunityJoinid, setActiveButton , setC
 
     const fetchCommunityChatData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/chat/${CommunityJoinid}`);
+        const response = await axios.get(
+          `http://localhost:3000/chat/${CommunityJoinid}`
+        );
         setMessages(response.data);
       } catch (error) {
         console.error("Error fetching community data:", error);
@@ -60,7 +70,7 @@ function Community({ setCommunityJoinId, CommunityJoinid, setActiveButton , setC
 
   const goBack = () => {
     setCommunityJoinId("");
-    setSelectedChat("")
+    setSelectedChat("");
   };
 
   const JoiningtoCommunity = async () => {
@@ -74,10 +84,7 @@ function Community({ setCommunityJoinId, CommunityJoinid, setActiveButton , setC
         data
       );
       console.log(response.data);
-      alert("Joined community successfully!") 
-      setActiveButton("YOURS")
-      setCommunityJoinId("")
-      setCommunityChatID(CommunityJoinid)
+      setIsJoinPopUp(true)
     } catch (err) {
       console.log("Error while joining", err);
     }
@@ -143,14 +150,42 @@ function Community({ setCommunityJoinId, CommunityJoinid, setActiveButton , setC
 
   const CLoseTheTab = () => {
     setCommunityJoinId("");
-    setSelectedChat("")
+    setSelectedChat("");
   };
+
+  const handleCancel = () => {
+    setIsJoinPopUp(false)
+  }
+
+  const Joined = () => {
+    setActiveButton("YOURS");
+    setCommunityJoinId("");
+    setCommunityChatID(CommunityJoinid);
+  }
 
   return (
     <>
       <div className="">
         <ToastContainer position="top-center" />
-        <div className="px-6 h-screen">
+        {isJoinPopUp && (
+          <div>
+            <div className="overlay"></div>
+            <div className="border logout-popup w-fit p-5 rounded flex flex-col justify-around text-center">
+              <h2 className="text-xl mb-2 font-poppins">
+                You joined the community {communityData.name}
+              </h2>
+              <div className="flex justify-end">
+                <button
+                  className="py-2 px-5  bg-black text-white tracking-wider "
+                  onClick={() => Joined()}
+                >
+                  Yes
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="px-6">
           <nav className="pl-5 pr-10 cursor-pointer flex justify-between items-center py-4 border-b-2">
             <div className="flex items-center gap-5 ">
               <button
@@ -200,7 +235,7 @@ function Community({ setCommunityJoinId, CommunityJoinid, setActiveButton , setC
               </svg>
             </div>
           </nav>
-          <div className="h-3/4 myPosts pb-7 overflow-auto">
+          <div className="h-[60vh] myPosts pb-7 overflow-auto">
             {messages
               .filter((msg) => msg.name && msg.message && msg.date)
               .map((msg, index) => (

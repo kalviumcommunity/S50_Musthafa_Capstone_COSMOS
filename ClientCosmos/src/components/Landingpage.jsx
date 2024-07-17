@@ -22,7 +22,7 @@ function Landingpage() {
         />
         <div className="relative z-10 mt-24 flex flex-col items-center justify-center">
           <div className="text-center flex justify-center">
-            <h2 className="text-4xl w-3/4 sm:text-6xl md:text-8xl lg:text-9xl z-10 font-bold text-gray-100">
+            <h2 className="text-4xl w-3/4 sm:text-6xl md:text-8xl lg:text-9xl z-10 font-poppins font-bold text-gray-100">
               THE COSMOS
             </h2>
           </div>

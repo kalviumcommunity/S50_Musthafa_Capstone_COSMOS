@@ -90,36 +90,19 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
     navigate(`/communities`);
   };
 
-  const ExitCommunity = () => {
+  const ExitCommunity = async () => {
     const userID = userData._id;
-
-    swal({
-      title: "Are you sure?",
-      icon: "warning",
-      buttons: true,
-      dangerMode: true,
-    }).then((willExit) => {
-      if (willExit) {
-        axios
-          .post(`http://localhost:3000/community/exit`, {
-            userId: userID,
-            communityId: communityID,
-          })
-          .then((res) => {
-            console.log(res.data);
-            navigate("/communities");
-            swal("Poof! You've successfully exited!", {
-              icon: "success",
-            });
-          })
-          .catch((err) => {
-            console.log("Error while exiting the community", err);
-            swal("Error while exiting the community", {
-              icon: "error",
-            });
-          });
-      }
-    });
+    try {
+      const response = await axios.post(`http://localhost:3000/community/exit`, {
+        userId: userID,
+        communityId: communityID,
+      });
+      console.log(response);
+      window.location.reload()
+      navigate(`/communities`);
+    } catch (err) {
+      console.log("Error while exiting the community", err);
+    }
   };
 
   return (
@@ -137,26 +120,26 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
             <div className="grid justify-center">
               <div className="flex justify-center">
                 <img
-                  className="rounded-full w-44 h-44"
+                  className="rounded-full w-24 h-24"
                   src={communityData.communityprofile}
                   alt=""
                 />
               </div>
-              <h2 className="text-3xl mt-2 font-semibold text-center">
+              <h2 className="text-2xl mt-2 font-semibold text-center">
                 {communityData.name}
               </h2>
               <h2 className="text-xl mt-2 font-semibold text-center">
                 {communityData.description}
               </h2>
             </div>
-            <h2 className="pl-5 pt-2 text-lg">Members</h2>
-            <ul className=" overflow-auto h-64">
+            <h2 className="pt-2 text-lg">Members</h2>
+            <ul className=" overflow-auto h-64 mt-2 myPosts">
               {communityData.members.map((member, index) => {
                 return (
                   <li
                     ref={lastMemberRef}
                     key={index}
-                    className="p-5 duration-100 cursor-pointer w-96"
+                    className="py-2 duration-100 cursor-pointer w-96"
                   >
                     <div className="flex items-center">
                       <img
@@ -180,21 +163,21 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
         <div className="mt-5">
           <button
             type="button"
-            className="px-4 py-2 mr-4 text-sm font-semibold text-white bg-red-500 rounded hover:bg-red-600 focus:outline-none focus:bg-red-600"
+            className="px-4 py-2 mr-4 text-sm tracking-wide text-white bg-red-500 rounded-sm hover:bg-red-600 duration-300"
             onClick={ExitCommunity}
           >
             Exit Community
           </button>
-          <button
+          {/* <button
             type="button"
-            className="px-4 py-2 text-sm font-semibold text-white bg-yellow-500 rounded hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
+            className="px-4 py-2 text-sm tracking-wide text-white bg-yellow-500 rounded-sm duration-300 hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
             onClick={() => {
               console.log("Reporting community...");
             }}
           >
             <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
             Report
-          </button>
+          </button> */}
         </div>
       </div>
     </dialog>

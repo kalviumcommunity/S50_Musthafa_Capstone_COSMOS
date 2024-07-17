@@ -81,6 +81,19 @@ router.get("/getmyposts/:id", async (req, res) => {
   }
 });
 
+// Route to fetch random 4 posts
+router.get("/getrandomposts", async (req, res) => {
+  try {
+      const randomPosts = await Post.aggregate([
+          { $sample: { size: 4 } }
+      ]);
+
+      res.status(200).json(randomPosts);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+});
+
 
 //* to get all of the comments of a particular post
 router.get("/getAllComments/:id", (req, res) => {
