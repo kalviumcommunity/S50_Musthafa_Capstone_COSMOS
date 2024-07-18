@@ -56,7 +56,7 @@ passport.use(
           request.res.cookie("token", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: false,
-            secure: true,
+            secure: false,
             path: "/",
             sameSite: "None",
           });
@@ -65,7 +65,7 @@ passport.use(
           request.res.cookie("passwordisthere", passwordBool, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: false,
-            secure: true,
+            secure: false,
             path: "/",
             sameSite: "None",
           });
