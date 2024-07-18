@@ -31,7 +31,7 @@ function SignupForm() {
   const onSubmit = async (data) => {
     console.log(data);
     try {
-      const response = await axios.post("http://localhost:3000/users", data);
+      const response = await axios.post("https://s50-musthafa-capstone-cosmos.onrender.com/users", data);
       setAlert(false);
       const { token } = response.data;
       Cookies.set("token", token);
@@ -46,7 +46,7 @@ function SignupForm() {
   };
 
   const GoogleSignUp = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
   };
 
   return (

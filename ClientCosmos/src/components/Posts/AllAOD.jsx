@@ -10,7 +10,7 @@ function AllAOD() {
     const fetchALLAODs = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/news/fetchAllAods"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/news/fetchAllAods"
         );
         setAODS(response.data);
         setLoading(false);

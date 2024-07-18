@@ -57,7 +57,7 @@ function Communities() {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { valid, user } = response.data;
@@ -91,7 +91,7 @@ function Communities() {
       console.log(data);
 
       const response = await axios.post(
-        "http://localhost:3000/community/create",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/community/create",
         requestData
       );
       window.location.reload();

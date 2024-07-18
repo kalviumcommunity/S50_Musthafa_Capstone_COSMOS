@@ -14,7 +14,7 @@ function Posts() {
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/users/getAsingleUser/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
       );
       setUserData(response.data);
     } catch (err) {
@@ -28,7 +28,7 @@ function Posts() {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { valid, user } = response.data;
@@ -47,7 +47,7 @@ function Posts() {
     const fetchRandomUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/users/getusersforuserpost"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/getusersforuserpost"
         );
         setRandomUsers(response.data);
       } catch (err) {

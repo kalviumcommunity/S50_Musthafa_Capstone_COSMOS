@@ -26,7 +26,7 @@ function HomePage({ setSelectedNews }) {
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/users/getAsingleUser/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
       );
       setUserData(response.data);
     } catch (err) {
@@ -40,7 +40,7 @@ function HomePage({ setSelectedNews }) {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { user, valid } = response.data;
@@ -60,7 +60,7 @@ function HomePage({ setSelectedNews }) {
 
     const fetchAstronomicPictureOfTheDay = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/news/apod");
+        const response = await axios.get("https://s50-musthafa-capstone-cosmos.onrender.com/news/apod");
         setAPOD(response.data);
       } catch (err) {
         console.log("Error while fetching APOD", err);
@@ -70,7 +70,7 @@ function HomePage({ setSelectedNews }) {
     const fetchNewsData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/news/getrandomnews"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/news/getrandomnews"
         );
         setNewsData(response.data);
       } catch (err) {
@@ -81,7 +81,7 @@ function HomePage({ setSelectedNews }) {
     const fetchUserPosts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/posts/getrandomposts"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/posts/getrandomposts"
         );
         setUserposts(response.data);
       } catch (err) {
@@ -132,7 +132,7 @@ function HomePage({ setSelectedNews }) {
 
   const LogOut = async () => {
     await axios
-      .get("http://localhost:3000/auth/logout")
+      .get("https://s50-musthafa-capstone-cosmos.onrender.com/auth/logout")
       .then((res) => {
         setLogoutPopupOpen(false);
         if (res.status === 200) {

@@ -45,7 +45,7 @@ function Account({ userData, setDeleteAccountPopUp, GoogleAuth }) {
   const handleChangePassword = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/users/changepassword/${userData.user_id}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/changepassword/${userData.user_id}`,
         {
           currentPassword,
           newPassword,
@@ -222,7 +222,7 @@ function Settings() {
       if (token) {
         try {
           const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
+            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
             { token }
           );
           const { user } = response.data;
@@ -244,7 +244,7 @@ function Settings() {
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/users/getAsingleUser/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
       );
       setUserData(response.data);
     } catch (err) {
@@ -255,7 +255,7 @@ function Settings() {
   const DeleteAccount = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/users/deleteMyAccount/${userData._id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/deleteMyAccount/${userData._id}`
       );
       Cookies.remove("token");
       Cookies.remove("passwordisthere");
@@ -282,7 +282,7 @@ function Settings() {
   const CheckPassWord = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/users/checkPassword/${userData.user_id}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/checkPassword/${userData.user_id}`,
         { password }
       );
       if (response.data.message == "Password is correct") {

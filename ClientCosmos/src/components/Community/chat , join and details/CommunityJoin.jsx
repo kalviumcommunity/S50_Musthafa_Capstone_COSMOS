@@ -26,7 +26,7 @@ function Community({
     if (token) {
       try {
         const response = await axios.post(
-          "http://localhost:3000/users/tokenvalidate",
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
           { token }
         );
         const { valid, user } = response.data;
@@ -44,7 +44,7 @@ function Community({
     const fetchCommunityData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/community/${CommunityJoinid}`
+          `https://s50-musthafa-capstone-cosmos.onrender.com/community/${CommunityJoinid}`
         );
         setCommunityData(response.data);
       } catch (error) {
@@ -55,7 +55,7 @@ function Community({
     const fetchCommunityChatData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/chat/${CommunityJoinid}`
+          `https://s50-musthafa-capstone-cosmos.onrender.com/chat/${CommunityJoinid}`
         );
         setMessages(response.data);
       } catch (error) {
@@ -80,7 +80,7 @@ function Community({
     };
     try {
       const response = await axios.post(
-        "http://localhost:3000/community/join",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/community/join",
         data
       );
       console.log(response.data);
