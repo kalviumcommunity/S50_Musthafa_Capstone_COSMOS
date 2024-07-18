@@ -33,6 +33,7 @@ const generateToken = (data) => {
 const verifyToken = (req, res, next) => {
   const token =
     req.body.token || req.query.token || req.headers["x-access-token"];
+  console.log(token);
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
@@ -297,15 +298,16 @@ router.post("/changepassword/:id", async (req, res) => {
   try {
     const user = await usermodel.findById(id);
     if (!user) {
-      return res
-        .json({ success: false, message: "User not found" });
+      return res.json({ success: false, message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      console.log("it is false")
-      return res
-        .json({ success: false, message: "Current password is incorrect" });
+      console.log("it is false");
+      return res.json({
+        success: false,
+        message: "Current password is incorrect",
+      });
     }
 
     // const salt = await bcrypt.genSalt(10);

@@ -35,13 +35,13 @@ function HomePage({ setSelectedNews }) {
   };
 
   useEffect(() => {
-    const token = Cookies.get("token");
+    // const token = Cookies.get("token");
     const fetchData = async () => {
       if (token) {
         try {
           const response = await axios.post(
             "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            { token }
+            {token}, {withCredentials: true}
           );
           const { user, valid } = response.data;
           setUser(user);
