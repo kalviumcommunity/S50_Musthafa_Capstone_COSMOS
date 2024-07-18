@@ -14,6 +14,8 @@ router.get('/google/callback',
 );
 
 router.get("/logout", (req, res) => {
+  res.clearCookie('token');
+  res.clearCookie('passwordisthere');
   req.logout(function (err) {
     if (err) {
       return res.status(500).send("Error during logout");
@@ -25,8 +27,7 @@ router.get("/logout", (req, res) => {
       res.status(200).send("User logged out successfully");
     });
   });
-  res.clearCookie('token');
-  res.clearCookie('passwordisthere');
+
 });
 
 
