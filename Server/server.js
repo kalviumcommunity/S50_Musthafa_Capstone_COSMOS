@@ -3,7 +3,6 @@ const express = require("express");
 const passport = require("passport");
 const session = require("express-session");
 const { createServer } = require("http");
-var cookieParser = require('cookie-parser')
 
 const setupSocket = require("./socketio");
 const connectDB = require("./config/connect");
