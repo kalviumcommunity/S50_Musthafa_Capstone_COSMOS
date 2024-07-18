@@ -35,8 +35,8 @@ function HomePage({ setSelectedNews }) {
   };
 
   useEffect(() => {
+    const token = Cookies.get("token");
     const fetchData = async () => {
-      const token = Cookies.get("token");
       if (token) {
         try {
           const response = await axios.post(
@@ -60,7 +60,9 @@ function HomePage({ setSelectedNews }) {
 
     const fetchAstronomicPictureOfTheDay = async () => {
       try {
-        const response = await axios.get("https://s50-musthafa-capstone-cosmos.onrender.com/news/apod");
+        const response = await axios.get(
+          "https://s50-musthafa-capstone-cosmos.onrender.com/news/apod"
+        );
         setAPOD(response.data);
       } catch (err) {
         console.log("Error while fetching APOD", err);
@@ -135,13 +137,9 @@ function HomePage({ setSelectedNews }) {
       .get("https://s50-musthafa-capstone-cosmos.onrender.com/auth/logout")
       .then((res) => {
         setLogoutPopupOpen(false);
-        if (res.status === 200) {
-          Cookies.remove("token");
-          Cookies.remove("passwordisthere");
-          window.location.reload();
-        } else {
-          console.error("Error while logging out:", response.data);
-        }
+        Cookies.remove("token");
+        Cookies.remove("passwordisthere");
+        window.location.reload();
       })
       .catch((err) => {
         console.log("Error while loggin out", err);

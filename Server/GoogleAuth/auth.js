@@ -22,7 +22,7 @@ router.get("/logout", (req, res) => {
       if (err) {
         return res.status(500).send("Error destroying session");
       }
-      res.send("User logged out successfully");
+      res.status(200).send("User logged out successfully");
     });
   });
 });
