@@ -3,8 +3,8 @@ const express = require("express");
 const passport = require("passport");
 const session = require("express-session");
 const { createServer } = require("http");
+var cookieParser = require('cookie-parser')
 
-require("./GoogleAuth/GoogleAuth");
 const setupSocket = require("./socketio");
 const connectDB = require("./config/connect");
 const userrouter = require("./Routes/user");
@@ -14,16 +14,18 @@ const communityrouter = require("./Routes/community");
 const chatrouter = require("./Routes/chat");
 const newsrouter = require("./Routes/news");
 const reviewrouter = require("./Routes/reviews");
-
+const cookieParser = require('cookie-parser')
 const port = 3000;
 const app = express();
-require("dotenv").config();
 const SESSION_SECRET = process.env.SESSION_SECRET;
-
 connectDB();
+require("dotenv").config();
+require("./GoogleAuth/GoogleAuth");
+
 
 const server = createServer(app);
-
+app.use(express.json());
+app.use(cookieParser())
 app.use(
   session({
     secret: SESSION_SECRET,
@@ -32,6 +34,7 @@ app.use(
     cookie: {
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
+      httpOnly: false,
       sameSite: "None",
     },
   })
@@ -44,11 +47,11 @@ app.use(
   cors({
     origin: "http://localhost:5173",
     // origin:"https://cosmos-weld.vercel.app",
+    secure: false,
     credentials: true,
   })
 );
 
-app.use(express.json());
 setupSocket(server);
 
 app.use("/users", userrouter);
