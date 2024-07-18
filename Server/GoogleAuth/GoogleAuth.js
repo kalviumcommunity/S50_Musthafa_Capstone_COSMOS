@@ -22,7 +22,8 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google/callback",
+      callbackURL:
+        "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google/callback",
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, done) {
@@ -54,13 +55,19 @@ passport.use(
 
           request.res.cookie("token", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: false,
+            httpOnly: true,
+            secure: true,
+            path: "/",
+            sameSite: "None",
           });
 
           const passwordBool = false;
           request.res.cookie("passwordisthere", passwordBool, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: false,
+            httpOnly: true,
+            secure: true,
+            path: "/",
+            sameSite: "None",
           });
 
           return done(null, existingProfile);
@@ -68,7 +75,7 @@ passport.use(
 
         const userDetail = await createUser(profile);
         const userData = await usermodel.create(userDetail);
-        
+
         const userProfile = {
           name: profile.name.givenName,
           email: profile.email,
@@ -85,12 +92,18 @@ passport.use(
 
         request.res.cookie("token", token, {
           maxAge: 7 * 24 * 60 * 60 * 1000,
-          httpOnly: false,
+          httpOnly: true,
+          secure: true,
+          path: "/",
+          sameSite: "None",
         });
         const passwordBool = false;
         request.res.cookie("passwordisthere", passwordBool, {
           maxAge: 7 * 24 * 60 * 60 * 1000,
-          httpOnly: false,
+          httpOnly: true,
+          secure: true,
+          path: "/",
+          sameSite: "None",
         });
 
         return done(null, profileData);
