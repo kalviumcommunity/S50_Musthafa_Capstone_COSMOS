@@ -35,7 +35,7 @@ function HomePage({ setSelectedNews }) {
   };
 
   useEffect(() => {
-    // const token = Cookies.get("token");
+    const token = Cookies.get("token");
     const fetchData = async () => {
       if (token) {
         try {
