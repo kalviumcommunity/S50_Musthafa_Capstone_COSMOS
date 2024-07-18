@@ -126,7 +126,7 @@ router.post("/getone", async (req, res) => {
     const responseData = {
       token,
     };
-
+    res.cookie("token",token, {httpOnly:false, secure: false})
     res.status(201).json(responseData);
   } catch (error) {
     console.error(error);
@@ -162,7 +162,7 @@ router.post("/", async (req, res) => {
 
       const userProfile = await Profilemodel.create(userProfileData);
       const token = generateToken(userProfile);
-
+      res.cookie("token",token, {httpOnly:false, secure: false})
       res.status(201).json({ token });
     }
   } catch (err) {
