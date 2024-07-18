@@ -33,7 +33,7 @@ const generateToken = (data) => {
 const verifyToken = (req, res, next) => {
   const token =
     req.body.token || req.query.token || req.headers["x-access-token"];
-  console.log(token);
+  console.log("token",token);
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
