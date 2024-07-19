@@ -14,9 +14,6 @@ router.get('/google/callback',
 );
 
 router.get("/logout", (req, res) => {
-  res.cookies("token", null, {secure: false, httpOnly: false});                                  
-  res.clearCookie('token');
-  res.clearCookie('passwordisthere');
   req.logout(function (err) {
     if (err) {
       return res.status(500).send("Error during logout");
