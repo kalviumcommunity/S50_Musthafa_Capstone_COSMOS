@@ -49,7 +49,8 @@ function About() {
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`,
+        { withCredentials: true }
       );
       setUserData(response.data);
     } catch (err) {
@@ -86,7 +87,8 @@ function About() {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/review/randomreviews"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/review/randomreviews",
+          { withCredentials: true }
         );
         if (Array.isArray(response.data)) {
           setReviews(response.data);
@@ -99,24 +101,20 @@ function About() {
     };
 
     const fetchData = async () => {
-      const token = Cookies.get("token");
-      if (token) {
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            { token }
-          );
-          const { user } = response.data;
-          if (user) {
-            setUserData(user);
-            getUserdata(user._id);
-          }
-        } catch (error) {
-          Cookies.remove("token");
-          console.error("Error in post request", error.response.data.error);
+      try {
+        const response = await axios.post(
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
+          {},
+          { withCredentials: true }
+        );
+        const { user } = response.data;
+        if (user) {
+          setUserData(user);
+          getUserdata(user._id);
         }
-      } else {
-        console.log("Token is not there");
+      } catch (error) {
+        Cookies.remove("token");
+        console.error("Error in post request", error.response.data.error);
       }
     };
 
@@ -136,7 +134,7 @@ function About() {
             <li
               className="text-lg font-poppins cursor-pointer hover:scale-105 duration-300 px-5"
               onClick={() => {
-                navigate("/HomePage")
+                navigate("/HomePage");
               }}
             >
               HOME

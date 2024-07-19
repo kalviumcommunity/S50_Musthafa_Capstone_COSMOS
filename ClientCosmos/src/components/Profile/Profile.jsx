@@ -70,23 +70,19 @@ function Profile() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get("token");
-      if (token) {
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            { token }
-          );
-          const { valid, user } = response.data;
-          if (user) {
-            getUserdata(user._id);
-          }
-        } catch (error) {
-          Cookies.remove("token");
-          console.error("Error in post request", error);
+      try {
+        const response = await axios.post(
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
+          {},
+          { withCredentials: true }
+        );
+        const { valid, user } = response.data;
+        if (user) {
+          getUserdata(user._id);
         }
-      } else {
-        console.log("Token is not there");
+      } catch (error) {
+        Cookies.remove("token");
+        console.error("Error in post request", error);
       }
     };
 
@@ -132,7 +128,9 @@ function Profile() {
 
   const DeleteMyPost = async () => {
     await axios
-      .delete(`https://s50-musthafa-capstone-cosmos.onrender.com/posts/${deletePostId}`)
+      .delete(
+        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/${deletePostId}`
+      )
       .then((res) => {
         console.log(res.data);
         setDeletePostPopUp(false);
@@ -370,7 +368,7 @@ function Profile() {
               >
                 YOUR BLOGS
               </h2> */}
-               <h2
+              <h2
                 className="text-4xl font-bold tracking-widest cursor-pointer"
                 onClick={() => {
                   setselectedComp("POSTS");

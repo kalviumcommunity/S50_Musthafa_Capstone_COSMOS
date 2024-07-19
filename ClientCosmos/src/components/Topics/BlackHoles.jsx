@@ -29,23 +29,19 @@ function BlackHoles({ setSelectedNews }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get("token");
-      if (token) {
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            { token }
-          );
-          const { user, valid } = response.data;
-          if (user) {
-            getUserdata(user._id);
-          }
-        } catch (error) {
-          Cookies.remove("token");
-          console.error("Error in post request", error.response.data.error);
+      try {
+        const response = await axios.post(
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
+          {},
+          { withCredentials: true }
+        );
+        const { user, valid } = response.data;
+        if (user) {
+          getUserdata(user._id);
         }
-      } else {
-        console.log("Token is not there");
+      } catch (error) {
+        Cookies.remove("token");
+        console.error("Error in post request", error.response.data.error);
       }
     };
 

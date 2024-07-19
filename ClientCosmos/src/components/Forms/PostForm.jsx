@@ -40,20 +40,16 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get("token");
-      if (token) {
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            { token }
-          );
-          const { user } = response.data;
-          setProfile(user);
-        } catch (error) {
-          console.error("Error in post request", error);
-        }
-      } else {
-        console.log("Token is not there");
+      try {
+        const response = await axios.post(
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
+          {},
+          { withCredentials: true }
+        );
+        const { user } = response.data;
+        setProfile(user);
+      } catch (error) {
+        console.error("Error in post request", error);
       }
     };
 
@@ -208,7 +204,7 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
             >
               {postLoading ? (
                 <div>
-                  <PulseLoader color="#ffffff" size={11}/>
+                  <PulseLoader color="#ffffff" size={11} />
                 </div>
               ) : (
                 <h2>CREATE POST</h2>

@@ -35,26 +35,25 @@ function HomePage({ setSelectedNews }) {
   };
 
   useEffect(() => {
-    // const token = Cookies.get("token");
+    const token = Cookies.get("token");
+    console.log("token", token)
+
     const fetchData = async () => {
-      if (token) {
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            {token}, {withCredentials: true}
-          );
-          const { user, valid } = response.data;
-          setUser(user);
-          if (user) {
-            getUserdata(user._id);
-          }
-          setValid(valid);
-        } catch (error) {
-          Cookies.remove("token");
-          console.error("Error in post request", error.response.data.error);
+      try {
+        const response = await axios.post(
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
+          {},
+          { withCredentials: true }
+        );
+        const { user, valid } = response.data;
+        setUser(user);
+        if (user) {
+          getUserdata(user._id);
         }
-      } else {
-        console.log("Token is not there");
+        setValid(valid);
+      } catch (error) {
+        Cookies.remove("token");
+        console.error("Error in post request", error.response.data.error);
       }
     };
 
@@ -132,14 +131,27 @@ function HomePage({ setSelectedNews }) {
     }
   };
 
+  function deleteCookie(name) {
+    console.log(document.cookie);
+    document.cookie =
+      name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
   const LogOut = async () => {
     await axios
-      .get("https://s50-musthafa-capstone-cosmos.onrender.com/auth/logout")
+      .get("https://s50-musthafa-capstone-cosmos.onrender.com/auth/logout", {
+        withCredentials: true,
+      })
       .then((res) => {
         setLogoutPopupOpen(false);
-        Cookies.remove("token");
-        Cookies.remove("passwordisthere");
-        window.location.reload();
+        console.log(res);
+
+        // Usage example: remove the 'token' cookie
+        deleteCookie("token");
+        deleteCookie("passwordisthere");
+
+        // Cookies.remove("token");
+        // Cookies.remove("passwordisthere");
+        // window.location.reload();
       })
       .catch((err) => {
         console.log("Error while loggin out", err);
@@ -295,10 +307,10 @@ function HomePage({ setSelectedNews }) {
                 <div className="rounded">
                   <img
                     className="rounded-lg w-12 h-8"
-                    src={userData.profilePic}
+                    src={userData?.profilePic}
                   />
                 </div>
-                <div className="font-poppins text-sm">{userData.name}</div>
+                <div className="font-poppins text-sm">{userData?.name}</div>
               </div>
             ) : (
               <>
@@ -342,13 +354,13 @@ function HomePage({ setSelectedNews }) {
                   {/* Profile picture */}
                   <img
                     className="w-16 h-16 rounded-lg mb-2"
-                    src={userData.profilePic}
+                    src={userData?.profilePic}
                     alt="Profile"
                   />
 
                   {/* Name */}
                   <h2 className="text-center  font-semibold text-lg mb-2">
-                    {user.name}
+                    {user?.name}
                   </h2>
                 </div>
               </li>
