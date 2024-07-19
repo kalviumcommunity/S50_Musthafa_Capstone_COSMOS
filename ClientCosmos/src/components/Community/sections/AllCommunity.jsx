@@ -10,12 +10,10 @@ function AllCommunity({ selectedChat, setSelectedChat , setCommunityJoinId }) {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get("token");
-      if (token) {
         try {
           const response = await axios.post(
             "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            { token }
+            {}, {withCredentials: true}
           );
           const { valid, user } = response.data;
           setUserData(user);
@@ -23,9 +21,6 @@ function AllCommunity({ selectedChat, setSelectedChat , setCommunityJoinId }) {
           Cookies.remove("token");
           console.error("Error in post request", error);
         }
-      } else {
-        console.log("Token is not there");
-      }
     };
 
     fetchData();

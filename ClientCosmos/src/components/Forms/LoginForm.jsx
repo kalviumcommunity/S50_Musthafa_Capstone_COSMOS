@@ -24,19 +24,17 @@ function LoginForm() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get("token");
-      if (token) {
+
         try {
           const response = await axios.post(
             "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            { token }
-          );
+            {}, {withCredentials: true}          );
           console.log(response.data);
           navigate("/HomePage");
         } catch (error) {
           console.error("Error in post request", error.response.data.error);
         }
-      }
+      
     };
 
     fetchData();

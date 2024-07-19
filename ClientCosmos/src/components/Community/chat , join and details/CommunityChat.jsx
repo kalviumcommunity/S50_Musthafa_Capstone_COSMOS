@@ -45,23 +45,19 @@ function CommunityChat({
   }, [id]);
 
   const fetchData = async () => {
-    const token = Cookies.get("token");
-    if (token) {
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          { token }
-        );
-        const { valid, user } = response.data;
-        if (user) {
-          getUserdata(user._id);
-        }
-      } catch (error) {
-        Cookies.remove("token");
-        console.error("Error in post request", error);
+    try {
+      const response = await axios.post(
+        "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
+        {},
+        { withCredentials: true }
+      );
+      const { valid, user } = response.data;
+      if (user) {
+        getUserdata(user._id);
       }
-    } else {
-      console.log("Token is not there");
+    } catch (error) {
+      Cookies.remove("token");
+      console.error("Error in post request", error);
     }
   };
 
@@ -90,7 +86,9 @@ function CommunityChat({
 
     const fetchCommunityChatData = async () => {
       try {
-        const response = await axios.get(`https://s50-musthafa-capstone-cosmos.onrender.com/chat/${id}`);
+        const response = await axios.get(
+          `https://s50-musthafa-capstone-cosmos.onrender.com/chat/${id}`
+        );
         setMessages(response.data);
       } catch (error) {
         console.error("Error fetching community data:", error);
@@ -334,7 +332,7 @@ function CommunityChat({
             </svg>
           </button>
         </div> */}
-        
+
         <div className="flex">
           <input
             type="text"

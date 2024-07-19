@@ -53,21 +53,17 @@ function Communities() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get("token");
-      if (token) {
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            { token }
-          );
-          const { valid, user } = response.data;
-          setUserData(user);
-        } catch (error) {
-          Cookies.remove("token");
-          console.error("Error in post request", error);
-        }
-      } else {
-        console.log("Token is not there");
+      try {
+        const response = await axios.post(
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
+          {},
+          { withCredentials: true }
+        );
+        const { valid, user } = response.data;
+        setUserData(user);
+      } catch (error) {
+        Cookies.remove("token");
+        console.error("Error in post request", error);
       }
     };
 

@@ -219,12 +219,10 @@ function Settings() {
         setGoogleAuth(false);
       }
 
-      if (token) {
         try {
           const response = await axios.post(
             "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            { token }
-          );
+            {}, {withCredentials: true} );
           const { user } = response.data;
           if (user) {
             getUserdata(user._id);
@@ -233,9 +231,6 @@ function Settings() {
           Cookies.remove("token");
           console.error("Error in post request", error.response.data.error);
         }
-      } else {
-        console.log("Token is not there");
-      }
     };
 
     fetchData();
