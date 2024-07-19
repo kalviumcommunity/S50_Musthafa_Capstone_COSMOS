@@ -34,7 +34,7 @@ function SignupForm() {
       const response = await axios.post("https://s50-musthafa-capstone-cosmos.onrender.com/users", data);
       setAlert(false);
       const { token } = response.data;
-      Cookies.set("token", token);
+      // Cookies.set("token", token);
       navigate("/HomePage");
 
       setApiError(null);

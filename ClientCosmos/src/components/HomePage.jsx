@@ -35,9 +35,6 @@ function HomePage({ setSelectedNews }) {
   };
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    console.log("token", token)
-
     const fetchData = async () => {
       try {
         const response = await axios.post(

@@ -32,8 +32,8 @@ const generateToken = (data) => {
 
 const verifyToken = (req, res, next) => {
   const token =
-    req.body.token || req.query.token || req.headers["x-access-token"];
-  console.log(token);
+    req.body.token || req.cookies.token || req.query.token || req.headers["x-access-token"];
+    console.log("token",token);
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
@@ -126,7 +126,6 @@ router.post("/getone", async (req, res) => {
     const responseData = {
       token,
     };
-
     res.status(201).json(responseData);
   } catch (error) {
     console.error(error);
@@ -162,7 +161,6 @@ router.post("/", async (req, res) => {
 
       const userProfile = await Profilemodel.create(userProfileData);
       const token = generateToken(userProfile);
-
       res.status(201).json({ token });
     }
   } catch (err) {
