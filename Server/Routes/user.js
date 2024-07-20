@@ -31,17 +31,12 @@ const generateToken = (data) => {
 };
 
 const verifyToken = (req, res, next) => {
-  // console.log(req.cookies.token);
   const token =
-<<<<<<< HEAD
-    req.body.token || req.cookies.token || req.query.token || req.headers["x-access-token"];
-    console.log("token",token);
-=======
     req.body.token ||
     req.cookies.token ||
     req.query.token ||
     req.headers["x-access-token"];
->>>>>>> 2df8590 (updation goin on)
+
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
