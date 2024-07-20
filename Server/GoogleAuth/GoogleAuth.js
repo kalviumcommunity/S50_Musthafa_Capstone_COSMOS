@@ -55,24 +55,12 @@ passport.use(
           request.res.cookie("token", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: false,
-<<<<<<< HEAD
-            secure: false,
-            path: "/",
-            sameSite: "None",
-=======
->>>>>>> 2df8590 (updation goin on)
           });
 
           const passwordBool = false;
           request.res.cookie("passwordisthere", passwordBool, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: false,
-<<<<<<< HEAD
-            secure: false,
-            path: "/",
-            sameSite: "None",
-=======
->>>>>>> 2df8590 (updation goin on)
           });
 
           return done(null, existingProfile);

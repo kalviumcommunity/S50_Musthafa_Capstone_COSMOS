@@ -22,28 +22,6 @@ function HomePage({ setSelectedNews }) {
   };
 
   useEffect(() => {
-<<<<<<< HEAD
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {},
-          { withCredentials: true }
-        );
-        const { user, valid } = response.data;
-        setUser(user);
-        if (user) {
-          getUserdata(user._id);
-        }
-        setValid(valid);
-      } catch (error) {
-        Cookies.remove("token");
-        console.error("Error in post request", error.response.data.error);
-      }
-    };
-
-=======
->>>>>>> 2df8590 (updation goin on)
     const fetchAstronomicPictureOfTheDay = async () => {
       try {
         const response = await axios.get("http://localhost:3000/news/apod");
