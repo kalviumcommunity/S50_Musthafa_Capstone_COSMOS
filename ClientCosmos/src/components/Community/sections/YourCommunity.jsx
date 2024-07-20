@@ -3,37 +3,24 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ShimmerPostItem } from "react-shimmer-effects";
+import useUserData from "../../utils/UserData";
 
 function YourCommunity({ selectedChat, setSelectedChat, setCommunityChatID }) {
   const [userCommunities, setUserCommunities] = useState([]);
-  const [userData, setUserData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { user } = useUserData();
 
   useEffect(() => {
-    const fetchData = async () => {
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            {}, {withCredentials: true}          );
-          const { valid, user } = response.data;
-          setUserData(user);
-        } catch (error) {
-          Cookies.remove("token");
-          console.error("Error in post request", error);
-        }
-    };
-
-    fetchData();
-    if (userData._id) {
+    if (user?._id) {
       fetchUserCommunities();
     }
-  }, [userData._id]);
+  }, [user?._id]);
 
   const fetchUserCommunities = async () => {
-    setSelectedChat("")
+    setSelectedChat("");
     try {
       const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/community/mycommunities/${userData._id}`
+        `http://localhost:3000/community/mycommunities/${user._id}`
       );
       setUserCommunities(response.data);
     } catch (error) {
@@ -76,7 +63,9 @@ function YourCommunity({ selectedChat, setSelectedChat, setCommunityChatID }) {
               <div
                 onClick={() => SelectCommunityChat(communityItem._id)}
                 className={`flex hover:bg-gray-100 hover:cursor-pointer duration-300 py-2 px-6 gap-4 items-center rounded-md ${
-                  selectedChat === communityItem._id ? "bg-gray-400 hover:bg-gray-400" : ""
+                  selectedChat === communityItem._id
+                    ? "bg-gray-400 hover:bg-gray-400"
+                    : ""
                 }`}
                 key={index}
               >

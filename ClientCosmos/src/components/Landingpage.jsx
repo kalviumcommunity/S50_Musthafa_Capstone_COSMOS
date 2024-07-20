@@ -14,7 +14,7 @@ function Landingpage() {
     <>
       <motion.div className="h-screen w-screen flex flex-col items-center relative">
         <video
-          src="https://firebasestorage.googleapis.com/v0/b/cosmos-16de1.appspot.com/o/73477-548608749.mp4?alt=media&token=0c0d36bc-6fe4-446e-9e89-7a81933ecf75"
+          src="https://firebasestorage.googleapis.com/v0/b/cosmos-16de1.appspot.com/o/dp%2F73477-548608749.mp4?alt=media&token=e4e08887-bf3b-45ad-a357-22b405503615"
           autoPlay
           loop
           muted
@@ -27,13 +27,12 @@ function Landingpage() {
             </h2>
           </div>
           <div className="w-full">
-
-          <button
-            onClick={onClick}
-            className="mt-14 w-full py-3 px-5 rounded tracking-wider text-lg sm:text-xl md:text-2xl font-poppins bg-transparent backdrop-blur-sm border duration-500 text-white"
-          >
-            Let's Explore
-          </button>
+            <button
+              onClick={onClick}
+              className="mt-14 w-full py-3 px-5 rounded tracking-wider text-lg sm:text-xl md:text-2xl font-poppins bg-transparent backdrop-blur-sm border duration-500 text-white"
+            >
+              Let's Explore
+            </button>
           </div>
         </div>
       </motion.div>

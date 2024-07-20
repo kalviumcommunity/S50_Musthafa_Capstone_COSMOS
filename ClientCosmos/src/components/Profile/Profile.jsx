@@ -11,9 +11,10 @@ import { imDB } from "../Firebase/firebase";
 import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { MoonLoader } from "react-spinners";
+import useUserData from "../utils/UserData";
 
 function Profile() {
-  const [userData, setUserData] = useState("");
+  const { userData } = useUserData();
   const [myPosts, setMyPosts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -32,7 +33,7 @@ function Profile() {
   const handleSaveClick = async () => {
     try {
       const response = await axios.put(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/editBio/${userData._id}`,
+        `http://localhost:3000/users/editBio/${userData._id}`,
         { bioText }
       );
       if (response) {
@@ -56,41 +57,9 @@ function Profile() {
     setEditMode(true);
   };
 
-  const getUserdata = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
-      );
-      setBioText(response.data.bio);
-      setUserData(response.data);
-    } catch (err) {
-      console.log("Error while getting the profile data", err);
-    }
-  };
-
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {},
-          { withCredentials: true }
-        );
-        const { valid, user } = response.data;
-        if (user) {
-          getUserdata(user._id);
-        }
-      } catch (error) {
-        Cookies.remove("token");
-        console.error("Error in post request", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (userData._id) {
+    if (userData?._id) {
+      setBioText(userData.bio)
       mypostFetch();
     }
   }, [userData]);
@@ -112,7 +81,7 @@ function Profile() {
     }
     try {
       const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/getmyposts/${id}`
+        `http://localhost:3000/posts/getmyposts/${id}`
       );
       if (response.status === 200) {
         setMyPosts(response.data);
@@ -128,9 +97,7 @@ function Profile() {
 
   const DeleteMyPost = async () => {
     await axios
-      .delete(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/${deletePostId}`
-      )
+      .delete(`http://localhost:3000/posts/${deletePostId}`)
       .then((res) => {
         console.log(res.data);
         setDeletePostPopUp(false);
@@ -162,7 +129,7 @@ function Profile() {
     if (imageUrl) {
       try {
         const response = await axios.patch(
-          `https://s50-musthafa-capstone-cosmos.onrender.com/users/updateProfilePic/${userData._id}`,
+          `http://localhost:3000/users/updateProfilePic/${userData._id}`,
           { imageUrl }
         );
         console.log(response.data);
@@ -181,7 +148,7 @@ function Profile() {
 
     try {
       const response = await axios.post(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/like/${postId}`,
+        `http://localhost:3000/posts/like/${postId}`,
         {
           userId: userId,
           action: action,
@@ -311,7 +278,7 @@ function Profile() {
                   <div
                     className="w-52 h-52 bg-cover hover:cursor-pointer hover:grayscale rounded-full"
                     style={{
-                      backgroundImage: `url(${userData.profilePic})`,
+                      backgroundImage: `url(${userData?.profilePic})`,
                       backgroundPosition: "center",
                     }}
                   ></div>
@@ -319,7 +286,7 @@ function Profile() {
               </label>
             </div>
             <h2 className="text-3xl  font font-bold tracking-widest my-3">
-              {userData.name}
+              {userData?.name}
             </h2>
           </div>
           <div className="lg:overflow-auto myPosts lg:h-72">
@@ -329,7 +296,7 @@ function Profile() {
                 type="text"
                 className="w-full font-light border mt-2 p-3 outline-none bg-white rounded-md"
                 disabled
-                value={userData.name}
+                value={userData?.name}
               />
             </div>
             <div>

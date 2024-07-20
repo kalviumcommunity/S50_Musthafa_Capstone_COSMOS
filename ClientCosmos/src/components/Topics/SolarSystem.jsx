@@ -3,47 +3,15 @@ import { Link, useNavigate } from "react-router-dom";
 import BHAM from "../../Assets/BHAM.png";
 import Cookies from "js-cookie";
 import axios from "axios";
+import useUserData from "../utils/UserData";
 
 function SolarSystem({ setSelectedNews }) {
   const [showAnswerIndex, setShowAnswerIndex] = useState(-1);
   const navigate = useNavigate();
-
+  const { userData } = useUserData();
+  
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, []);
-
-  const [userData, setUserData] = useState(null);
-
-  const getUserdata = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
-      );
-      setUserData(response.data);
-    } catch (err) {
-      console.log("Error while getting the profile data", err);
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {},
-          { withCredentials: true }
-        );
-        const { user, valid } = response.data;
-        if (user) {
-          getUserdata(user._id);
-        }
-      } catch (error) {
-        Cookies.remove("token");
-        console.error("Error in post request", error);
-      }
-    };
-
-    fetchData();
   }, []);
 
   const ProfileClick = (index) => {
@@ -179,9 +147,6 @@ function SolarSystem({ setSelectedNews }) {
       case "HOME":
         navigate("/HomePage");
         break;
-      case "EARTH":
-        navigate("/earth");
-        break;
       case "STARS":
         navigate("/stars");
         break;
@@ -212,12 +177,6 @@ function SolarSystem({ setSelectedNews }) {
               className=" cursor-pointer hover:scale-105 duration-300"
             >
               HOME
-            </li>
-            <li
-              onClick={() => discoverTopics("EARTH")}
-              className=" cursor-pointer hover:scale-105 duration-300"
-            >
-              EARTH
             </li>
             <li
               onClick={() => discoverTopics("STARS")}

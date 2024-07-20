@@ -5,6 +5,7 @@ import axios from "axios";
 import swal from "sweetalert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import useUserData from "../../utils/UserData";
 
 function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
   useEffect(() => {
@@ -16,10 +17,10 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
   }, [isOpen]);
 
   const [communityData, setCommunityData] = useState(null);
-  const [userData, setUserData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
+  const { user } = useUserData();
 
   const navigate = useNavigate();
   const observer = useRef();
@@ -42,7 +43,7 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/community/details/${communityID}?page=${page}`
+        `http://localhost:3000/community/details/${communityID}?page=${page}`
       );
       setCommunityData((prevData) => {
         if (prevData) {
@@ -62,24 +63,8 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
     }
   };
 
-  const fetchData = async () => {
- 
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {}, {withCredentials: true}
-        );
-        const { valid, user } = response.data;
-        setUserData(user);
-      } catch (error) {
-        Cookies.remove("token");
-        console.error("Error in post request", error);
-      }
-  };
-
   useEffect(() => {
     fetchCommunityData();
-    fetchData();
   }, [page]);
 
   const goBack = () => {
@@ -87,9 +72,9 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
   };
 
   const ExitCommunity = async () => {
-    const userID = userData._id;
+    const userID = user._id;
     try {
-      const response = await axios.post(`https://s50-musthafa-capstone-cosmos.onrender.com/community/exit`, {
+      const response = await axios.post(`http://localhost:3000/community/exit`, {
         userId: userID,
         communityId: communityID,
       });

@@ -24,17 +24,18 @@ function LoginForm() {
 
   useEffect(() => {
     const fetchData = async () => {
-
+      const token = Cookies.get("token");
+      if (token) {
         try {
           const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            {}, {withCredentials: true}          );
-          console.log(response.data);
+            "http://localhost:3000/users/tokenvalidate",
+            { token }
+          );
           navigate("/HomePage");
         } catch (error) {
           console.error("Error in post request", error.response.data.error);
         }
-      
+      }
     };
 
     fetchData();
@@ -43,7 +44,7 @@ function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
+        "http://localhost:3000/users/getone",
         data
       );
       const { token } = response.data;
@@ -56,7 +57,7 @@ function LoginForm() {
   };
 
   const toLogin = () => {
-    window.location.href = "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
+    window.location.href = "http://localhost:3000/auth/google";
   };
 
   return (

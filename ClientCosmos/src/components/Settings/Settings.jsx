@@ -7,6 +7,7 @@ import PassIcon from "../../Assets/passIcon.png";
 import AccountIcon from "../../Assets/accountIcon.png";
 import HomeIcon from "../../Assets/homeIcon.png";
 import editicon from "../../Assets/editicon.png";
+import useUserData from "../utils/UserData";
 
 function Help() {
   return (
@@ -45,7 +46,7 @@ function Account({ userData, setDeleteAccountPopUp, GoogleAuth }) {
   const handleChangePassword = async () => {
     try {
       const response = await axios.post(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/changepassword/${userData.user_id}`,
+        `http://localhost:3000/users/changepassword/${userData.user_id}`,
         {
           currentPassword,
           newPassword,
@@ -195,13 +196,13 @@ function Account({ userData, setDeleteAccountPopUp, GoogleAuth }) {
 
 function Settings() {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
   const [selectedFun, setSelectedFun] = useState("Account");
   const [DeleteAccountPopUp, setDeleteAccountPopUp] = useState(false);
   const [askPassWord, setAskPassWord] = useState(false);
   const [password, setPassWord] = useState("");
   const [GoogleAuth, setGoogleAuth] = useState(true);
   const [passwordInvalid, setPasswordInvalid] = useState("");
+  const { userData } = useUserData();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -212,45 +213,17 @@ function Settings() {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      const token = Cookies.get("token");
-      const googleAuth = Cookies.get("passwordisthere");
-      if (googleAuth) {
-        setGoogleAuth(false);
-      }
-
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            {}, {withCredentials: true} );
-          const { user } = response.data;
-          if (user) {
-            getUserdata(user._id);
-          }
-        } catch (error) {
-          Cookies.remove("token");
-          console.error("Error in post request", error.response.data.error);
-        }
-    };
-
-    fetchData();
+    const googleAuth = Cookies.get("passwordisthere");
+    if (googleAuth) {
+      setGoogleAuth(false);
+    }
   }, []);
 
-  const getUserdata = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
-      );
-      setUserData(response.data);
-    } catch (err) {
-      console.log("Error while getting the profile data", err);
-    }
-  };
 
   const DeleteAccount = async () => {
     try {
       const response = await axios.delete(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/deleteMyAccount/${userData._id}`
+        `http://localhost:3000/users/deleteMyAccount/${userData._id}`
       );
       Cookies.remove("token");
       Cookies.remove("passwordisthere");
@@ -277,7 +250,7 @@ function Settings() {
   const CheckPassWord = async () => {
     try {
       const response = await axios.post(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/checkPassword/${userData.user_id}`,
+        `http://localhost:3000/users/checkPassword/${userData.user_id}`,
         { password }
       );
       if (response.data.message == "Password is correct") {

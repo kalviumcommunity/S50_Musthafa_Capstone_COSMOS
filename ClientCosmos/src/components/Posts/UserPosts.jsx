@@ -12,7 +12,7 @@ function UserPosts({ userData, setUserData }) {
 
   useEffect(() => {
     axios
-      .get(`https://s50-musthafa-capstone-cosmos.onrender.com/posts`)
+      .get(`http://localhost:3000/posts`)
       .then((response) => {
         const postsWithBase64Images = response.data;
         const shuffledArray = shuffleArray(postsWithBase64Images);
@@ -43,7 +43,7 @@ function UserPosts({ userData, setUserData }) {
 
     try {
       const response = await axios.post(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/like/${postId}`,
+        `http://localhost:3000/posts/like/${postId}`,
         {
           userId: userId,
           action: action,
@@ -88,7 +88,7 @@ function UserPosts({ userData, setUserData }) {
 
     try {
       const response = await axios.post(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/saveThePost/${userId}`,
+        `http://localhost:3000/users/saveThePost/${userId}`,
         {
           postId: postId,
           action: action,
@@ -204,7 +204,7 @@ function UserPosts({ userData, setUserData }) {
                         onChange={(event) =>
                           handleCheckboxChange(event, post._id)
                         }
-                        checked={post.likes.includes(userData._id)}
+                        checked={post.likes.includes(userData?._id)}
                       />
                       <div className="bookmark z-0">
                         <svg
@@ -240,8 +240,8 @@ function UserPosts({ userData, setUserData }) {
                     type="checkbox"
                     onChange={(event) => savePostsHandleChange(event, post._id)}
                     checked={
-                      userData.saved_posts
-                        ? userData.saved_posts.includes(post._id)
+                      userData?.saved_posts
+                        ? userData?.saved_posts.includes(post._id)
                         : false
                     }
                   />

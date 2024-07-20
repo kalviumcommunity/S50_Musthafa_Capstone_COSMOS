@@ -5,43 +5,20 @@ import Cookies from "js-cookie";
 import UserPosts from "./UserPosts";
 import SavedPosts from "./SavedPosts";
 import AllAOD from "./AllAOD";
+import useUserData from "../utils/UserData";
 
 function Posts() {
+  const { userData , setUserData } = useUserData();
+
   const navigate = useNavigate();
   const [randomUsers, setRandomUsers] = useState([]);
-  const [userData, setUserData] = useState("");
   const [activeTab, setActiveTab] = useState("userPosts");
-  const getUserdata = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
-      );
-      setUserData(response.data);
-    } catch (err) {
-      console.log("Error while getting the profile data", err);
-    }
-  };
 
   useEffect(() => {
-    const fetchData = async () => {
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            {}, {withCredentials: true}          );
-          const { valid, user } = response.data;
-          if (user) {
-            getUserdata(user._id);
-          }
-        } catch (error) {
-          Cookies.remove("token");
-          console.error("Error in post request", error);
-        }
-    };
-
     const fetchRandomUsers = async () => {
       try {
         const response = await axios.get(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/getusersforuserpost"
+          "http://localhost:3000/users/getusersforuserpost"
         );
         setRandomUsers(response.data);
       } catch (err) {
@@ -50,7 +27,6 @@ function Posts() {
     };
 
     fetchRandomUsers();
-    fetchData();
   }, []);
 
   return (

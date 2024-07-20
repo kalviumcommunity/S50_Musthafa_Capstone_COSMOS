@@ -13,9 +13,11 @@ import YourCommunity from "./sections/YourCommunity";
 import CommunityJoin from "./chat , join and details/CommunityJoin";
 import CommunityChat from "./chat , join and details/CommunityChat";
 import { PulseLoader } from "react-spinners";
+import useUserData from "../utils/UserData";
 
 function Communities() {
-  const [userData, setUserData] = useState([]);
+  const { user } = useUserData();
+
   const [CommunityJoinid, setCommunityJoinId] = useState("");
   const [CommunityChatID, setCommunityChatID] = useState("");
   const [files, setFiles] = useState([]);
@@ -51,29 +53,14 @@ function Communities() {
     setCommunityChatID("");
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {},
-          { withCredentials: true }
-        );
-        const { valid, user } = response.data;
-        setUserData(user);
-      } catch (error) {
-        Cookies.remove("token");
-        console.error("Error in post request", error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
+  const closeModalPP = () => {
+    document.getElementById("my_modal_1").close();
+  };
+  
   const onSubmit = async (data) => {
     setCommunityCreationLoading(true);
     try {
-      const id = userData._id;
+      const id = user._id;
       const imgS = ref(imDB, `images${v4()}`);
       const uploadData = await uploadBytes(imgS, files[0]);
       const imageUrl = await getDownloadURL(uploadData.ref);
@@ -84,13 +71,19 @@ function Communities() {
         communityprofile: imageUrl,
       };
 
-      console.log(data);
-
       const response = await axios.post(
-        "https://s50-musthafa-capstone-cosmos.onrender.com/community/create",
+        "http://localhost:3000/community/create",
         requestData
       );
-      window.location.reload();
+
+      const { community, message } = response.data;
+      setCommunityCreationLoading(false);
+      console.log(community);
+      closeModalPP()
+      setActiveButton("YOURS");
+      setSelectedChat(community._id);
+      setCommunityChatID(community._id);
+      setCommunityJoinId("");
     } catch (error) {
       console.error("Error creating community:", error);
     }
