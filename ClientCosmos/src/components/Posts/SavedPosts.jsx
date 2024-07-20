@@ -15,7 +15,7 @@ function SavedPosts({ userData , setUserData }) {
     const fetchSavedPosts = async () => {
       try {
         const response = await axios.get(
-          `https://s50-musthafa-capstone-cosmos.onrender.com/posts/getmysavedPosts/${userData._id}`
+          `http://localhost:3000/posts/getmysavedPosts/${userData._id}`
         );
         setMySavedPosts(response.data); // Set the fetched data to state
         setLoading(false);
@@ -26,7 +26,7 @@ function SavedPosts({ userData , setUserData }) {
     };
 
     fetchSavedPosts();
-  }, [userData._id]);
+  }, [userData?._id]);
 
   const savePostsHandleChange = async (event, postId) => {
     const action = event.target.checked ? "saved" : "unsaved";
@@ -34,7 +34,7 @@ function SavedPosts({ userData , setUserData }) {
 
     try {
       const response = await axios.post(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/saveThePost/${userId}`,
+        `http://localhost:3000/users/saveThePost/${userId}`,
         {
           postId: postId,
           action: action,
@@ -67,7 +67,7 @@ function SavedPosts({ userData , setUserData }) {
 
     try {
       const response = await axios.post(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/like/${postId}`,
+        `http://localhost:3000/posts/like/${postId}`,
         {
           userId: userId,
           action: action,

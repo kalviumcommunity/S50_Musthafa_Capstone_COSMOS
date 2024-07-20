@@ -7,14 +7,15 @@ import { Rating } from "primereact/rating";
 import { formatDistanceToNow } from "date-fns";
 import { useForm } from "react-hook-form";
 import { PulseLoader } from "react-spinners";
+import useUserData from "./utils/UserData";
 
 function About() {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState([]);
-  const [userData, setUserData] = useState(null);
   const { register, handleSubmit } = useForm();
   const [reviewUpdation, setreviewUpdation] = useState(false);
-
+  const { userData } = useUserData();
+  
   const onSubmit = async (data) => {
     setreviewUpdation(true);
     const review = {
@@ -25,7 +26,7 @@ function About() {
 
     try {
       const response = await axios.post(
-        "https://s50-musthafa-capstone-cosmos.onrender.com/review/newreview",
+        "http://localhost:3000/review/newreview",
         { review }
       );
       if (response.data && response.data._id) {
@@ -43,18 +44,6 @@ function About() {
       }
     } catch (error) {
       alert("Error adding review");
-    }
-  };
-
-  const getUserdata = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`,
-        { withCredentials: true }
-      );
-      setUserData(response.data);
-    } catch (err) {
-      console.log("Error while getting the profile data", err);
     }
   };
 
@@ -87,8 +76,7 @@ function About() {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/review/randomreviews",
-          { withCredentials: true }
+          "http://localhost:3000/review/randomreviews"
         );
         if (Array.isArray(response.data)) {
           setReviews(response.data);
@@ -100,25 +88,6 @@ function About() {
       }
     };
 
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {},
-          { withCredentials: true }
-        );
-        const { user } = response.data;
-        if (user) {
-          setUserData(user);
-          getUserdata(user._id);
-        }
-      } catch (error) {
-        Cookies.remove("token");
-        console.error("Error in post request", error.response.data.error);
-      }
-    };
-
-    fetchData();
     fetchReviews();
   }, []);
 
@@ -134,7 +103,7 @@ function About() {
             <li
               className="text-lg font-poppins cursor-pointer hover:scale-105 duration-300 px-5"
               onClick={() => {
-                navigate("/HomePage");
+                navigate("/HomePage")
               }}
             >
               HOME

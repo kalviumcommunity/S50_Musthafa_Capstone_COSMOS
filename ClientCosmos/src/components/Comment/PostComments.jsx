@@ -11,7 +11,7 @@ function PostComments({ post_id, userData, commentModal, toggleCommentModal }) {
     try {
       if (post_id !== "") {
         const response = await axios.get(
-          `https://s50-musthafa-capstone-cosmos.onrender.com/posts/getAllComments/${post_id}`
+          `http://localhost:3000/posts/getAllComments/${post_id}`
         );
         console.log(response.data);
         setComments(response.data);
@@ -36,7 +36,7 @@ function PostComments({ post_id, userData, commentModal, toggleCommentModal }) {
 
       try {
         const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/posts/addcomment",
+          "http://localhost:3000/posts/addcomment",
           newComment
         );
         console.log("Comment added successfully:", response.data);
@@ -47,7 +47,6 @@ function PostComments({ post_id, userData, commentModal, toggleCommentModal }) {
         console.error("Error adding comment:", error);
         toast.error("Error adding comment. Please try again.");
       }
-
       setYourComment("");
     }
   };

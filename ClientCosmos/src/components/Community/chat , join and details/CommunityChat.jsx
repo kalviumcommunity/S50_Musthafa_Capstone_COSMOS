@@ -6,6 +6,7 @@ import { ShimmerCategoryItem } from "react-shimmer-effects";
 import Cookies from "js-cookie";
 import io from "socket.io-client";
 import CommunityDetailsModal from "./CommunityDetailsModal";
+import useUserData from "../../utils/UserData";
 
 function CommunityChat({
   id,
@@ -14,13 +15,14 @@ function CommunityChat({
   setSelectedChat,
 }) {
   const [communityData, setCommunityData] = useState([]);
-  const [userData, setUserData] = useState([]);
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
+  const { userData } = useUserData();
+
   const messagesEndRef = useRef(null);
 
-  const socket = io("https://s50-musthafa-capstone-cosmos.onrender.com");
+  const socket = io("http://localhost:3000");
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -44,39 +46,11 @@ function CommunityChat({
     };
   }, [id]);
 
-  const fetchData = async () => {
-    try {
-      const response = await axios.post(
-        "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-        {},
-        { withCredentials: true }
-      );
-      const { valid, user } = response.data;
-      if (user) {
-        getUserdata(user._id);
-      }
-    } catch (error) {
-      Cookies.remove("token");
-      console.error("Error in post request", error);
-    }
-  };
-
-  const getUserdata = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
-      );
-      setUserData(response.data);
-    } catch (err) {
-      console.log("Error while getting the profile data", err);
-    }
-  };
-
   useEffect(() => {
     const fetchCommunityData = async () => {
       try {
         const response = await axios.get(
-          `https://s50-musthafa-capstone-cosmos.onrender.com/community/${id}`
+          `http://localhost:3000/community/${id}`
         );
         setCommunityData(response.data);
       } catch (error) {
@@ -86,16 +60,13 @@ function CommunityChat({
 
     const fetchCommunityChatData = async () => {
       try {
-        const response = await axios.get(
-          `https://s50-musthafa-capstone-cosmos.onrender.com/chat/${id}`
-        );
+        const response = await axios.get(`http://localhost:3000/chat/${id}`);
         setMessages(response.data);
       } catch (error) {
         console.error("Error fetching community data:", error);
       }
     };
 
-    fetchData();
     fetchCommunityData();
     fetchCommunityChatData();
   }, [id]);
@@ -234,7 +205,7 @@ function CommunityChat({
               <div
                 key={index}
                 className={`chat ${
-                  msg.name === userData.name ? "chat-end" : "chat-start"
+                  msg.name === userData?.name ? "chat-end" : "chat-start"
                 }`}
               >
                 <div className="chat-image avatar">
@@ -244,7 +215,7 @@ function CommunityChat({
                 </div>
                 <div
                   className={`chat-bubble shadow-lg py-4 ${
-                    msg.name === userData.name
+                    msg.name === userData?.name
                       ? "text-white bg-gray-900"
                       : "bg-white text-black"
                   }`}
@@ -262,77 +233,7 @@ function CommunityChat({
             ))}
           <div ref={messagesEndRef} />
         </div>
-
-        {/* <div className="messageBox border py-5 px-10 flex justify-around">
-          <div className="fileUploadWrapper">
-            <label htmlFor="file">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 337 337"
-              >
-                <circle
-                  strokeWidth="20"
-                  stroke="#6c6c6c"
-                  fill="none"
-                  r="158.5"
-                  cy="168.5"
-                  cx="168.5"
-                ></circle>
-                <path
-                  strokeLinecap="round"
-                  strokeWidth="25"
-                  stroke="#6c6c6c"
-                  d="M167.759 79V259"
-                ></path>
-                <path
-                  strokeLinecap="round"
-                  strokeWidth="25"
-                  stroke="#6c6c6c"
-                  d="M79 167.138H259"
-                ></path>
-              </svg>
-              <span className="tooltip">Add an image</span>
-            </label>
-            <input type="file" id="file" name="file" />
-          </div>
-          <input
-            required
-            placeholder="Type here.."
-            type="text"
-            value={message}
-            id="messageInput"
-            onChange={(e) => {
-              setMessage(e.target.value);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                sendMessage();
-              }
-            }}
-            className="w-11/12 h-full bg-transparent pl-3 outline-none"
-          />
-          <button onClick={() => sendMessage()} id="sendButton">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 664 663"
-            >
-              <path
-                fill="none"
-                d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
-              ></path>
-              <path
-                strokeLinejoin="round"
-                strokeLinecap="round"
-                strokeWidth="33.67"
-                stroke="#6c6c6c"
-                d="M646.293 331.888L17.7538 17.6187L155.245 331.888M646.293 331.888L17.753 646.157L155.245 331.888M646.293 331.888L318.735 330.228L155.245 331.888"
-              ></path>
-            </svg>
-          </button>
-        </div> */}
-
+        
         <div className="flex">
           <input
             type="text"

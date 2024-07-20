@@ -6,13 +6,11 @@ import WHAM from "../Assets/WHAM.png";
 import EARTH from "../Assets/EARTH.jpg";
 import SOLARSYSTEM from "../Assets/SOLARSYSTEM1.webp";
 import commenticon from "../Assets/commenticon.png";
+import useUserData from "./utils/UserData";
 
 function HomePage({ setSelectedNews }) {
+  const { valid, userData, loading, setLoading } = useUserData();
   const navigate = useNavigate();
-  const [valid, setValid] = useState("");
-  const [user, setUser] = useState([]);
-  const [userData, setUserData] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [apod, setAPOD] = useState([]);
   const [newsData, setNewsData] = useState([]);
   const [isLogoutPopupOpen, setLogoutPopupOpen] = useState(false);
@@ -23,18 +21,8 @@ function HomePage({ setSelectedNews }) {
     navigate("/selenews");
   };
 
-  const getUserdata = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
-      );
-      setUserData(response.data);
-    } catch (err) {
-      console.log("Error while getting the profile data", err);
-    }
-  };
-
   useEffect(() => {
+<<<<<<< HEAD
     const fetchData = async () => {
       try {
         const response = await axios.post(
@@ -54,11 +42,11 @@ function HomePage({ setSelectedNews }) {
       }
     };
 
+=======
+>>>>>>> 2df8590 (updation goin on)
     const fetchAstronomicPictureOfTheDay = async () => {
       try {
-        const response = await axios.get(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/news/apod"
-        );
+        const response = await axios.get("http://localhost:3000/news/apod");
         setAPOD(response.data);
       } catch (err) {
         console.log("Error while fetching APOD", err);
@@ -68,7 +56,7 @@ function HomePage({ setSelectedNews }) {
     const fetchNewsData = async () => {
       try {
         const response = await axios.get(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/news/getrandomnews"
+          "http://localhost:3000/news/getrandomnews"
         );
         setNewsData(response.data);
       } catch (err) {
@@ -79,7 +67,7 @@ function HomePage({ setSelectedNews }) {
     const fetchUserPosts = async () => {
       try {
         const response = await axios.get(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/posts/getrandomposts"
+          "http://localhost:3000/posts/getrandomposts"
         );
         setUserposts(response.data);
       } catch (err) {
@@ -94,7 +82,6 @@ function HomePage({ setSelectedNews }) {
     fetchAstronomicPictureOfTheDay();
     fetchNewsData();
     fetchUserPosts();
-    fetchData();
     return () => clearTimeout(timer);
   }, []);
 
@@ -128,27 +115,18 @@ function HomePage({ setSelectedNews }) {
     }
   };
 
-  function deleteCookie(name) {
-    console.log(document.cookie);
-    document.cookie =
-      name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  }
   const LogOut = async () => {
     await axios
-      .get("https://s50-musthafa-capstone-cosmos.onrender.com/auth/logout", {
-        withCredentials: true,
-      })
+      .get("http://localhost:3000/auth/logout")
       .then((res) => {
         setLogoutPopupOpen(false);
-        console.log(res);
-
-        // Usage example: remove the 'token' cookie
-        deleteCookie("token");
-        deleteCookie("passwordisthere");
-
-        // Cookies.remove("token");
-        // Cookies.remove("passwordisthere");
-        // window.location.reload();
+        if (res.status === 200) {
+          Cookies.remove("token");
+          Cookies.remove("passwordisthere");
+          window.location.reload();
+        } else {
+          console.error("Error while logging out:", response.data);
+        }
       })
       .catch((err) => {
         console.log("Error while loggin out", err);
@@ -357,7 +335,7 @@ function HomePage({ setSelectedNews }) {
 
                   {/* Name */}
                   <h2 className="text-center  font-semibold text-lg mb-2">
-                    {user?.name}
+                    {userData?.name}
                   </h2>
                 </div>
               </li>
@@ -503,9 +481,10 @@ function HomePage({ setSelectedNews }) {
           </h2>
           <div className="flex gap-5 mt-7">
             {userposts &&
-              userposts.map((post) => {
+              userposts.map((post, index) => {
                 return (
                   <div
+                    key={index}
                     className="p-5 w-96 border text-white rounded-sm hover:cursor-pointer"
                     onClick={() => {
                       navigate("/userPosts");

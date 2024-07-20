@@ -3,40 +3,23 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { ShimmerPostItem } from "react-shimmer-effects";
 import Cookies from "js-cookie";
+import useUserData from "../../utils/UserData";
 
 function AllCommunity({ selectedChat, setSelectedChat , setCommunityJoinId }) {
-  const [userData, setUserData] = useState(null);
   const [communities, setCommunities] = useState([]);
+  const { user } = useUserData();
 
   useEffect(() => {
-    const fetchData = async () => {
-        try {
-          const response = await axios.post(
-            "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-            {}, {withCredentials: true}
-          );
-          const { valid, user } = response.data;
-          setUserData(user);
-        } catch (error) {
-          Cookies.remove("token");
-          console.error("Error in post request", error);
-        }
-    };
-
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (userData) {
+    if (user) {
       fetchCommunities();
     }
-  }, [userData]);
+  }, [user]);
 
   const fetchCommunities = async () => {
     setSelectedChat("")
     try {
       const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/community/getAll/${userData._id}`
+        `http://localhost:3000/community/getAll/${user._id}`
       );
       setCommunities(response.data);
     } catch (error) {
@@ -60,7 +43,6 @@ function AllCommunity({ selectedChat, setSelectedChat , setCommunityJoinId }) {
                 className={`flex hover:bg-gray-100 hover:cursor-pointer duration-300 py-2 px-6 gap-4 items-center rounded-md ${
                   selectedChat === communityItem._id ? "bg-gray-400 hover:bg-gray-400" : ""
                 }`}
-                // className="flex hover:bg-gray-200 hover:cursor-pointer duration-300 py-2 px-6 gap-4 items-center rounded-md"
                 key={index}
               >
                 <img

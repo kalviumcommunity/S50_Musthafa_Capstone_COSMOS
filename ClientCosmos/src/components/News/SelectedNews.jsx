@@ -30,7 +30,7 @@ function SelectedNews({ setSelectedNews, selectedNews }) {
     const fetchRelatedNews = async () => {
       try {
         const response = await axios.get(
-          `https://s50-musthafa-capstone-cosmos.onrender.com/news/getRelatedNews/${selectedNews.topic}`
+          `http://localhost:3000/news/getRelatedNews/${selectedNews.topic}`
         );
         console.log(response.data);
         setRelatedNewsData(response.data);

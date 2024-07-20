@@ -10,11 +10,13 @@ import { imDB } from "../Firebase/firebase";
 import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { PulseLoader } from "react-spinners";
+import useUserData from "../utils/UserData";
 
 function PostForm({ Modal, setModalOpen, mypostFetch }) {
+  const { user } = useUserData();
+  
   const [iv, setisv] = useState(false);
   const [files, setFiles] = React.useState([]);
-  const [profile, setProfile] = useState([]);
   const [postLoading, setPostLoading] = useState(false);
   const [fileRejections, setFileRejections] = React.useState([]);
   const handleChange = React.useCallback((files) => setFiles([files[0]]), []);
@@ -38,24 +40,6 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
     }
   }, [Modal]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {},
-          { withCredentials: true }
-        );
-        const { user } = response.data;
-        setProfile(user);
-      } catch (error) {
-        console.error("Error in post request", error);
-      }
-    };
-
-    fetchData();
-  });
-
   const {
     register,
     handleSubmit,
@@ -76,11 +60,11 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
 
       setModalOpen(false);
       const response = await axios.post(
-        "https://s50-musthafa-capstone-cosmos.onrender.com/posts/newpost",
+        "http://localhost:3000/posts/newpost",
         requestData,
         {
           headers: {
-            "X-Profile": JSON.stringify(profile),
+            "X-Profile": JSON.stringify(user),
             "Content-Type": "multipart/form-data",
           },
         }

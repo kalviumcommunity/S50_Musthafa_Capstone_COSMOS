@@ -5,6 +5,7 @@ import { ShimmerCategoryItem } from "react-shimmer-effects";
 import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useUserData from "../../utils/UserData";
 
 function Community({
   setCommunityJoinId,
@@ -15,31 +16,17 @@ function Community({
   setSelectedChat,
 }) {
   const [communityData, setCommunityData] = useState(null);
-  const [userData, setUserData] = useState([]);
   const [messages, setMessages] = useState([]);
   const [isJoinPopUp, setIsJoinPopUp] = useState(false);
 
   const navigate = useNavigate();
-
-  const fetchData = async () => {
-
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {}, {withCredentials: true}        );
-        const { valid, user } = response.data;
-        setUserData(user);
-      } catch (error) {
-        Cookies.remove("token");
-        console.error("Error in post request", error);
-      }
-  };
+  const { user } = useUserData();
 
   useEffect(() => {
     const fetchCommunityData = async () => {
       try {
         const response = await axios.get(
-          `https://s50-musthafa-capstone-cosmos.onrender.com/community/${CommunityJoinid}`
+          `http://localhost:3000/community/${CommunityJoinid}`
         );
         setCommunityData(response.data);
       } catch (error) {
@@ -50,7 +37,7 @@ function Community({
     const fetchCommunityChatData = async () => {
       try {
         const response = await axios.get(
-          `https://s50-musthafa-capstone-cosmos.onrender.com/chat/${CommunityJoinid}`
+          `http://localhost:3000/chat/${CommunityJoinid}`
         );
         setMessages(response.data);
       } catch (error) {
@@ -70,12 +57,12 @@ function Community({
 
   const JoiningtoCommunity = async () => {
     const data = {
-      userId: userData._id,
+      userId: user._id,
       communityid: CommunityJoinid,
     };
     try {
       const response = await axios.post(
-        "https://s50-musthafa-capstone-cosmos.onrender.com/community/join",
+        "http://localhost:3000/community/join",
         data
       );
       console.log(response.data);
@@ -237,7 +224,7 @@ function Community({
                 <div
                   key={index}
                   className={`chat ${
-                    msg.name === userData.name ? "chat-end" : "chat-start"
+                    msg.name === user.name ? "chat-end" : "chat-start"
                   }`}
                 >
                   <div className="chat-image avatar">
@@ -247,7 +234,7 @@ function Community({
                   </div>
                   <div
                     className={`chat-bubble shadow-lg py-4 ${
-                      msg.name === userData.name
+                      msg.name === user.name
                         ? "text-white bg-gray-900"
                         : "bg-white text-black"
                     }`}

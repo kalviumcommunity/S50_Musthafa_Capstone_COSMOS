@@ -4,10 +4,11 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import React from "react";
+import useUserData from "../utils/UserData";
 
 function PostEditForm({ EditModal, setEditModalOpen, mypostFetch, post }) {
   const [iv, setisv] = useState(false);
-  const [profile, setProfile] = useState([]);
+  const { user } = useUserData();
 
   useEffect(() => {
     if (EditModal == true) {
@@ -20,23 +21,6 @@ function PostEditForm({ EditModal, setEditModalOpen, mypostFetch, post }) {
       }
     }
   }, [EditModal]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {},
-          { withCredentials: true }
-        );
-        const { user } = response.data;
-        setProfile(user);
-      } catch (error) {
-        console.error("Error in post request", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   const {
     register,
@@ -56,11 +40,11 @@ function PostEditForm({ EditModal, setEditModalOpen, mypostFetch, post }) {
     try {
       setEditModalOpen(false);
       const response = await axios.put(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/${post._id}`,
+        `http://localhost:3000/posts/${post._id}`,
         data,
         {
           headers: {
-            "X-Profile": JSON.stringify(profile),
+            "X-Profile": JSON.stringify(user),
             "Content-Type": "application/json",
           },
         }

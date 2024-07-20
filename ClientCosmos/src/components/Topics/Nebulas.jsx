@@ -3,11 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import BHAM from "../../Assets/BHAM.png";
 import Cookies from "js-cookie";
 import axios from "axios";
+import useUserData from "../utils/UserData";
 
 function Nebulas({ setSelectedNews }) {
   const navigate = useNavigate();
   const [showAnswerIndex, setShowAnswerIndex] = useState(-1);
-
+  const {  userData } = useUserData();
+  
   const ProfileClick = (index) => {
     setShowAnswerIndex(showAnswerIndex === index ? -1 : index);
   };
@@ -15,38 +17,7 @@ function Nebulas({ setSelectedNews }) {
     setSelectedNews(e);
     navigate("/selenews");
   };
-  const [userData, setUserData] = useState(null);
-  const getUserdata = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
-      );
-      setUserData(response.data);
-    } catch (err) {
-      console.log("Error while getting the profile data", err);
-    }
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          {},
-          { withCredentials: true }
-        );
-        const { user, valid } = response.data;
-        if (user) {
-          getUserdata(user._id);
-        }
-      } catch (error) {
-        Cookies.remove("token");
-        console.error("Error in post request", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+  
 
   const discoverTopics = (e) => {
     switch (e) {
@@ -55,9 +26,6 @@ function Nebulas({ setSelectedNews }) {
         break;
       case "HOME":
         navigate("/HomePage");
-        break;
-      case "EARTH":
-        navigate("/earth");
         break;
       case "SOLAR SYSTEM":
         navigate("/solarsystem");
@@ -199,12 +167,6 @@ The central bar in these types of galaxies plays an important role in their evol
               className=" cursor-pointer hover:scale-105 duration-300"
             >
               HOME
-            </li>
-            <li
-              onClick={() => discoverTopics("EARTH")}
-              className=" cursor-pointer hover:scale-105 duration-300"
-            >
-              EARTH
             </li>
             <li
               onClick={() => discoverTopics("SOLAR SYSTEM")}
