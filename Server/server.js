@@ -24,7 +24,8 @@ require("./GoogleAuth/GoogleAuth");
 
 const server = createServer(app);
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser());
+
 app.use(
   session({
     secret: SESSION_SECRET,
@@ -33,8 +34,8 @@ app.use(
     cookie: {
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
-      httpOnly: false,
-      sameSite: "None",
+      httpOnly: true,
+      sameSite: "Lax",
     },
   })
 );

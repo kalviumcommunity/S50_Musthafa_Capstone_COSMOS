@@ -282,7 +282,7 @@ function SolarSystem({ setSelectedNews }) {
               <div
                 key={index}
                 className="h-full flex items-end bg-cover bg-blue-600"
-                style={{ backgroundImage: `url(${planet.image})` }}
+                style={{ backgroundImage: `url(${planet.image})` , backgroundPosition:"left" }}
               >
                 <div className="w-72">
                   <h2 className="text-3xl text-white mb-7 ml-5 font-bold ">

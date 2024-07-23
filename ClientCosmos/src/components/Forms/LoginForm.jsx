@@ -22,34 +22,37 @@ function LoginForm() {
     formState: { errors },
   } = useForm();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const token = Cookies.get("token");
-      if (token) {
-        try {
-          const response = await axios.post(
-            "http://localhost:3000/users/tokenvalidate",
-            { token }
-          );
-          navigate("/HomePage");
-        } catch (error) {
-          console.error("Error in post request", error.response.data.error);
-        }
-      }
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const token = Cookies.get("token");
+  //     if (token) {
+  //       try {
+  //         const response = await axios.post(
+  //           "http://localhost:3000/users/tokenvalidate",
+  //           { token }
+  //         );
+  //         navigate("/HomePage");
+  //       } catch (error) {
+  //         console.error("Error in post request", error.response.data.error);
+  //       }
+  //     }
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
         "http://localhost:3000/users/getone",
-        data
+        data,
+        {
+          withCredentials: true,
+        }
       );
-      const { token } = response.data;
-      Cookies.set("token", token);
-      navigate("/HomePage");
+      if (response.status === 201) {
+        navigate("/HomePage");
+      }
     } catch (error) {
       console.error("Error in post request", error.response.data.error);
       setApiError(error.response.data.error);
@@ -75,7 +78,7 @@ function LoginForm() {
           </div>
         </div>
       )}
-      
+
       <div
         className="w-screen h-screen bg-black grid py-28 justify-end items-center bg-no-repeat bg-cover"
         style={{
