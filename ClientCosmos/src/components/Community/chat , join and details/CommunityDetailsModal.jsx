@@ -45,6 +45,7 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
       const response = await axios.get(
         `http://localhost:3000/community/details/${communityID}?page=${page}`
       );
+      console.log(response.data);
       setCommunityData((prevData) => {
         if (prevData) {
           return {
@@ -74,12 +75,15 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
   const ExitCommunity = async () => {
     const userID = user._id;
     try {
-      const response = await axios.post(`http://localhost:3000/community/exit`, {
-        userId: userID,
-        communityId: communityID,
-      });
+      const response = await axios.post(
+        `http://localhost:3000/community/exit`,
+        {
+          userId: userID,
+          communityId: communityID,
+        }
+      );
       console.log(response);
-      window.location.reload()
+      window.location.reload();
       navigate(`/communities`);
     } catch (err) {
       console.log("Error while exiting the community", err);
@@ -129,7 +133,14 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
                         alt=""
                       />
                       <div>
-                        <span className="">{member.name}</span>
+                        <div className="flex gap-10">
+                          <span className="">{member.name}</span>
+                          {member._id == communityData?.creator ? (
+                            <span>(Owner)</span>
+                          ) : (
+                            <></>
+                          )}
+                        </div>
                         <p className="line-clamp-1">{member.bio}</p>
                       </div>
                     </div>
@@ -142,23 +153,22 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
           <p>Loading community data...</p>
         )}
         <div className="mt-5">
-          <button
-            type="button"
-            className="px-4 py-2 mr-4 text-sm tracking-wide text-white bg-red-500 rounded-sm hover:bg-red-600 duration-300"
-            onClick={ExitCommunity}
-          >
-            Exit Community
-          </button>
-          {/* <button
-            type="button"
-            className="px-4 py-2 text-sm tracking-wide text-white bg-yellow-500 rounded-sm duration-300 hover:bg-yellow-600 focus:outline-none focus:bg-yellow-600"
-            onClick={() => {
-              console.log("Reporting community...");
-            }}
-          >
-            <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
-            Report
-          </button> */}
+          {user?._id == communityData?.creator ? (
+            <button
+              type="button"
+              className="px-4 py-2 mr-4 text-sm tracking-wide text-white bg-red-500 rounded-sm hover:bg-red-600 duration-300"
+            >
+              Delete group
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="px-4 py-2 mr-4 text-sm tracking-wide text-white bg-red-500 rounded-sm hover:bg-red-600 duration-300"
+              onClick={ExitCommunity}
+            >
+              Exit Community
+            </button>
+          )}
         </div>
       </div>
     </dialog>

@@ -29,14 +29,14 @@ function SignupForm() {
   const [alert, setAlert] = useState(false);
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
-      const response = await axios.post("http://localhost:3000/users", data);
+      const response = await axios.post("http://localhost:3000/users", data, {
+        withCredentials: true,
+      });
       setAlert(false);
-      const { token } = response.data;
-      // Cookies.set("token", token);
-      navigate("/HomePage");
-
+      if (response.status === 201) {
+        navigate("/HomePage");
+      }
       setApiError(null);
     } catch (error) {
       console.error("Error in post request", error);
@@ -150,7 +150,7 @@ function SignupForm() {
                 )}
               </p>
             </div>
-            
+
             <div className="flex mt-6 w-full gap-5">
               <button
                 type="submit"

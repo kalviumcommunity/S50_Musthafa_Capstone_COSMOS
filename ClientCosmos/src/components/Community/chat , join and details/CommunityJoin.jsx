@@ -47,7 +47,6 @@ function Community({
 
     fetchCommunityData();
     fetchCommunityChatData();
-    fetchData();
   }, [CommunityJoinid]);
 
   const goBack = () => {

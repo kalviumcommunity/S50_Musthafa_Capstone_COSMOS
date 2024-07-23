@@ -41,7 +41,7 @@ function AllAOD() {
           ))}
         </div>
       ) : (
-        AODS.map((apod, index) => (
+        AODS.reverse().map((apod, index) => (
           <div key={index} className="mt-5 border px-7 py-5">
             <h2 className="text-2xl font-bold">{apod.title}</h2>
             <div className="flex justify-center w-full">

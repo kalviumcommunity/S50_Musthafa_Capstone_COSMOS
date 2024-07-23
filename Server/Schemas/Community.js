@@ -12,7 +12,8 @@ const CommunitySchema = new mongoose.Schema({
     type: String,
   },
   creator: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Profile",
   },
   description: {
     type: String,

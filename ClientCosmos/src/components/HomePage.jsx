@@ -24,7 +24,9 @@ function HomePage({ setSelectedNews }) {
   useEffect(() => {
     const fetchAstronomicPictureOfTheDay = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/news/apod");
+        const response = await axios.get(
+          "https://s50-musthafa-capstone-cosmos.onrender.com/news/apod"
+        );
         setAPOD(response.data);
       } catch (err) {
         console.log("Error while fetching APOD", err);
@@ -34,7 +36,7 @@ function HomePage({ setSelectedNews }) {
     const fetchNewsData = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/news/getrandomnews"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/news/getrandomnews"
         );
         setNewsData(response.data);
       } catch (err) {
@@ -45,7 +47,7 @@ function HomePage({ setSelectedNews }) {
     const fetchUserPosts = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/posts/getrandomposts"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/posts/getrandomposts"
         );
         setUserposts(response.data);
       } catch (err) {
@@ -304,14 +306,11 @@ function HomePage({ setSelectedNews }) {
             <ul className="menu pt-10 p-7 w-80 min-h-full bg-white flex items-center text-base-content">
               <li className="w-full" onClick={() => ProfileClick("profile")}>
                 <div className="w-full  text-black flex gap-5  shadow-lg hover:bg-gray-300">
-                  {/* Profile picture */}
                   <img
                     className="w-16 h-16 rounded-lg mb-2"
                     src={userData?.profilePic}
                     alt="Profile"
                   />
-
-                  {/* Name */}
                   <h2 className="text-center  font-semibold text-lg mb-2">
                     {userData?.name}
                   </h2>
@@ -453,65 +452,69 @@ function HomePage({ setSelectedNews }) {
         </div>
 
         {/* userPosts  */}
-        <div className="mt-14">
-          <h2 className="text-3xl mt-7 text-white font-bold font-poppins">
-            USER POSTS
-          </h2>
-          <div className="flex gap-5 mt-7">
-            {userposts &&
-              userposts.map((post, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="p-5 w-96 border text-white rounded-sm hover:cursor-pointer"
-                    onClick={() => {
-                      navigate("/userPosts");
-                    }}
-                  >
+        {userposts.length === 4 ? (
+          <div className="mt-14">
+            <h2 className="text-3xl mt-7 text-white font-bold font-poppins">
+              USER POSTS
+            </h2>
+            <div className="flex gap-5 mt-7">
+              {userposts &&
+                userposts.map((post, index) => {
+                  return (
                     <div
-                      className="bg-cover h-80"
-                      style={{
-                        backgroundPosition: "center",
-                        backgroundImage: `url(${post.image})`,
+                      key={index}
+                      className="p-5 w-96 border text-white rounded-sm hover:cursor-pointer"
+                      onClick={() => {
+                        navigate("/userPosts");
                       }}
-                    ></div>
-                    <h2 className="font-poppins line-clamp-1">
-                      {post.caption}
-                    </h2>
-                    <div className="flex items-center gap-2">
-                      <div className="flex justify-center items-center gap-1">
-                        <label className="ui-bookmark">
-                          <input type="checkbox" checked />
-                          <div className="bookmark z-0">
-                            <svg
-                              viewBox="0 0 16 16"
-                              style={{ marginTop: "4px" }}
-                              className="bi bi-heart-fill mt-10"
-                              height="20"
-                              width="20"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                                fillRule="evenodd"
-                              ></path>
-                            </svg>
-                          </div>
-                        </label>
-                        <h2 className="text-sm font-light">
-                          {post.likes.length} Likes
-                        </h2>
-                      </div>
-                      <div className="flex justify-center text-sm font-light items-center gap-1">
-                        <img src={commenticon} className="w-5" alt="" />
-                        <h2>{post.comments.length} Comments</h2>
+                    >
+                      <div
+                        className="bg-cover h-80"
+                        style={{
+                          backgroundPosition: "center",
+                          backgroundImage: `url(${post.image})`,
+                        }}
+                      ></div>
+                      <h2 className="font-poppins line-clamp-1">
+                        {post.caption}
+                      </h2>
+                      <div className="flex items-center gap-2">
+                        <div className="flex justify-center items-center gap-1">
+                          <label className="ui-bookmark">
+                            <input type="checkbox" checked />
+                            <div className="bookmark z-0">
+                              <svg
+                                viewBox="0 0 16 16"
+                                style={{ marginTop: "4px" }}
+                                className="bi bi-heart-fill mt-10"
+                                height="20"
+                                width="20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                  fillRule="evenodd"
+                                ></path>
+                              </svg>
+                            </div>
+                          </label>
+                          <h2 className="text-sm font-light">
+                            {post.likes.length} Likes
+                          </h2>
+                        </div>
+                        <div className="flex justify-center text-sm font-light items-center gap-1">
+                          <img src={commenticon} className="w-5" alt="" />
+                          <h2>{post.comments.length} Comments</h2>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
 
         {/* topics  */}
         <div className="mt-20">
