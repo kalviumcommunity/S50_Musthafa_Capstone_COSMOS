@@ -32,7 +32,7 @@ const generateToken = (data) => {
 
 const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
-
+  console.log("THE REQUEST :-  ",req);
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
@@ -123,7 +123,7 @@ router.post("/getone", async (req, res) => {
     });
 
     const token = generateToken(userProfile);
-
+    console.log("token while loggin in :- ", token);
     res.cookie("token", token, {
       httpOnly: false,
       secure: true,
@@ -166,6 +166,7 @@ router.post("/", async (req, res) => {
 
       const userProfile = await Profilemodel.create(userProfileData);
       const token = generateToken(userProfile);
+      console.log("token while creating an account :-  ", token);
 
       res.cookie("token", token, {
         httpOnly: false,
