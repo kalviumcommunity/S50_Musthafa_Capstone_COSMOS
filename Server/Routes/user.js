@@ -125,7 +125,7 @@ router.post("/getone", async (req, res) => {
     const token = generateToken(userProfile);
     console.log("token while loggin in :- ", token);
     res.cookie("token", token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       sameSite: "Lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -169,7 +169,7 @@ router.post("/", async (req, res) => {
       console.log("token while creating an account :-  ", token);
 
       res.cookie("token", token, {
-        httpOnly: true,
+        httpOnly: false,
         secure: false,
         sameSite: "Lax",
         maxAge: 7 * 24 * 60 * 60 * 1000,
