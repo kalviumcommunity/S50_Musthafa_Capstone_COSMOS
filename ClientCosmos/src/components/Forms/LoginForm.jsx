@@ -22,29 +22,10 @@ function LoginForm() {
     formState: { errors },
   } = useForm();
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const token = Cookies.get("token");
-  //     if (token) {
-  //       try {
-  //         const response = await axios.post(
-  //           "http://localhost:3000/users/tokenvalidate",
-  //           { token }
-  //         );
-  //         navigate("/HomePage");
-  //       } catch (error) {
-  //         console.error("Error in post request", error.response.data.error);
-  //       }
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
-
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/users/getone",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
         data,
         {
           withCredentials: true,

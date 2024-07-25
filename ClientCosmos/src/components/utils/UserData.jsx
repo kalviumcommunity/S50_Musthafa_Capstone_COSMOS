@@ -25,12 +25,14 @@ const useUserData = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      console.log(Cookies.get("token"));
       try {
         const response = await axios.post(
-          "http://localhost:3000/users/tokenvalidate",
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
           {},
           { withCredentials: true }
         );
+        console.log(response.data);
         const { user, valid } = response.data;
         setUser(user);
         if (user) {
@@ -40,7 +42,7 @@ const useUserData = () => {
       } catch (error) {
         Cookies.remove("token");
         Cookies.remove("passwordisthere");
-        console.error("Error in post request", error.response.data.error);
+        console.error("Error in post request", error.response.data);
         setError(error);
       } finally {
         setLoading(false);
@@ -50,7 +52,7 @@ const useUserData = () => {
     fetchData();
   }, []);
 
-  return { user, valid, userData, loading, error , setLoading , setUserData };
+  return { user, valid, userData, loading, error, setLoading, setUserData };
 };
 
 export default useUserData;
