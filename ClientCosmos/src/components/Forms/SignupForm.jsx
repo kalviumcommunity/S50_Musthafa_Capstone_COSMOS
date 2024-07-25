@@ -30,7 +30,7 @@ function SignupForm() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post("http://localhost:3000/users", data, {
+      const response = await axios.post("https://s50-musthafa-capstone-cosmos.onrender.com/users", data, {
         withCredentials: true,
       });
       setAlert(false);

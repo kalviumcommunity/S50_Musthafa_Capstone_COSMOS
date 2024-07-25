@@ -10,9 +10,9 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const secretKey = process.env.JWT_SECRET;
 
 const generateToken = (data) => {
-  const { _id, name, email } = data;
+  const { _id } = data;
   const expiresIn = "7h";
-  const payload = { _id, name, email };
+  const payload = { _id };
   const token = jwt.sign(payload, secretKey, { expiresIn });
   return token;
 };
@@ -68,7 +68,7 @@ passport.use(
 
         const userDetail = await createUser(profile);
         const userData = await usermodel.create(userDetail);
-        
+
         const userProfile = {
           name: profile.name.givenName,
           email: profile.email,
