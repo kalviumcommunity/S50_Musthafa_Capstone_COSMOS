@@ -20,7 +20,7 @@ function YourCommunity({ selectedChat, setSelectedChat, setCommunityChatID }) {
     setSelectedChat("");
     try {
       const response = await axios.get(
-        `http://localhost:3000/community/mycommunities/${user._id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/mycommunities/${user._id}`
       );
       setUserCommunities(response.data);
     } catch (error) {

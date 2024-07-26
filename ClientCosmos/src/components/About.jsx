@@ -15,22 +15,27 @@ function About() {
   const { register, handleSubmit } = useForm();
   const [reviewUpdation, setreviewUpdation] = useState(false);
   const { userData } = useUserData();
-  
+
+  const closeReviewModal = () => {
+    document.getElementById("my_modal_1").close();
+  };
+
   const onSubmit = async (data) => {
     setreviewUpdation(true);
     const review = {
-      profilePic: userData.profilePic,
-      name: userData.name,
+      profilePic: userData?.profilePic,
+      name: userData?.name,
       comment: data.review,
     };
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/review/newreview",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/review/newreview",
         { review }
       );
       if (response.data && response.data._id) {
         setreviewUpdation(false);
+        closeReviewModal();
         setReviews((prevReviews) => {
           const MAX_REVIEWS = 4;
           const updatedReviews =
@@ -72,12 +77,15 @@ function About() {
     }
   };
 
+
+
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/review/randomreviews"
+          "https://s50-musthafa-capstone-cosmos.onrender.com/review/randomreviews"
         );
+        console.log(response.data);
         if (Array.isArray(response.data)) {
           setReviews(response.data);
         } else {
@@ -103,7 +111,7 @@ function About() {
             <li
               className="text-lg font-poppins cursor-pointer hover:scale-105 duration-300 px-5"
               onClick={() => {
-                navigate("/HomePage")
+                navigate("/HomePage");
               }}
             >
               HOME

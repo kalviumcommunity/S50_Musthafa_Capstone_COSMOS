@@ -41,9 +41,9 @@ const authenticate = async (req, res, next) => {
       return res.status(401).json({ error: "Unauthorized: Profile not found" });
     }
 
+    
     req.userProfileId = profile._id;
     req.name = profile.name;
-
     next();
   } catch (error) {
     console.error(error);
@@ -130,7 +130,6 @@ router.post("/newpost", authenticate, upload.any(), async (req, res) => {
     });
 
     await Profile.updateOne({ _id: createdBy }, { $push: { posts: post._id } });
-
     await post.save();
     res.status(201).json(post);
   } catch (err) {

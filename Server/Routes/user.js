@@ -31,8 +31,8 @@ const generateToken = (data) => {
 };
 
 const verifyToken = (req, res, next) => {
-  console.log("Request Headers:", req.headers); // Check if the Cookie header is present
-  console.log("Cookies in Request:", req.cookies); // Check if cookies are being parsed correctly
+  // console.log("Request Headers:", req.headers); // Check if the Cookie header is present
+  // console.log("Cookies in Request:", req.cookies); // Check if cookies are being parsed correctly
   const token = req.cookies.token;
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });

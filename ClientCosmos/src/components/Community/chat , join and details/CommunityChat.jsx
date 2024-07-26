@@ -22,7 +22,7 @@ function CommunityChat({
 
   const messagesEndRef = useRef(null);
 
-  const socket = io("http://localhost:3000");
+  const socket = io("https://s50-musthafa-capstone-cosmos.onrender.com");
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -50,7 +50,7 @@ function CommunityChat({
     const fetchCommunityData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/community/${id}`
+          `https://s50-musthafa-capstone-cosmos.onrender.com/community/${id}`
         );
         setCommunityData(response.data);
       } catch (error) {
@@ -60,7 +60,7 @@ function CommunityChat({
 
     const fetchCommunityChatData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/chat/${id}`);
+        const response = await axios.get(`https://s50-musthafa-capstone-cosmos.onrender.com/chat/${id}`);
         setMessages(response.data);
       } catch (error) {
         console.error("Error fetching community data:", error);

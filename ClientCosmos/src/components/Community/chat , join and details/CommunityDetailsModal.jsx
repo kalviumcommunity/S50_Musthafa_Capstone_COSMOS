@@ -9,6 +9,7 @@ import useUserData from "../../utils/UserData";
 
 function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
   useEffect(() => {
+    console.log(communityID)
     if (isOpen) {
       document.getElementById("modal").showModal();
     } else {
@@ -43,9 +44,8 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:3000/community/details/${communityID}?page=${page}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/details/${communityID}?page=${page}`
       );
-      console.log(response.data);
       setCommunityData((prevData) => {
         if (prevData) {
           return {
@@ -66,7 +66,7 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
 
   useEffect(() => {
     fetchCommunityData();
-  }, [page]);
+  }, [page, communityID]);
 
   const goBack = () => {
     navigate(`/communities`);
@@ -76,7 +76,7 @@ function CommunityDetailsModal({ isOpen, closeModal, communityID }) {
     const userID = user._id;
     try {
       const response = await axios.post(
-        `http://localhost:3000/community/exit`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/exit`,
         {
           userId: userID,
           communityId: communityID,

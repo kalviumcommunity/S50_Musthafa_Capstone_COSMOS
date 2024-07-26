@@ -72,7 +72,7 @@ function Communities() {
       };
 
       const response = await axios.post(
-        "http://localhost:3000/community/create",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/community/create",
         requestData
       );
 
