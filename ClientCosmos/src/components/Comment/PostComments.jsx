@@ -11,7 +11,7 @@ function PostComments({ post_id, userData, commentModal, toggleCommentModal }) {
     try {
       if (post_id !== "") {
         const response = await axios.get(
-          `http://localhost:3000/posts/getAllComments/${post_id}`
+          `https://s50-musthafa-capstone-cosmos.onrender.com/posts/getAllComments/${post_id}`
         );
         console.log(response.data);
         setComments(response.data);
@@ -30,13 +30,13 @@ function PostComments({ post_id, userData, commentModal, toggleCommentModal }) {
       const newComment = {
         postid: post_id,
         comment: yourComment,
-        name: userData.name,
-        profilepic: userData.profilePic,
+        name: userData?.name,
+        profilepic: userData?.profilePic,
       };
 
       try {
         const response = await axios.post(
-          "http://localhost:3000/posts/addcomment",
+          "https://s50-musthafa-capstone-cosmos.onrender.com/posts/addcomment",
           newComment
         );
         console.log("Comment added successfully:", response.data);

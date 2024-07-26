@@ -14,7 +14,7 @@ import { MoonLoader } from "react-spinners";
 import useUserData from "../utils/UserData";
 
 function Profile() {
-  const { userData } = useUserData();
+  const { userData , setUserData } = useUserData();
   const [myPosts, setMyPosts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -27,13 +27,14 @@ function Profile() {
   const [profilePicChanging, setprofilePicChanging] = useState(false);
   const [deletePostId, setDeletePostId] = useState(null);
   const [selectedComp, setselectedComp] = useState("POSTS");
+  const [DeletePostPopUp, setDeletePostPopUp] = useState(false);
 
   const navigate = useNavigate();
 
   const handleSaveClick = async () => {
     try {
       const response = await axios.put(
-        `http://localhost:3000/users/editBio/${userData._id}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/editBio/${userData._id}`,
         { bioText }
       );
       if (response) {
@@ -59,7 +60,7 @@ function Profile() {
 
   useEffect(() => {
     if (userData?._id) {
-      setBioText(userData.bio)
+      setBioText(userData.bio);
       mypostFetch();
     }
   }, [userData]);
@@ -81,7 +82,7 @@ function Profile() {
     }
     try {
       const response = await axios.get(
-        `http://localhost:3000/posts/getmyposts/${id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/getmyposts/${id}`
       );
       if (response.status === 200) {
         setMyPosts(response.data);
@@ -97,7 +98,7 @@ function Profile() {
 
   const DeleteMyPost = async () => {
     await axios
-      .delete(`http://localhost:3000/posts/${deletePostId}`)
+      .delete(`https://s50-musthafa-capstone-cosmos.onrender.com/posts/${deletePostId}`)
       .then((res) => {
         console.log(res.data);
         setDeletePostPopUp(false);
@@ -129,7 +130,7 @@ function Profile() {
     if (imageUrl) {
       try {
         const response = await axios.patch(
-          `http://localhost:3000/users/updateProfilePic/${userData._id}`,
+          `https://s50-musthafa-capstone-cosmos.onrender.com/users/updateProfilePic/${userData._id}`,
           { imageUrl }
         );
         console.log(response.data);
@@ -148,7 +149,7 @@ function Profile() {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/posts/like/${postId}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/like/${postId}`,
         {
           userId: userId,
           action: action,
@@ -182,7 +183,37 @@ function Profile() {
     }
   };
 
-  const [DeletePostPopUp, setDeletePostPopUp] = useState(false);
+  const savePostsHandleChange = async (event, postId) => {
+    const action = event.target.checked ? "saved" : "unsaved";
+    const userId = userData._id;
+
+    try {
+      const response = await axios.post(
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/saveThePost/${userId}`,
+        {
+          postId: postId,
+          action: action,
+        }
+      );
+      console.log("User updated:", response.data);
+
+      // Update the local state immediately
+      const updatedUserData = {
+        ...userData,
+        saved_posts:
+          action === "saved"
+            ? [...userData.saved_posts, postId]
+            : userData.saved_posts.filter((id) => id !== postId),
+      };
+
+      setUserData(updatedUserData);
+    } catch (error) {
+      console.error(
+        "Error saving post:",
+        error.response?.data || error.message
+      );
+    }
+  };
 
   useEffect(() => {
     if (DeletePostPopUp) {
@@ -423,7 +454,7 @@ function Profile() {
                     </h2>
 
                     <div className="flex items-center justify-between mt-3 gap-5">
-                      <div className="flex gap-4">
+                      {/*<div className="flex gap-4">
                         <div>
                           <label className="ui-bookmark">
                             <input
@@ -469,6 +500,66 @@ function Profile() {
 
                       <label className="custom-container">
                         <input type="checkbox" />
+                        <div className="custom-bookmark z-0">
+                          <svg viewBox="0 0 32 32">
+                            <g>
+                              <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
+                            </g>
+                          </svg>
+                        </div>
+                      </label>
+                    </div> */}
+                      <div className="flex items-center gap-2">
+                        <div className="flex justify-center items-center gap-1">
+                          <label className="ui-bookmark">
+                            <input
+                              type="checkbox"
+                              onChange={(event) =>
+                                handleCheckboxChange(event, post._id)
+                              }
+                              checked={post.likes.includes(userData?._id)}
+                            />
+                            <div className="bookmark z-0">
+                              <svg
+                                viewBox="0 0 16 16"
+                                style={{ marginTop: "4px" }}
+                                className="bi bi-heart-fill mt-10"
+                                height="20"
+                                width="20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
+                                  fillRule="evenodd"
+                                ></path>
+                              </svg>
+                            </div>
+                          </label>
+                          <h2 className="">{post.likes.length} Likes</h2>
+                        </div>
+                        <div className="flex drawer-content justify-center cursor-pointer  items-center gap-1">
+                          <img
+                            onClick={() => toggleCommentModal(post._id)}
+                            src={commenticon}
+                            className="w-5"
+                            alt=""
+                          />
+                          <h2>{post.comments.length} Comments</h2>
+                        </div>
+                      </div>
+
+                      <label className="custom-container">
+                        <input
+                          type="checkbox"
+                          onChange={(event) =>
+                            savePostsHandleChange(event, post._id)
+                          }
+                          checked={
+                            userData?.saved_posts
+                              ? userData?.saved_posts.includes(post._id)
+                              : false
+                          }
+                        />
                         <div className="custom-bookmark z-0">
                           <svg viewBox="0 0 32 32">
                             <g>

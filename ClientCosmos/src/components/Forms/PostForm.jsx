@@ -13,7 +13,7 @@ import { PulseLoader } from "react-spinners";
 import useUserData from "../utils/UserData";
 
 function PostForm({ Modal, setModalOpen, mypostFetch }) {
-  const { user } = useUserData();
+  const { userData } = useUserData();
   
   const [iv, setisv] = useState(false);
   const [files, setFiles] = React.useState([]);
@@ -60,11 +60,11 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
 
       setModalOpen(false);
       const response = await axios.post(
-        "http://localhost:3000/posts/newpost",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/posts/newpost",
         requestData,
         {
           headers: {
-            "X-Profile": JSON.stringify(user),
+            "X-Profile": JSON.stringify(userData),
             "Content-Type": "multipart/form-data",
           },
         }
