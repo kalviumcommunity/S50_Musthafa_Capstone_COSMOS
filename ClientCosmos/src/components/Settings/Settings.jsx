@@ -44,41 +44,43 @@ function Account({ userData, setDeleteAccountPopUp, GoogleAuth }) {
   const [successMessage, setSuccessMessage] = useState("");
 
   const handleChangePassword = async () => {
-    try {
-      const response = await axios.post(
-        `http://localhost:3000/users/changepassword/${userData.user_id}`,
-        {
-          currentPassword,
-          newPassword,
-        }
-      );
+    if (currentPassword !== "" && newPassword !== "") {
+      try {
+        const response = await axios.post(
+          `https://s50-musthafa-capstone-cosmos.onrender.com/users/changepassword/${userData.user_id}`,
+          {
+            currentPassword,
+            newPassword,
+          }
+        );
 
-      console.log(response.data);
-      if (response.data.success) {
-        setErrorMessage("");
-        setSuccessMessage("Password changed successfully");
-        setIsEditing(false);
-        setCurrentPassword("");
-        setNewPassword("");
-        setTimeout(() => {
-          setSuccessMessage("");
-        }, 4000);
-      } else {
         console.log(response.data);
-        setErrorMessage("Current password is incorrect");
-        setIsEditing(false);
-        setCurrentPassword("");
-        setNewPassword("");
+        if (response.data.success) {
+          setErrorMessage("");
+          setSuccessMessage("Password changed successfully");
+          setIsEditing(false);
+          setCurrentPassword("");
+          setNewPassword("");
+          setTimeout(() => {
+            setSuccessMessage("");
+          }, 4000);
+        } else {
+          console.log(response.data);
+          setErrorMessage("Current password is incorrect");
+          setIsEditing(false);
+          setCurrentPassword("");
+          setNewPassword("");
+          setTimeout(() => {
+            setErrorMessage("");
+          }, 4000);
+        }
+      } catch (error) {
+        console.log("Error while changing the password", error);
+        setErrorMessage("An error occurred while changing the password.");
         setTimeout(() => {
           setErrorMessage("");
         }, 4000);
       }
-    } catch (error) {
-      console.log("Error while changing the password", error);
-      setErrorMessage("An error occurred while changing the password.");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 4000);
     }
   };
 
@@ -131,38 +133,42 @@ function Account({ userData, setDeleteAccountPopUp, GoogleAuth }) {
                     </div>
                   )}
                 </div>
-                <div className="flex gap-3">
-                  <div className="w-2/4">
-                    <h2 className="text-lg text-gray-400 font-poppins">
-                      Current Password
-                    </h2>
-                    <input
-                      type="password"
-                      placeholder="........"
-                      className={`bg-white w-full outline-none py-2 px-3 border ${
-                        isEditing ? "border-2 border-black" : ""
-                      }`}
-                      value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
-                      disabled={!isEditing}
-                    />
+                <form action="">
+                  <div className="flex gap-3">
+                    <div className="w-2/4">
+                      <h2 className="text-lg text-gray-400 font-poppins">
+                        Current Password
+                      </h2>
+                      <input
+                        type="password"
+                        placeholder="........"
+                        required
+                        className={`bg-white w-full outline-none py-2 px-3 border ${
+                          isEditing ? "border-2 border-black" : ""
+                        }`}
+                        value={currentPassword}
+                        onChange={(e) => setCurrentPassword(e.target.value)}
+                        disabled={!isEditing}
+                      />
+                    </div>
+                    <div className="w-2/4">
+                      <h2 className="text-lg text-gray-400 font-poppins">
+                        New Password
+                      </h2>
+                      <input
+                        type="password"
+                        placeholder="........"
+                        className={`bg-white w-full outline-none py-2 px-3 border ${
+                          isEditing ? "border-2 border-black" : ""
+                        }`}
+                        required
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                        disabled={!isEditing}
+                      />
+                    </div>
                   </div>
-                  <div className="w-2/4">
-                    <h2 className="text-lg text-gray-400 font-poppins">
-                      New Password
-                    </h2>
-                    <input
-                      type="password"
-                      placeholder="........"
-                      className={`bg-white w-full outline-none py-2 px-3 border ${
-                        isEditing ? "border-2 border-black" : ""
-                      }`}
-                      value={newPassword}
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      disabled={!isEditing}
-                    />
-                  </div>
-                </div>
+                </form>
                 {isEditing && (
                   <div className="mt-4">
                     <button
@@ -219,11 +225,10 @@ function Settings() {
     }
   }, []);
 
-
   const DeleteAccount = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/users/deleteMyAccount/${userData._id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/deleteMyAccount/${userData._id}`
       );
       Cookies.remove("token");
       Cookies.remove("passwordisthere");
@@ -250,7 +255,7 @@ function Settings() {
   const CheckPassWord = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/users/checkPassword/${userData.user_id}`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/users/checkPassword/${userData.user_id}`,
         { password }
       );
       if (response.data.message == "Password is correct") {

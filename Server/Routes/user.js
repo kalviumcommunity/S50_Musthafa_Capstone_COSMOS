@@ -31,10 +31,9 @@ const generateToken = (data) => {
 };
 
 const verifyToken = (req, res, next) => {
-  // console.log("Request Headers:", req.headers); // Check if the Cookie header is present
-  // console.log("Cookies in Request:", req.cookies); // Check if cookies are being parsed correctly
-  const token = req.cookies.token;
-
+  const token =
+    req.cookies.token || req.headers["x-access-token"] || req.body.token;
+  console.log(token);
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
@@ -46,7 +45,6 @@ const verifyToken = (req, res, next) => {
     return res.status(401).json({ error: "Failed to authenticate token" });
   }
 };
-
 
 router.post("/tokenvalidate", verifyToken, (req, res) => {
   res.status(200).json({ valid: true, user: req.decoded });
