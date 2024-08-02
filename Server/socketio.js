@@ -19,7 +19,7 @@ const setupSocket = (server) => {
     socket.on("message", async (message) => {
 
       // Update the messages array for the community
-      const result = await Message.updateOne(
+      await Message.updateOne(
         { communityId: message.communityId },
         { $push: { messages: message } },
         { upsert: true }

@@ -428,28 +428,32 @@ function HomePage({ setSelectedNews }) {
         )}
 
         {/* latest news */}
-        <div className="mt-10">
-          <h2 className="text-3xl mt-7 text-white font-bold font-poppins">
-            LATEST NEWS
-          </h2>
-          <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-10 mt-7">
-            {newsData.map((news, index) => (
-              <div
-                key={index}
-                onClick={() => selectedNews(news)}
-                className="bg-white cursor-pointer overflow-auto  hover:rounded-md duration-500"
-              >
-                <img className="w-full h-52" src={news.imageUrl} alt="" />
-                <div className="my-3 mx-5">
-                  <h2 className="text-xl font-semibold line-clamp-2 font-poppins">
-                    {news.title}
-                  </h2>
-                  <p className="line-clamp-3">{news.description}</p>
+        {newsData.length === 0 ? (
+          <></>
+        ) : (
+          <div className="mt-10">
+            <h2 className="text-3xl mt-7 text-white font-bold font-poppins">
+              LATEST NEWS
+            </h2>
+            <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-10 mt-7">
+              {newsData.map((news, index) => (
+                <div
+                  key={index}
+                  onClick={() => selectedNews(news)}
+                  className="bg-white cursor-pointer overflow-auto  hover:rounded-md duration-500"
+                >
+                  <img className="w-full h-52" src={news.imageUrl} alt="" />
+                  <div className="my-3 mx-5">
+                    <h2 className="text-xl font-semibold line-clamp-2 font-poppins">
+                      {news.title}
+                    </h2>
+                    <p className="line-clamp-3">{news.description}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         {/* userPosts  */}
         {userposts.length === 4 ? (
