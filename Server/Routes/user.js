@@ -124,7 +124,7 @@ router.post("/getone", async (req, res) => {
     });
 
     const token = generateToken(userProfile);
-    console.log("token while loggin in :- ", token);
+    console.log(token)
     res.cookie("token", token, {
       httpOnly: false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
