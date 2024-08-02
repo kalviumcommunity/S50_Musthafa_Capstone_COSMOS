@@ -26,10 +26,11 @@ const useUserData = () => {
   useEffect(() => {
     const fetchData = async () => {
       const token = Cookies.get("token");
+      console.log(token);
       try {
         const response = await axios.post(
-          "http://localhost:3000/users/tokenvalidate",
-          // "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
+          // "http://localhost:3000/users/tokenvalidate",
+          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
           { token },
           { withCredentials: true }
         );
