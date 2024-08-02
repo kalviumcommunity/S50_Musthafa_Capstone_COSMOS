@@ -150,7 +150,7 @@ router.post("/", async (req, res) => {
 
       // Create user
       const user = await usermodel.create(userData);
-
+      console.log(user)
       // Create user profile
       const userProfileData = {
         name: req.body.name,
@@ -165,7 +165,6 @@ router.post("/", async (req, res) => {
 
       const userProfile = await Profilemodel.create(userProfileData);
       const token = generateToken(userProfile);
-      console.log("token while creating an account :-  ", token);
 
       res.cookie("token", token, {
         httpOnly: false,
