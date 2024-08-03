@@ -125,10 +125,17 @@ router.post("/getone", async (req, res) => {
 
     const token = generateToken(userProfile);
     console.log(token)
+    // res.cookie("token", token, {
+    //   httpOnly: false,
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // });
     res.cookie("token", token, {
-      httpOnly: false,
+      httpOnly: true,
+      secure: true, 
+      sameSite: "None",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
 
     res.status(201).json({ message: "User Logged in successfully" });
   } catch (error) {
