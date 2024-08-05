@@ -88,7 +88,7 @@ const generateToken = (data) => {
 //           maxAge: 7 * 24 * 60 * 60 * 1000,
 //           httpOnly: false,
 //         });
-//         const passwordBool = false;
+        // const passwordBool = false;
 //         request.res.cookie("passwordisthere", passwordBool, {
 //           maxAge: 7 * 24 * 60 * 60 * 1000,
 //           httpOnly: false,
@@ -136,7 +136,11 @@ passport.use(
           }
 
           const token = generateToken(existingProfile);
+
           req.session.token = token; 
+          const passwordBool = false;
+          req.session.passwordisthere = passwordBool;  
+
           return done(null, existingProfile);
         }
 
@@ -158,6 +162,8 @@ passport.use(
         const token = generateToken(profileData);
 
         req.session.token = token; 
+        const passwordBool = false;
+        req.session.passwordisthere = passwordBool;
 
         return done(null, profileData);
       } catch (error) {
