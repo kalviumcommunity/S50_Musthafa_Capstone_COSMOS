@@ -102,15 +102,6 @@ const generateToken = (data) => {
 //   )
 // );
 
-// passport.serializeUser(function (user, done) {
-//   done(null, user);
-// });
-
-// passport.deserializeUser(function (user, done) {
-//   done(null, user);
-// });
-
-// module.exports = passport;
 passport.use(
   new GoogleStrategy(
     {
@@ -175,3 +166,13 @@ passport.use(
     }
   )
 );
+
+passport.serializeUser(function (user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function (user, done) {
+  done(null, user);
+});
+
+module.exports = passport;
