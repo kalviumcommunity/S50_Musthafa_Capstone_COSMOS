@@ -145,9 +145,7 @@ passport.use(
           }
 
           const token = generateToken(existingProfile);
-
           req.session.token = token; 
-
           return done(null, existingProfile);
         }
 
