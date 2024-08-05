@@ -26,12 +26,12 @@ router.get('/google/callback',
       
     res.cookie('token', token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, 
-      httpOnly: true,
+      httpOnly: false,
     });
     const passwordisthere = false;
     res.cookie('passwordisthere', passwordisthere, {
       maxAge: 7 * 24 * 60 * 60 * 1000, 
-      httpOnly: true,
+      httpOnly: false,
     });
 
     res.redirect('http://localhost:5173/HomePage');
