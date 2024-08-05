@@ -25,7 +25,6 @@ function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        // "http://localhost:3000/users/getone",
         "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
         data,
         {
@@ -42,15 +41,11 @@ function LoginForm() {
   };
 
   const toLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
   };
 
   return (
     <>
-      {/* <div
-        className="w-screen h-screen bg-black grid py-28 justify-end items-center bg-no-repeat bg-cover"
-        style={{ backgroundImage: `url(${LOGINBG4})` }}
-      > */}
       {alert && apiError && (
         <div className="absolute flex justify-center items-center w-screen transition-transform transform translate-y-full">
           <div className="px-7 w-2/4 rounded-md py-2 bg-red-600 flex items-center justify-center text-center">
