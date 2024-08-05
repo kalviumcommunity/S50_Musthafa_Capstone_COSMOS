@@ -137,9 +137,9 @@ passport.use(
 
           const token = generateToken(existingProfile);
 
-          req.session.token = token; 
-          const passwordBool = false;
-          req.session.passwordisthere = passwordBool;  
+          // req.session.token = token; 
+          // const passwordBool = false;
+          // req.session.passwordisthere = passwordBool;  
 
           return done(null, existingProfile);
         }
@@ -161,9 +161,9 @@ passport.use(
 
         const token = generateToken(profileData);
 
-        req.session.token = token; 
-        const passwordBool = false;
-        req.session.passwordisthere = passwordBool;
+        // req.session.token = token; 
+        // const passwordBool = false;
+        // req.session.passwordisthere = passwordBool;
 
         return done(null, profileData);
       } catch (error) {
