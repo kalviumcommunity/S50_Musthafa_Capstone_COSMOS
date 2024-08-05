@@ -51,7 +51,7 @@ function SignupForm() {
   };
 
   const GoogleSignUp = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+    window.location.href = "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
   };
 
   return (
