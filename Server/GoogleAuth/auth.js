@@ -12,8 +12,14 @@ router.get('/google/callback',
   }), 
   (req, res) => {
     const token = req.session.token;
-
+    console.log(req.session);
     res.cookie('token', token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, 
+      httpOnly: true,
+    });
+    const passwordisthere = req.session.passwordisthere;
+
+    res.cookie('passwordisthere', passwordisthere, {
       maxAge: 7 * 24 * 60 * 60 * 1000, 
       httpOnly: true,
     });
