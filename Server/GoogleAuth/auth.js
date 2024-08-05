@@ -1,6 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
+const jwt = require("jsonwebtoken");
+
+const generateToken = (data) => {
+  const { _id } = data;
+  const expiresIn = "7h";
+  const payload = { _id };
+  const token = jwt.sign(payload, secretKey, { expiresIn });
+  return token;
+};
 
 router.get('/google', 
   passport.authenticate('google', { scope: ['email', 'profile'] })
@@ -13,6 +22,7 @@ router.get('/google/callback',
   (req, res) => {
     const token = req.session.token;
     console.log(req.session);
+    console.log("user data:- ",req.session.passport.user);
     res.cookie('token', token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, 
       httpOnly: true,
