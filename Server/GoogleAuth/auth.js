@@ -20,15 +20,14 @@ router.get('/google/callback',
     failureRedirect: 'http://localhost:5173/login'
   }), 
   (req, res) => {
-    const token = req.session.token;
-    console.log(req.session);
-    console.log("user data:- ",req.session.passport.user);
+    const token = generateToken(req.session.passport.user);
+    console.log("user data:- ",token);
+      
     res.cookie('token', token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, 
       httpOnly: true,
     });
-    const passwordisthere = req.session.passwordisthere;
-
+    const passwordisthere = false;
     res.cookie('passwordisthere', passwordisthere, {
       maxAge: 7 * 24 * 60 * 60 * 1000, 
       httpOnly: true,
