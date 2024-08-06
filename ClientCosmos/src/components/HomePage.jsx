@@ -124,6 +124,9 @@ function HomePage({ setSelectedNews }) {
       case "userPosts":
         navigate("/userPosts");
         break;
+      case "chats":
+        navigate("/chats");
+        break;
       case "news":
         navigate("/news");
         break;
@@ -247,9 +250,9 @@ function HomePage({ setSelectedNews }) {
               </li>
               <li
                 className="text-lg font-poppins cursor-pointer hover:scale-105 duration-300 px-5"
-                onClick={() => ProfileClick("communities")}
+                onClick={() => ProfileClick("chats")}
               >
-                COMMUNITIES
+                CHATS
               </li>
             </ul>
           </div>
@@ -303,7 +306,7 @@ function HomePage({ setSelectedNews }) {
               className="drawer-overlay"
             ></label>
 
-            <ul className="menu pt-10 p-7 w-80 min-h-full bg-white flex items-center text-base-content">
+            <ul className="menu pt-10 p-7 w-80 min-h-full z-50 bg-white flex items-center text-base-content">
               <li className="w-full" onClick={() => ProfileClick("profile")}>
                 <div className="w-full  text-black flex gap-5  shadow-lg hover:bg-gray-300">
                   <img
@@ -369,10 +372,10 @@ function HomePage({ setSelectedNews }) {
               </li>
               <li
                 className="w-full"
-                onClick={() => ProfileClick("communities")}
+                onClick={() => ProfileClick("chats")}
               >
                 <button className=" text-black font-poppins mt-4 py-3 border shadow-md rounded-sm">
-                  COMMUNITIES
+                  CHATS
                 </button>
               </li>
               <li className="w-full" onClick={() => ProfileClick("settings")}>
@@ -530,7 +533,7 @@ function HomePage({ setSelectedNews }) {
               <div
                 key={index}
                 onClick={() => NavigateTopics(topic.name)}
-                className="relative h-36 shadow-sm cursor-pointer rounded-sm text-2xl font-bold bg-cover text-white pl-2 pt-24 transition duration-300 transform hover:scale-105"
+                className="relative h-36 z-10 shadow-sm cursor-pointer rounded-sm text-2xl font-bold bg-cover text-white pl-2 pt-24 transition duration-300 transform hover:scale-105"
                 style={{
                   backgroundImage: `url(${topic.imageUrl})`,
                   backgroundPosition: "center",
@@ -620,49 +623,6 @@ function HomePage({ setSelectedNews }) {
           </div>
         </div>
       </footer>
-      {/* <footer className="bg-black pt-20 text-white py-8">
-        <div className="container mx-auto">
-          <div className="flex flex-wrap justify-between items-center">
-            <ul className="flex flex-wrap text-sm">
-              <li className="mr-6">
-                <Link
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                  className="hover:text-gray-300"
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="mr-6">
-                <Link to="/about" className="hover:text-gray-300">
-                  About Us
-                </Link>
-              </li>
-              <li className="mr-6">
-                <a
-                  href="https://www.linkedin.com/in/musthafa-cp-312b59287"
-                  className="hover:text-gray-300"
-                >
-                  Linkedin
-                </a>
-              </li>
-              <li className="mr-6">
-                <Link to="/about" className="hover:text-gray-300">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="text-sm text-center mt-4">
-          &copy; Copyright 2023 Musthafa
-        </div>
-
-        <div className="text-sm text-center py-4">
-          A project by Muhammed Musthafa CP
-        </div>
-      </footer> */}
     </>
   );
 }

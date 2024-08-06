@@ -9,7 +9,6 @@ import Profile from "./components/Profile/Profile";
 import News from "./components/News/News";
 import About from "./components/About";
 import PostForm from "./components/Forms/PostForm";
-import CommunityJoin from "./components/Community/chat , join and details/CommunityJoin";
 import SelectedNews from "./components/News/SelectedNews";
 import SolarSystem from "./components/Topics/SolarSystem";
 import BlackHoles from "./components/Topics/BlackHoles";
@@ -17,11 +16,11 @@ import Nebulas from "./components/Topics/Nebulas";
 import Stars from "./components/Topics/Stars";
 import Galaxies from "./components/Topics/Galaxies";
 import Loading from "./components/Loading/Loading";
-import CommunityChat from "./components/Community/chat , join and details/CommunityChat";
 import PostComments from "./components/Comment/PostComments";
-import Communities from "./components/Community/Communties";
 import Settings from "./components/Settings/Settings";
-
+import UserProfile from "./components/UserProfile/UserProfile";
+import Chats from "./components/Chats/Chats";
+import CommunityChats from "./components/Chats/CommunityChats";
 function App() {
   const location = useLocation();
   const [selectedNews, setSelectedNews] = useState(null);
@@ -30,6 +29,10 @@ function App() {
     <>
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Landingpage />} />
+        {/* chat routes */}
+        <Route path="/chats" element={<Chats />} />
+        <Route path="/communitychats" element={<CommunityChats />} />
+
         <Route
           path="/HomePage"
           element={<HomePage setSelectedNews={setSelectedNews} />}
@@ -37,9 +40,9 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/userprofile/:id" element={<UserProfile />} />
+
         <Route path="/userPosts" element={<Posts />} />
-        <Route path="/communities" element={<Communities />} />
-        <Route path="/communitychat/:id" element={<CommunityChat />} />
         <Route path="/postComments" element={<PostComments />} />
         <Route
           path="/news"
@@ -47,7 +50,6 @@ function App() {
         />
         <Route path="/about" element={<About />} />
         <Route path="/Postform" element={<PostForm />} />
-        <Route path="/communityjoin/:id" element={<CommunityJoin />} />
         <Route
           path="/selenews"
           element={
@@ -79,8 +81,7 @@ function App() {
           path="/solarsystem"
           element={<SolarSystem setSelectedNews={setSelectedNews} />}
         />
-        <Route
-        />
+        <Route />
         <Route path="/loading" element={<Loading />} />
         <Route path="/settings" element={<Settings />} />
       </Routes>

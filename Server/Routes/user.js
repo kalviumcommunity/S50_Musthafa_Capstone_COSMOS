@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const Post = require("../Schemas/Posts");
 const Message = require("../Schemas/Message");
 const postModel = require("../Schemas/Posts");
+const PersonalMessage = require("../Schemas/PersonalMessage");
 const saltRounds = 10;
 app.use(express.json());
 require("dotenv").config();
@@ -31,9 +32,10 @@ const generateToken = (data) => {
 };
 
 const verifyToken = (req, res, next) => {
-  const token =
-    req.cookies.token || req.headers["x-access-token"] || req.body.token;
-  console.log(token);
+  // console.log("Request Headers:", req.headers); // Check if the Cookie header is present
+  // console.log("Cookies in Request:", req.cookies); // Check if cookies are being parsed correctly
+  const token = req.cookies.token;
+
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
@@ -56,6 +58,115 @@ router.post("/tokenvalidate", verifyToken, (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const data = await usermodel.find();
+    res.json(data);
+  } catch (error) {
+    console.error(
+      "An error occurred with the GET method while getting the user data:",
+      error
+    );
+    res.status(500).json({
+      error:
+        "Internal Server Error with the GET method while getting the user data",
+    });
+  }
+});
+
+// *to get all of the users
+// router.get("/friends/:id", async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     // Find all profiles except the one with the given id
+//     const data = await Profilemodel.find({ _id: { $ne: id } });
+//     res.json(data);
+//   } catch (error) {
+//     console.error(
+//       "An error occurred with the GET method while getting the user data:",
+//       error
+//     );
+//     res.status(500).json({
+//       error:
+//         "Internal Server Error with the GET method while getting the user data",
+//     });
+//   }
+// });
+
+router.get("/friends/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const chatRooms = await PersonalMessage.find({
+      $or: [
+        { room: { $regex: `^${id}_` } },
+        { room: { $regex: `_${id}$` } }   
+      ]
+    });
+
+    const latestChats = {};
+    chatRooms.forEach((chatRoom) => {
+      const [senderId, receiverId] = chatRoom.room.split('_');
+      const otherUserId = senderId === id ? receiverId : senderId;
+
+      const latestMessage = chatRoom.messages[chatRoom.messages.length - 1]; 
+
+      if (
+        !latestChats[otherUserId] ||
+        new Date(latestMessage.timestamp) > new Date(latestChats[otherUserId].latestMessage.timestamp)
+      ) {
+        latestChats[otherUserId] = {
+          ...chatRoom.toObject(), 
+          latestMessage
+        };
+      }
+    });
+
+    const sortedChats = Object.values(latestChats).sort((a, b) => new Date(b.latestMessage.timestamp) - new Date(a.latestMessage.timestamp));
+
+    const userIds = sortedChats.map(chat => {
+      const [senderId, receiverId] = chat.room.split('_');
+      return senderId === id ? receiverId : senderId;
+    });
+
+    const profiles = await Profilemodel.find({ _id: { $in: userIds } });
+    const profileMap = profiles.reduce((map, profile) => {
+      map[profile._id.toString()] = profile;
+      return map;
+    }, {});
+
+    const response = sortedChats.map(chat => {
+      const [senderId, receiverId] = chat.room.split('_');
+      const otherUserId = senderId === id ? receiverId : senderId;
+      return {
+        ...profileMap[otherUserId].toObject(), 
+        latestMessage: chat.latestMessage
+      };
+    });
+
+    const otherProfiles = await Profilemodel.find({
+      _id: { $ne: id, $nin: userIds }
+    });
+
+    const finalResponse = [
+      ...response, 
+      ...otherProfiles
+    ];
+
+    res.json(finalResponse);
+  } catch (error) {
+    console.error(
+      "An error occurred with the GET method while getting the user data:",
+      error
+    );
+    res.status(500).json({
+      error:
+        "Internal Server Error with the GET method while getting the user data",
+    });
+  }
+});
+
+
+router.get("/profiles", async (req, res) => {
+  try {
+    const data = await Profilemodel.find();
     res.json(data);
   } catch (error) {
     console.error(
@@ -124,10 +235,16 @@ router.post("/getone", async (req, res) => {
     });
 
     const token = generateToken(userProfile);
+    console.log("token while loggin in :- ", token);
     res.cookie("token", token, {
+<<<<<<< HEAD
+      httpOnly: false,
+      secure: false,
+=======
       httpOnly: true,
       secure: true, 
       sameSite: "None",
+>>>>>>> a6d5b995cd05854280dfe61dd9ef9df4adaf78ce
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
@@ -167,11 +284,20 @@ router.post("/", async (req, res) => {
 
       const userProfile = await Profilemodel.create(userProfileData);
       const token = generateToken(userProfile);
+<<<<<<< HEAD
+      console.log("token while creating an account :-  ", token);
+
+      res.cookie("token", token, {
+        httpOnly: false,
+        secure: false,
+        sameSite: "Lax",
+=======
 
       res.cookie("token", token, {
         httpOnly: true,
         secure: true, 
         sameSite: "None",
+>>>>>>> a6d5b995cd05854280dfe61dd9ef9df4adaf78ce
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 

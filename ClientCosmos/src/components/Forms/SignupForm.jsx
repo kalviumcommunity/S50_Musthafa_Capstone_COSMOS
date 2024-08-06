@@ -30,14 +30,9 @@ function SignupForm() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await axios.post(
-        "https://s50-musthafa-capstone-cosmos.onrender.com/users",
-        // "http://localhost:3000/users",
-        data,
-        {
-          withCredentials: true,
-        }
-      );
+      const response = await axios.post("https://s50-musthafa-capstone-cosmos.onrender.com/users", data, {
+        withCredentials: true,
+      });
       setAlert(false);
       if (response.status === 201) {
         navigate("/HomePage");
@@ -51,7 +46,7 @@ function SignupForm() {
   };
 
   const GoogleSignUp = () => {
-    window.location.href = "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
+    window.location.href = "http://localhost:3000/auth/google";
   };
 
   return (
