@@ -21,14 +21,13 @@ router.get("/:communityId", async (req, res) => {
   }
 });
 
-// Example endpoint in your server file
+
 router.get("/personalMessages/:otherUserId", async (req, res) => {
   const { userData } = req.query;
   const parsedUserData = JSON.parse(userData);
 
   const currentUserId = parsedUserData._id;
 
-  // Replace with actual user ID from the request (e.g., from JWT or session)
   const { otherUserId } = req.params;
   const room = [currentUserId, otherUserId].sort().join("_");
 

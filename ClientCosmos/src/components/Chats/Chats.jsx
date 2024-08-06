@@ -35,7 +35,7 @@ function Chats() {
     const fetchUsers = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/users/friends/${userData?._id}`
+          `https://s50-musthafa-capstone-cosmos.onrender.com/users/friends/${userData?._id}`
         );
         setUsers(response.data);
       } catch (error) {
@@ -48,7 +48,7 @@ function Chats() {
   }, [userData]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3000", {
+    const newSocket = io("https://s50-musthafa-capstone-cosmos.onrender.com", {
       withCredentials: true,
       transports: ["websocket", "polling"],
     });
@@ -71,7 +71,7 @@ function Chats() {
 
         try {
           const response = await axios.get(
-            `http://localhost:3000/chat/personalMessages/${selectedUser._id}`,
+            `https://s50-musthafa-capstone-cosmos.onrender.com/chat/personalMessages/${selectedUser._id}`,
             {
               params: {
                 userData: JSON.stringify(userData),
@@ -118,7 +118,7 @@ function Chats() {
   };
 
   const [filteredUsers, setFilteredUsers] = useState(users);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     const filtered = users.filter((user) =>
@@ -174,11 +174,11 @@ function Chats() {
               onClick={() => navigate("/profile")}
               className="cursor-pointer flex items-center hover:border-gray-400 rounded-md py-1 px-3 duration-300 border border-transparent gap-2 lg:gap-6"
             >
-              <div>
+              <div className="flex flex-col items-center">
                 <h2 className="font-bold text-start">
                   {userData?.name || "Guest"}
                 </h2>
-                <p className="text-xs text-end">Online</p>
+                <p className="text-xs -mt-3 text-end">Online</p>
               </div>
               <div
                 className="w-10 lg:w-12 h-10 lg:h-12 bg-cover rounded-full"
