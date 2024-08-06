@@ -140,21 +140,23 @@ function Chats() {
         profile_picture: userData.profilePic,
         communityId: selectedCommunity._id,
       };
-  
+
       socket.emit("communityMessage", messagePayload);
       setNewMessage("");
-  
+
       const updatedCommunities = communities.map((community) =>
         community._id === selectedCommunity._id
           ? { ...community, latestMessageTime: new Date() }
           : community
       );
-  
-      updatedCommunities.sort((a, b) => (b.latestMessageTime || 0) - (a.latestMessageTime || 0));
+
+      updatedCommunities.sort(
+        (a, b) => (b.latestMessageTime || 0) - (a.latestMessageTime || 0)
+      );
       setCommunities(updatedCommunities);
     }
   };
-  
+
   const fetchTheCommunityData = async () => {
     try {
       const response = await axios.get(
@@ -253,6 +255,38 @@ function Chats() {
     }
   };
 
+  // Searching part
+  const [searchTerm, setSearchTerm] = useState("");
+
+  useEffect(() => {
+    const fetchAndFilterCommunities = async () => {
+      try {
+        let response;
+        if (selectedSection === "ALL") {
+          response = await axios.get(
+            `http://localhost:3000/community/getAll/${userData?._id}`
+          );
+        } else {
+          response = await axios.get(
+            `http://localhost:3000/community/mycommunities/${userData?._id}`
+          );
+        }
+
+        const allCommunities = response.data;
+        const filtered = allCommunities.filter((community) =>
+          community.name.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        setCommunities(filtered);
+      } catch (error) {
+        console.error("Error fetching communities:", error);
+      }
+    };
+
+    if (userData) {
+      fetchAndFilterCommunities();
+    }
+  }, [searchTerm, selectedSection, userData]);
+
   return (
     <div className="h-screen w-screen flex flex-col lg:flex-row">
       {isJoinPopUp && (
@@ -308,6 +342,8 @@ function Chats() {
               type="text"
               className="bg-white outline-none border py-2 rounded-xl w-full lg:w-[30vw] px-3 font-light"
               placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
           <div>
@@ -425,13 +461,12 @@ function Chats() {
                 </button>
               </div>
               <div className="overflow-auto myPosts h-full">
-                {communities &&
+                {communities.length > 0 ? (
                   communities.map((community) => (
                     <div
                       key={community._id}
                       onClick={() => handleCommunitySelect(community)}
                       className={`w-full cursor-pointer hover:bg-gray-100 duration-300 rounded-lg px-7 py-2 flex items-center gap-4 ${
-                        selectedCommunity &&
                         selectedCommunity?._id === community._id
                           ? "bg-gray-200"
                           : ""
@@ -446,7 +481,12 @@ function Chats() {
                       ></div>
                       <h2 className="text-sm lg:text-base">{community.name}</h2>
                     </div>
-                  ))}
+                  ))
+                ) : (
+                  <div className="h-full flex justify-center">
+                    <p className="text-gray-600 text-2xl mt-44 tracking-wider text-center w-full">No communities found.</p>
+                  </div>
+                )}
               </div>
               <div>
                 <button
