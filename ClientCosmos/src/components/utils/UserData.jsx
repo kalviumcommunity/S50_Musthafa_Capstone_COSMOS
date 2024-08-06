@@ -12,7 +12,7 @@ const useUserData = () => {
   const getUserdata = async (id) => {
     try {
       const response = await axios.get(
-        `https://s50-musthafa-capstone-cosmos.onrender.com/users/getAsingleUser/${id}`
+        `http://localhost:3000/users/getAsingleUser/${id}`
       );
       setUserData(response.data);
     } catch (err) {
@@ -25,12 +25,12 @@ const useUserData = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get("token");
-      console.log(token);
+      // console.log(Cookies.get("token"));
       try {
         const response = await axios.post(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
-          { token },
+          "http://localhost:3000/users/tokenvalidate",
+          // "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
+          {},
           { withCredentials: true }
         );
         const { user, valid } = response.data;

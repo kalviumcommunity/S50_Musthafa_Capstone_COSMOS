@@ -6,18 +6,27 @@ app.use(express.json());
 require("dotenv").config();
 const multer = require("multer");
 const profile = require("../Schemas/Profile");
-const Message = require("../Schemas/Message")
+const Message = require("../Schemas/Message");
+
+const shuffleArray = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array;
+};
 
 // GET ROUTES
-
 // to get all of the communities
 router.get("/getAll/:id", async (req, res) => {
   const userId = req.params.id;
   try {
     const communities = await communitymodel.find({
-      members: { $nin: [userId] }
+      members: { $nin: [userId] },
     });
-    res.status(200).json(communities);
+
+    const shuffledCommunities = shuffleArray(communities);
+    res.status(200).json(shuffledCommunities);
   } catch (error) {
     console.error("An error occurred while fetching community data:", error);
     res.status(500).json({
@@ -40,7 +49,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-//* to get the details of a community such as members, description, etc. 
+//* to get the details of a community such as members, description, etc.
 router.get("/details/:id", async (req, res) => {
   try {
     const communityID = req.params.id;
@@ -66,10 +75,32 @@ router.get("/details/:id", async (req, res) => {
 });
 
 //* to get all the community which a particular user has included
+// router.get("/mycommunities/:id", async (req, res) => {
+//   try {
+//     const userId = req.params.id;
+
+//     const user = await profile.findById(userId);
+
+//     if (!user) {
+//       return res.status(404).json({ message: "User not found" });
+//     }
+
+//     const communityIds = user.communities;
+//     const communities = await communitymodel.find({
+//       _id: { $in: communityIds },
+//     });
+
+//     res.status(200).json(communities);
+//   } catch (error) {
+//     console.error("An error occurred while fetching community data:", error);
+//     res.status(500).json({
+//       error: "Internal Server Error while fetching community data",
+//     });
+//   }
+// });
 router.get("/mycommunities/:id", async (req, res) => {
   try {
     const userId = req.params.id;
-
     const user = await profile.findById(userId);
 
     if (!user) {
@@ -77,9 +108,33 @@ router.get("/mycommunities/:id", async (req, res) => {
     }
 
     const communityIds = user.communities;
-    const communities = await communitymodel.find({
-      _id: { $in: communityIds },
-    });
+    const communities = await Message.aggregate([
+      { $match: { communityId: { $in: communityIds } } }, 
+      { $unwind: "$messages" }, 
+      { $sort: { "messages.date": -1 } },
+      {
+        $group: {
+          _id: "$communityId",
+          latestMessage: { $first: "$messages" },
+        },
+      },
+      {
+        $lookup: {
+          from: "communities",
+          localField: "_id",
+          foreignField: "_id",
+          as: "communityDetails",
+        },
+      },
+      { $unwind: "$communityDetails" },
+      {
+        $replaceRoot: {
+          newRoot: {
+            $mergeObjects: ["$communityDetails", { latestMessage: "$latestMessage" }],
+          },
+        },
+      },
+    ]);
 
     res.status(200).json(communities);
   } catch (error) {
@@ -94,7 +149,6 @@ router.post("/create", async (req, res) => {
   try {
     const { name, description, creator, communityprofile } = req.body;
 
-    // Create a new community object
     const community = {
       name: name,
       description: description,
@@ -109,7 +163,7 @@ router.post("/create", async (req, res) => {
     if (com) {
       // Update the creator's user document to add the new community
       await profile.findByIdAndUpdate(creator, {
-        $push: { communities: com._id }
+        $push: { communities: com._id },
       });
 
       // Create a message document for the new community
@@ -120,9 +174,9 @@ router.post("/create", async (req, res) => {
 
       await message.save();
 
-      res.status(200).json({ 
-        message: "Community created successfully", 
-        community: com 
+      res.status(200).json({
+        message: "Community created successfully",
+        community: com,
       });
     } else {
       res.status(500).json({ error: "Failed to create community" });
@@ -159,7 +213,7 @@ router.post("/join", async (req, res) => {
 });
 
 // *to exit from a community
-router.post('/exit', async (req, res) => {
+router.post("/exit", async (req, res) => {
   const { userId, communityId } = req.body;
 
   try {
@@ -177,40 +231,52 @@ router.post('/exit', async (req, res) => {
 
     // Check if the community was updated
     if (communityResult.matchedCount === 0) {
-      return res.status(404).json({ message: 'Community not found' });
+      return res.status(404).json({ message: "Community not found" });
     }
 
     // Check if the user was a member of the community
     if (communityResult.modifiedCount === 0) {
-      return res.status(400).json({ message: 'User is not a member of the community' });
+      return res
+        .status(400)
+        .json({ message: "User is not a member of the community" });
     }
 
     // Check if the user profile was updated
     if (profileResult.matchedCount === 0) {
-      return res.status(404).json({ message: 'User profile not found' });
+      return res.status(404).json({ message: "User profile not found" });
     }
 
-    res.status(200).json({ message: 'Successfully exited the community' });
+    res.status(200).json({ message: "Successfully exited the community" });
   } catch (error) {
-    console.error('Error while exiting the community', error);
-    res.status(500).json({ message: 'Server error' });
+    console.error("Error while exiting the community", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
 
-
 // DELETE ACCORDING ID
-router.delete("/:id", async (req, res) => {
+router.delete("/delete/:id", async (req, res) => {
   try {
-    const id = req.params.id;
-    const deletedPost = await communitymodel.findByIdAndDelete(id);
+    const communityId = req.params.id;
 
-    if (!deletedPost) {
-      return res.status(404).json({ message: "Post not found" });
+    // Delete the community by ID
+    const deletedCommunity = await communitymodel.findByIdAndDelete(
+      communityId
+    );
+
+    if (!deletedCommunity) {
+      return res.status(404).json({ message: "Community not found" });
     }
 
-    res.status(200).json({ message: "Post deleted successfully" });
+    // Delete all messages associated with the community ID
+    const deletedMessages = await Message.deleteMany({
+      communityId: communityId,
+    });
+
+    res.status(200).json({
+      message: "Community deleted successfully",
+    });
   } catch (error) {
-    console.error("Error deleting post:", error);
+    console.error("Error deleting community and messages:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 });

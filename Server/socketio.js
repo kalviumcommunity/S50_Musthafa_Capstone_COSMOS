@@ -1,5 +1,6 @@
 const { Server } = require("socket.io");
-const Message = require("./Schemas/Message");
+const CommunityMessage = require("./Schemas/Message");
+const PersonalMessage = require("./Schemas/PersonalMessage");
 
 const setupSocket = (server) => {
   const io = new Server(server, {
@@ -12,21 +13,46 @@ const setupSocket = (server) => {
   io.on("connection", (socket) => {
     socket.on("joinCommunity", async (communityId) => {
       socket.join(communityId);
-      const communityMessages = await Message.findOne({ communityId });
-      socket.emit("message", communityMessages ? communityMessages.messages : []);
+      const communityMessages = await CommunityMessage.findOne({ communityId });
+      socket.emit(
+        "communityMessage",
+        communityMessages && communityMessages.messages
+      );
     });
 
-    socket.on("message", async (message) => {
-
-      // Update the messages array for the community
-      await Message.updateOne(
+    socket.on("communityMessage", async (message) => {
+      await CommunityMessage.updateOne(
         { communityId: message.communityId },
         { $push: { messages: message } },
         { upsert: true }
       );
-      
-      // Emit the message to all clients in the community room
-      io.to(message.communityId).emit("message", message);
+
+      io.to(message.communityId).emit("communityMessage", message);
+    });
+
+    // Personal Chat
+    socket.on("joinPersonalChat", async ({ userId, otherUserId }) => {
+      const room = getPersonalRoomId(userId, otherUserId);
+      socket.join(room);
+
+      const personalMessages = await PersonalMessage.findOne({ room });
+      socket.emit(
+        "personalMessage",
+        personalMessages && personalMessages.messages
+      );
+    });
+
+    socket.on("personalMessage", async (message) => {
+      const { senderId, receiverId } = message;
+      const room = getPersonalRoomId(senderId, receiverId);
+
+      await PersonalMessage.updateOne(
+        { room },
+        { $push: { messages: message } },
+        { upsert: true }
+      );
+
+      io.to(room).emit("personalMessage", message);
     });
 
     socket.on("disconnect", () => {
@@ -35,6 +61,10 @@ const setupSocket = (server) => {
   });
 
   return io;
+};
+
+const getPersonalRoomId = (userId, otherUserId) => {
+  return [userId, otherUserId].sort().join("_");
 };
 
 module.exports = setupSocket;
