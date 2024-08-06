@@ -237,10 +237,17 @@ router.post("/getone", async (req, res) => {
     const token = generateToken(userProfile);
     console.log("token while loggin in :- ", token);
     res.cookie("token", token, {
+<<<<<<< HEAD
       httpOnly: false,
       secure: false,
+=======
+      httpOnly: true,
+      secure: true, 
+      sameSite: "None",
+>>>>>>> a6d5b995cd05854280dfe61dd9ef9df4adaf78ce
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+
 
     res.status(201).json({ message: "User Logged in successfully" });
   } catch (error) {
@@ -262,7 +269,7 @@ router.post("/", async (req, res) => {
 
       // Create user
       const user = await usermodel.create(userData);
-
+      console.log(user)
       // Create user profile
       const userProfileData = {
         name: req.body.name,
@@ -277,12 +284,20 @@ router.post("/", async (req, res) => {
 
       const userProfile = await Profilemodel.create(userProfileData);
       const token = generateToken(userProfile);
+<<<<<<< HEAD
       console.log("token while creating an account :-  ", token);
 
       res.cookie("token", token, {
         httpOnly: false,
         secure: false,
         sameSite: "Lax",
+=======
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: true, 
+        sameSite: "None",
+>>>>>>> a6d5b995cd05854280dfe61dd9ef9df4adaf78ce
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 

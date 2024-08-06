@@ -18,7 +18,7 @@ router.get("/randomreviews", async (req, res) => {
 
 router.post("/newreview", async (req, res) => {
   const { review } = req.body;
-
+  console.log(review)
   const savedReview = await Review.create(review);
   res.status(201).json(savedReview);
 });
