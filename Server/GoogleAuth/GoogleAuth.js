@@ -81,13 +81,13 @@ passport.use(
         };
         
         const profileData = await Profilemodel.create(userProfile);
+
         const token = generateToken(profileData);
 
         request.res.cookie("token", token, {
           maxAge: 7 * 24 * 60 * 60 * 1000,
           httpOnly: false,
         });
-        
         const passwordBool = false;
         request.res.cookie("passwordisthere", passwordBool, {
           maxAge: 7 * 24 * 60 * 60 * 1000,
