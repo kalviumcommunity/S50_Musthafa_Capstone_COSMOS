@@ -74,30 +74,7 @@ router.get("/details/:id", async (req, res) => {
   }
 });
 
-//* to get all the community which a particular user has included
-// router.get("/mycommunities/:id", async (req, res) => {
-//   try {
-//     const userId = req.params.id;
 
-//     const user = await profile.findById(userId);
-
-//     if (!user) {
-//       return res.status(404).json({ message: "User not found" });
-//     }
-
-//     const communityIds = user.communities;
-//     const communities = await communitymodel.find({
-//       _id: { $in: communityIds },
-//     });
-
-//     res.status(200).json(communities);
-//   } catch (error) {
-//     console.error("An error occurred while fetching community data:", error);
-//     res.status(500).json({
-//       error: "Internal Server Error while fetching community data",
-//     });
-//   }
-// });
 router.get("/mycommunities/:id", async (req, res) => {
   try {
     const userId = req.params.id;
