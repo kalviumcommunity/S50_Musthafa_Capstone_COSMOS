@@ -51,7 +51,6 @@ passport.use(
           }
 
           const token = generateToken(existingProfile);
-<<<<<<< HEAD
 
           request.res.cookie("token", token, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -64,9 +63,6 @@ passport.use(
             httpOnly: false,
           });
 
-=======
-          req.session.token = token; 
->>>>>>> a6d5b995cd05854280dfe61dd9ef9df4adaf78ce
           return done(null, existingProfile);
         }
 

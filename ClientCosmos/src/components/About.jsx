@@ -57,8 +57,8 @@ function About() {
       case "profile":
         navigate("/profile");
         break;
-      case "communities":
-        navigate("/communities");
+      case "chats":
+        navigate("/chats");
         break;
       case "userPosts":
         navigate("/userPosts");
@@ -130,9 +130,9 @@ function About() {
             </li>
             <li
               className="text-lg font-poppins cursor-pointer hover:scale-105 duration-300 px-5"
-              onClick={() => ProfileClick("communities")}
+              onClick={() => ProfileClick("chats")}
             >
-              COMMUNITIES
+              CHATS
             </li>
           </ul>
         </div>

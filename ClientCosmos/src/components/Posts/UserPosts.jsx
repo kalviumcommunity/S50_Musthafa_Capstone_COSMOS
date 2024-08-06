@@ -94,9 +94,7 @@ function UserPosts({ userData, setUserData }) {
           action: action,
         }
       );
-      console.log("User updated:", response.data);
 
-      // Update the local state immediately
       const updatedUserData = {
         ...userData,
         saved_posts:
@@ -118,7 +116,7 @@ function UserPosts({ userData, setUserData }) {
     <div>
       {shuffledPosts.length === 0 && !loading ? (
         <div className="text-center text-3xl font-bold font-poppins mt-40 mb-40 lg:mb-0 lg:mt-64 text-gray-700">
-          There is no Post
+          There is no post found.
         </div>
       ) : loading ? (
         <div className="">
