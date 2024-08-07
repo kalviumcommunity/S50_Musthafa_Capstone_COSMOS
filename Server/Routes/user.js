@@ -32,9 +32,8 @@ const generateToken = (data) => {
 };
 
 const verifyToken = (req, res, next) => {
-  // console.log("Request Headers:", req.headers); // Check if the Cookie header is present
-  // console.log("Cookies in Request:", req.cookies); // Check if cookies are being parsed correctly
-  const token = req.cookies.token;
+  const token =
+    req.cookies.token || req.headers["x-access-token"] || req.body.token;
 
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
@@ -71,58 +70,41 @@ router.get("/", async (req, res) => {
   }
 });
 
-// *to get all of the users
-// router.get("/friends/:id", async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     // Find all profiles except the one with the given id
-//     const data = await Profilemodel.find({ _id: { $ne: id } });
-//     res.json(data);
-//   } catch (error) {
-//     console.error(
-//       "An error occurred with the GET method while getting the user data:",
-//       error
-//     );
-//     res.status(500).json({
-//       error:
-//         "Internal Server Error with the GET method while getting the user data",
-//     });
-//   }
-// });
-
 router.get("/friends/:id", async (req, res) => {
   try {
     const { id } = req.params;
 
     const chatRooms = await PersonalMessage.find({
-      $or: [
-        { room: { $regex: `^${id}_` } },
-        { room: { $regex: `_${id}$` } }   
-      ]
+      $or: [{ room: { $regex: `^${id}_` } }, { room: { $regex: `_${id}$` } }],
     });
 
     const latestChats = {};
     chatRooms.forEach((chatRoom) => {
-      const [senderId, receiverId] = chatRoom.room.split('_');
+      const [senderId, receiverId] = chatRoom.room.split("_");
       const otherUserId = senderId === id ? receiverId : senderId;
 
-      const latestMessage = chatRoom.messages[chatRoom.messages.length - 1]; 
+      const latestMessage = chatRoom.messages[chatRoom.messages.length - 1];
 
       if (
         !latestChats[otherUserId] ||
-        new Date(latestMessage.timestamp) > new Date(latestChats[otherUserId].latestMessage.timestamp)
+        new Date(latestMessage.timestamp) >
+          new Date(latestChats[otherUserId].latestMessage.timestamp)
       ) {
         latestChats[otherUserId] = {
-          ...chatRoom.toObject(), 
-          latestMessage
+          ...chatRoom.toObject(),
+          latestMessage,
         };
       }
     });
 
-    const sortedChats = Object.values(latestChats).sort((a, b) => new Date(b.latestMessage.timestamp) - new Date(a.latestMessage.timestamp));
+    const sortedChats = Object.values(latestChats).sort(
+      (a, b) =>
+        new Date(b.latestMessage.timestamp) -
+        new Date(a.latestMessage.timestamp)
+    );
 
-    const userIds = sortedChats.map(chat => {
-      const [senderId, receiverId] = chat.room.split('_');
+    const userIds = sortedChats.map((chat) => {
+      const [senderId, receiverId] = chat.room.split("_");
       return senderId === id ? receiverId : senderId;
     });
 
@@ -132,23 +114,20 @@ router.get("/friends/:id", async (req, res) => {
       return map;
     }, {});
 
-    const response = sortedChats.map(chat => {
-      const [senderId, receiverId] = chat.room.split('_');
+    const response = sortedChats.map((chat) => {
+      const [senderId, receiverId] = chat.room.split("_");
       const otherUserId = senderId === id ? receiverId : senderId;
       return {
-        ...profileMap[otherUserId].toObject(), 
-        latestMessage: chat.latestMessage
+        ...profileMap[otherUserId].toObject(),
+        latestMessage: chat.latestMessage,
       };
     });
 
     const otherProfiles = await Profilemodel.find({
-      _id: { $ne: id, $nin: userIds }
+      _id: { $ne: id, $nin: userIds },
     });
 
-    const finalResponse = [
-      ...response, 
-      ...otherProfiles
-    ];
+    const finalResponse = [...response, ...otherProfiles];
 
     res.json(finalResponse);
   } catch (error) {
@@ -162,7 +141,6 @@ router.get("/friends/:id", async (req, res) => {
     });
   }
 });
-
 
 router.get("/profiles", async (req, res) => {
   try {
@@ -235,13 +213,12 @@ router.post("/getone", async (req, res) => {
     });
 
     const token = generateToken(userProfile);
-    console.log("token while loggin in :- ", token);
+
     res.cookie("token", token, {
       httpOnly: false,
       secure: false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-
 
     res.status(201).json({ message: "User Logged in successfully" });
   } catch (error) {
@@ -263,7 +240,6 @@ router.post("/", async (req, res) => {
 
       // Create user
       const user = await usermodel.create(userData);
-      console.log(user)
       // Create user profile
       const userProfileData = {
         name: req.body.name,
@@ -281,7 +257,7 @@ router.post("/", async (req, res) => {
 
       res.cookie("token", token, {
         httpOnly: true,
-        secure: true, 
+        secure: true,
         sameSite: "None",
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
