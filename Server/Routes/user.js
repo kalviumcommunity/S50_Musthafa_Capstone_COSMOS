@@ -34,8 +34,8 @@ const generateToken = (data) => {
 const verifyToken = (req, res, next) => {
   const token =
     req.cookies.token || req.headers["x-access-token"] || req.body.token;
-   console.log(token)
-
+  console.log(token);
+  
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
@@ -221,7 +221,7 @@ router.post("/getone", async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.status(201).json({ message: "User Logged in successfully" });
+    res.status(201).json({ message: "User Logged in successfully" , token: token});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
