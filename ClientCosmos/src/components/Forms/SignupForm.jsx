@@ -35,6 +35,7 @@ function SignupForm() {
       });
       setAlert(false);
       if (response.status === 201) {
+        localStorage.setItem('token', response.data.token);
         navigate("/HomePage");
       }
       setApiError(null);

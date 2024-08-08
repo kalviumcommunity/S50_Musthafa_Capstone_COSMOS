@@ -22,19 +22,11 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/auth/google/callback",
+      callbackURL: "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google/callback",
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, done) {
       try {
-        async function createUser(profile) {
-          return {
-            name: profile.name.givenName,
-            email: profile.email,
-            password: "",
-          };
-        }
-
         const existingProfile = await Profilemodel.findOne({
           email: profile.email,
           name: profile.name.givenName,
@@ -52,21 +44,15 @@ passport.use(
 
           const token = generateToken(existingProfile);
 
-          request.res.cookie("token", token, {
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: false,
-          });
-
-          const passwordBool = false;
-          request.res.cookie("passwordisthere", passwordBool, {
-            maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: false,
-          });
-
-          return done(null, existingProfile);
+          return done(null, { token, user: existingProfile });
         }
 
-        const userDetail = await createUser(profile);
+        const userDetail = {
+          name: profile.name.givenName,
+          email: profile.email,
+          password: "", 
+        };
+        
         const userData = await usermodel.create(userDetail);
 
         const userProfile = {
@@ -84,17 +70,7 @@ passport.use(
 
         const token = generateToken(profileData);
 
-        request.res.cookie("token", token, {
-          maxAge: 7 * 24 * 60 * 60 * 1000,
-          httpOnly: false,
-        });
-        const passwordBool = false;
-        request.res.cookie("passwordisthere", passwordBool, {
-          maxAge: 7 * 24 * 60 * 60 * 1000,
-          httpOnly: false,
-        });
-
-        return done(null, profileData);
+        return done(null, { token, user: profileData });
       } catch (error) {
         return done(error);
       }
