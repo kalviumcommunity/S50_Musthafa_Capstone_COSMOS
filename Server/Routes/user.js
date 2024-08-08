@@ -32,10 +32,11 @@ const generateToken = (data) => {
 };
 
 const verifyToken = (req, res, next) => {
+  console.log("cookies", req.cookies.token);
   const token =
     req.cookies.token || req.headers["x-access-token"] || req.body.token;
   console.log(token);
-  
+
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
   }
