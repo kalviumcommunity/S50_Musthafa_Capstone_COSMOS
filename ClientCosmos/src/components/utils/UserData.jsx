@@ -25,7 +25,8 @@ const useUserData = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token =  localStorage.getItem('token');
+      const token = localStorage.getItem("token");
+      console.log("G- Auth", Cookies.get("token"));
       try {
         const response = await axios.post(
           "https://s50-musthafa-capstone-cosmos.onrender.com/users/tokenvalidate",
@@ -39,8 +40,8 @@ const useUserData = () => {
         }
         setValid(valid);
       } catch (error) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('passwordisthere');
+        localStorage.removeItem("token");
+        localStorage.removeItem("passwordisthere");
         console.error("Error in post request", error.response.data);
         setError(error);
       } finally {

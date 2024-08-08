@@ -41,26 +41,26 @@ function LoginForm() {
     }
   };
 
-  // const toLogin = () => {
-  //   window.location.href = "http://localhost:3000/auth/google";
-  // };
-
-  const toLogin = async () => {
-    try {
-      const response = await axios.get('https://s50-musthafa-capstone-cosmos.onrender.com/auth/google/callback', {
-        withCredentials: true,
-      });
-  
-      if (response.status === 200) {
-        const { token } = response.data;
-        localStorage.setItem('token', token);
-        const navigate = useNavigate();
-        navigate("/HomePage");
-      }
-    } catch (error) {
-      console.error("Error during Google authentication", error);
-    }
+  const toLogin = () => {
+    window.location.href = "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
   };
+
+  // const toLogin = async () => {
+  //   try {
+  //     const response = await axios.get('https://s50-musthafa-capstone-cosmos.onrender.com/auth/google/callback', {
+  //       withCredentials: true,
+  //     });
+  
+  //     if (response.status === 200) {
+  //       const { token } = response.data;
+  //       localStorage.setItem('token', token);
+  //       const navigate = useNavigate();
+  //       navigate("/HomePage");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during Google authentication", error);
+  //   }
+  // };
 
   return (
     <>
