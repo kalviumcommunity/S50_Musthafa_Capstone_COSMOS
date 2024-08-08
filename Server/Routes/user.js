@@ -215,13 +215,9 @@ router.post("/getone", async (req, res) => {
 
     const token = generateToken(userProfile);
 
-    res.cookie("token", token, {
-      httpOnly: false,
-      secure: false,
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
-
-    res.status(201).json({ message: "User Logged in successfully" , token: token});
+    res
+      .status(201)
+      .json({ message: "User Logged in successfully", token: token });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -256,14 +252,9 @@ router.post("/", async (req, res) => {
       const userProfile = await Profilemodel.create(userProfileData);
       const token = generateToken(userProfile);
 
-      res.cookie("token", token, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 7 * 24 * 60 * 60 * 1000,
-      });
-
-      res.status(201).json({ message: "User created successfully" });
+      res
+        .status(201)
+        .json({ message: "User created successfully", token: token });
     }
   } catch (err) {
     console.log(

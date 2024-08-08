@@ -25,7 +25,6 @@ function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        // "http://localhost:3000/users/getone",
         "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
         data,
         {
@@ -42,8 +41,25 @@ function LoginForm() {
     }
   };
 
-  const toLogin = () => {
-    window.location.href = "http://localhost:3000/auth/google";
+  // const toLogin = () => {
+  //   window.location.href = "http://localhost:3000/auth/google";
+  // };
+
+  const toLogin = async () => {
+    try {
+      const response = await axios.get('https://s50-musthafa-capstone-cosmos.onrender.com/auth/google/callback', {
+        withCredentials: true,
+      });
+  
+      if (response.status === 200) {
+        const { token } = response.data;
+        localStorage.setItem('token', token);
+        const navigate = useNavigate();
+        navigate("/HomePage");
+      }
+    } catch (error) {
+      console.error("Error during Google authentication", error);
+    }
   };
 
   return (
