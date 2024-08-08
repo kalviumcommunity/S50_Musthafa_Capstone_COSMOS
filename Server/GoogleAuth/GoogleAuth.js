@@ -27,6 +27,14 @@ passport.use(
     },
     async function (request, accessToken, refreshToken, profile, done) {
       try {
+        async function createUser(profile) {
+          return {
+            name: profile.name.givenName,
+            email: profile.email,
+            password: "",
+          };
+        }
+
         const existingProfile = await Profilemodel.findOne({
           email: profile.email,
           name: profile.name.givenName,
@@ -44,15 +52,21 @@ passport.use(
 
           const token = generateToken(existingProfile);
 
-          return done(null, { token, user: existingProfile });
+          request.res.cookie("token", token, {
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            httpOnly: false,
+          });
+
+          const passwordBool = false;
+          request.res.cookie("passwordisthere", passwordBool, {
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+            httpOnly: false,
+          });
+
+          return done(null, existingProfile);
         }
 
-        const userDetail = {
-          name: profile.name.givenName,
-          email: profile.email,
-          password: "", 
-        };
-        
+        const userDetail = await createUser(profile);
         const userData = await usermodel.create(userDetail);
 
         const userProfile = {
@@ -70,7 +84,17 @@ passport.use(
 
         const token = generateToken(profileData);
 
-        return done(null, { token, user: profileData });
+        request.res.cookie("token", token, {
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+          httpOnly: false,
+        });
+        const passwordBool = false;
+        request.res.cookie("passwordisthere", passwordBool, {
+          maxAge: 7 * 24 * 60 * 60 * 1000,
+          httpOnly: false,
+        });
+
+        return done(null, profileData);
       } catch (error) {
         return done(error);
       }
