@@ -25,7 +25,8 @@ const useUserData = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get("token");
+      const token =  localStorage.getItem('token');
+      console.log(token)
       try {
         const response = await axios.post(
           // "http://localhost:3000/users/tokenvalidate",
