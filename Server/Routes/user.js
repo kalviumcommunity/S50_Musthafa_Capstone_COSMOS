@@ -54,7 +54,6 @@ router.post("/tokenvalidate", verifyToken, (req, res) => {
 });
 
 // GET REQUESTS
-
 // *to get all of the users
 router.get("/", async (req, res) => {
   try {

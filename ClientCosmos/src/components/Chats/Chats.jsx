@@ -130,7 +130,7 @@ function Chats() {
   return (
     <div className="h-screen w-screen flex flex-col lg:flex-row">
       {/* Sidebar */}
-      <ul className="lg:h-full flex lg:flex-col items-center gap-5 lg:gap-20 bg-black py-2 lg:py-10 px-4">
+      <ul className="lg:h-full w-[5vw] flex lg:flex-col items-center gap-5 lg:gap-20 bg-black py-2 lg:py-10 px-4">
         <li>
           <img
             className="cursor-pointer w-6"
