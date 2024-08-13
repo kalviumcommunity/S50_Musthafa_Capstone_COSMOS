@@ -306,7 +306,7 @@ function HomePage({ setSelectedNews }) {
               className="drawer-overlay"
             ></label>
 
-            <ul className="menu pt-10 p-7 w-80 min-h-full z-50 bg-white flex items-center text-base-content">
+            <ul className="menu pt-10 p-7 w-[20vw] min-h-full z-50 bg-white flex items-center text-base-content">
               <li className="w-full" onClick={() => ProfileClick("profile")}>
                 <div className="w-full  text-black flex gap-5  shadow-lg hover:bg-gray-300">
                   <img

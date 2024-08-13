@@ -25,14 +25,15 @@ function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
+        "http://localhost:3000/users/getone",
+        // "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
         data,
         {
           withCredentials: true,
         }
       );
       if (response.status === 201) {
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem("token", response.data.token);
         navigate("/HomePage");
       }
     } catch (error) {
@@ -42,7 +43,8 @@ function LoginForm() {
   };
 
   const toLogin = () => {
-    window.location.href = "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
+    window.location.href =
+      "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
   };
 
   // const toLogin = async () => {
@@ -50,7 +52,7 @@ function LoginForm() {
   //     const response = await axios.get('https://s50-musthafa-capstone-cosmos.onrender.com/auth/google/callback', {
   //       withCredentials: true,
   //     });
-  
+
   //     if (response.status === 200) {
   //       const { token } = response.data;
   //       localStorage.setItem('token', token);
