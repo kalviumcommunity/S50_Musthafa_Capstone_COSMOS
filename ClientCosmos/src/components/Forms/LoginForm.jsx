@@ -26,7 +26,6 @@ function LoginForm() {
     try {
       const response = await axios.post(
         "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
-        // "http://localhost:3000/users/getone",
         data,
         {
           withCredentials: true,
