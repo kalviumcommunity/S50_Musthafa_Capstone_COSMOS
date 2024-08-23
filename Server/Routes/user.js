@@ -6,6 +6,7 @@ const bcrypt = require("bcrypt");
 const app = express();
 const Joi = require("joi");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const Post = require("../Schemas/Posts");
 const Message = require("../Schemas/Message");
 const postModel = require("../Schemas/Posts");
@@ -32,10 +33,8 @@ const generateToken = (data) => {
 };
 
 const verifyToken = (req, res, next) => {
-  console.log("cookies", req.cookies.token);
   const token =
     req.cookies.token || req.headers["x-access-token"] || req.body.token;
-  console.log(token);
 
   if (!token) {
     return res.status(200).json({ error: "Token is not provided" });
@@ -182,10 +181,10 @@ router.get("/getAsingleUser/:id", async (req, res) => {
 //* get random users
 router.get("/getusersforuserpost", async (req, res) => {
   try {
-    // Get random users and project only the name and profile picture
+    const userId = req.params.id;
     const users = await Profilemodel.aggregate([
       { $sample: { size: 4 } },
-      { $project: { name: 1, profilePic: 1 } },
+      { $project: { name: 1, profilePic: 1 } }
     ]);
 
     res.json(users);
@@ -194,6 +193,7 @@ router.get("/getusersforuserpost", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
+
 
 // POST REQUESTS
 //* to login authentication
@@ -214,6 +214,11 @@ router.post("/getone", async (req, res) => {
     });
 
     const token = generateToken(userProfile);
+
+    res.cookie("token", token, {
+      httpOnly: false,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
 
     res
       .status(201)
@@ -251,6 +256,11 @@ router.post("/", async (req, res) => {
 
       const userProfile = await Profilemodel.create(userProfileData);
       const token = generateToken(userProfile);
+
+      res.cookie("token", token, {
+        httpOnly: false,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
 
       res
         .status(201)

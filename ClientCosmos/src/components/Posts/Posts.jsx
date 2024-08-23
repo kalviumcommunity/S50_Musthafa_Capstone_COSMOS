@@ -8,7 +8,7 @@ import AllAOD from "./AllAOD";
 import useUserData from "../utils/UserData";
 
 function Posts() {
-  const { userData , setUserData } = useUserData();
+  const { userData, setUserData } = useUserData();
 
   const navigate = useNavigate();
   const [randomUsers, setRandomUsers] = useState([]);
@@ -18,7 +18,8 @@ function Posts() {
     const fetchRandomUsers = async () => {
       try {
         const response = await axios.get(
-          "https://s50-musthafa-capstone-cosmos.onrender.com/users/getusersforuserpost"
+          // `http://localhost:3000/users/getusersforuserpost/${userData?._id}`
+          `http://localhost:3000/users/getusersforuserpost`
         );
         setRandomUsers(response.data);
       } catch (err) {
@@ -89,6 +90,7 @@ function Posts() {
                   {randomUsers.map((user, index) => (
                     <li
                       key={index}
+                      onClick={() => navigate(`/userprofile/${user._id}`)}
                       className="items-center gap-4 py-3 rounded-md flex pl-6 w-full border mt-2 hover:shadow-lg duration-300 cursor-pointer"
                     >
                       <img
