@@ -14,19 +14,17 @@ router.get('/google/callback',
 );
 
 router.get("/logout", (req, res) => {
-  console.log("logging out");
+  
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+  });
 
   req.logout(function (err) {
     if (err) {
       return res.status(500).send("Error during logout");
     }
-    
-    res.clearCookie("token", {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'none',
-    });
-
     req.session.destroy(function (err) {
       if (err) {
         return res.status(500).send("Error destroying session");
