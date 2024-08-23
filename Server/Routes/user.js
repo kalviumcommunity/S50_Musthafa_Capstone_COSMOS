@@ -184,7 +184,7 @@ router.get("/getusersforuserpost", async (req, res) => {
     const userId = req.params.id;
     const users = await Profilemodel.aggregate([
       { $sample: { size: 4 } },
-      { $project: { name: 1, profilePic: 1 } }
+      { $project: { name: 1, profilePic: 1 } },
     ]);
 
     res.json(users);
@@ -193,7 +193,6 @@ router.get("/getusersforuserpost", async (req, res) => {
     res.status(500).send("Internal Server Error");
   }
 });
-
 
 // POST REQUESTS
 //* to login authentication
@@ -217,12 +216,13 @@ router.post("/getone", async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: false,
+      secure: false,
+      sameSite: "lax",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-    console.log("User Logged in successfully", token)
-    res
-      .status(201)
-      .json({ message: "User Logged in successfully"});
+
+    console.log("User Logged in successfully", token);
+    res.status(201).json({ message: "User Logged in successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -262,9 +262,7 @@ router.post("/", async (req, res) => {
         maxAge: 7 * 24 * 60 * 60 * 1000,
       });
 
-      res
-        .status(201)
-        .json({ message: "User created successfully"});
+      res.status(201).json({ message: "User created successfully" });
     }
   } catch (err) {
     console.log(
