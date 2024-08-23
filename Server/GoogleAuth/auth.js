@@ -14,7 +14,7 @@ router.get('/google/callback',
 );
 
 router.get("/logout", (req, res) => {
-  req.clearCookie("token", {
+  res.clearCookie("token", {
     httpOnly: true, 
     secure: true,
     sameSite: "none",
