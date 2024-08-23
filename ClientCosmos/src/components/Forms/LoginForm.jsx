@@ -25,12 +25,14 @@ function LoginForm() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/users/getone",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
+        // "http://localhost:3000/users/getone",
         data,
         {
           withCredentials: true,
         }
       );
+      console.log(response.data);
       if (response.status === 201) {
         navigate("/HomePage");
       }

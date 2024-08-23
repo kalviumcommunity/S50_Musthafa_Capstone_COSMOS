@@ -219,7 +219,7 @@ router.post("/getone", async (req, res) => {
       httpOnly: false,
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
-
+    console.log("User Logged in successfully", token)
     res
       .status(201)
       .json({ message: "User Logged in successfully"});
