@@ -45,7 +45,6 @@ app.use(passport.session());
 app.use(
   cors({
     origin: "http://localhost:5173",
-    // origin:"https://cosmos-plum.vercel.app",
     secure: false,
     credentials: true,
   })
