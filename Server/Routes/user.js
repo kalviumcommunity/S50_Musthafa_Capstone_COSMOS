@@ -214,12 +214,19 @@ router.post("/getone", async (req, res) => {
 
     const token = generateToken(userProfile);
 
+    // res.cookie("token", token, {
+    //   httpOnly: false,
+    //   secure: false,
+    //   sameSite: "lax",
+    //   maxAge: 7 * 24 * 60 * 60 * 1000,
+    // });
     res.cookie("token", token, {
-      httpOnly: false,
-      secure: false,
-      sameSite: "lax",
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
+    
 
     console.log("User Logged in successfully", token);
     res.status(201).json({ message: "User Logged in successfully" });
