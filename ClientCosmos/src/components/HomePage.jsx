@@ -422,7 +422,7 @@ function HomePage({ setSelectedNews }) {
                 </div>
               </div>
             </div>
-            <p className="font-light mt-6 text-white">
+            <p className= "text-lg quicksand-font mt-6 text-white">
               <strong>Explanation :</strong> {apod.explanation}
             </p>
           </div>

@@ -31,8 +31,7 @@ function SignupForm() {
   const onSubmit = async (data) => {
     try {
       const response = await axios.post(
-        // "https://s50-musthafa-capstone-cosmos.onrender.com/users",
-        "http://localhost:3000//users",
+        "http://localhost:3000/users",
         data,
         {
           withCredentials: true,
@@ -70,9 +69,6 @@ function SignupForm() {
 
         <div
           className="w-screen h-screen pl-36 bg-black grid items-center bg-no-repeat bg-cover"
-          // style={{
-          //   backgroundImage: `url(https://gtwallpaper.org/sites/default/files/wallpaper/168710/gradient-sci-fi-planet-wallpapers-168710-200004-99570.png)`,
-          // }}
           style={{
             backgroundImage: `url(https://wallpapers.com/images/featured/4k-space-9w27dqmc4nrs3xwd.jpg)`,
           }}

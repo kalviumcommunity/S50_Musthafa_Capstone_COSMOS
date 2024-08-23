@@ -26,7 +26,6 @@ function LoginForm() {
     try {
       const response = await axios.post(
         "http://localhost:3000/users/getone",
-        // "https://s50-musthafa-capstone-cosmos.onrender.com/users/getone",
         data,
         {
           withCredentials: true,
@@ -44,32 +43,11 @@ function LoginForm() {
 
   const toLogin = () => {
     window.location.href =
-      "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
+      "http://localhost:3000/auth/google";
   };
-
-  // const toLogin = async () => {
-  //   try {
-  //     const response = await axios.get('https://s50-musthafa-capstone-cosmos.onrender.com/auth/google/callback', {
-  //       withCredentials: true,
-  //     });
-
-  //     if (response.status === 200) {
-  //       const { token } = response.data;
-  //       localStorage.setItem('token', token);
-  //       const navigate = useNavigate();
-  //       navigate("/HomePage");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during Google authentication", error);
-  //   }
-  // };
 
   return (
     <>
-      {/* <div
-        className="w-screen h-screen bg-black grid py-28 justify-end items-center bg-no-repeat bg-cover"
-        style={{ backgroundImage: `url(${LOGINBG4})` }}
-      > */}
       {alert && apiError && (
         <div className="absolute flex justify-center items-center w-screen transition-transform transform translate-y-full">
           <div className="px-7 w-2/4 rounded-md py-2 bg-red-600 flex items-center justify-center text-center">

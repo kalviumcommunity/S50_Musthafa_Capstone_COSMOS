@@ -85,34 +85,36 @@ router.get("/mycommunities/:id", async (req, res) => {
     }
 
     const communityIds = user.communities;
-    const communities = await Message.aggregate([
-      { $match: { communityId: { $in: communityIds } } }, 
-      { $unwind: "$messages" }, 
-      { $sort: { "messages.date": -1 } },
-      {
-        $group: {
-          _id: "$communityId",
-          latestMessage: { $first: "$messages" },
-        },
-      },
-      {
-        $lookup: {
-          from: "communities",
-          localField: "_id",
-          foreignField: "_id",
-          as: "communityDetails",
-        },
-      },
-      { $unwind: "$communityDetails" },
-      {
-        $replaceRoot: {
-          newRoot: {
-            $mergeObjects: ["$communityDetails", { latestMessage: "$latestMessage" }],
-          },
-        },
-      },
-    ]);
+    const communities = await communitymodel.find({ _id: { $in: communityIds } });
+    // const communities = await Message.aggregate([
+    //   { $match: { communityId: { $in: communityIds } } }, 
+    //   { $unwind: "$messages" }, 
+    //   { $sort: { "messages.date": -1 } },
+    //   {
+    //     $group: {
+    //       _id: "$communityId",
+    //       latestMessage: { $first: "$messages" },
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: "communities",
+    //       localField: "_id",
+    //       foreignField: "_id",
+    //       as: "communityDetails",
+    //     },
+    //   },
+    //   { $unwind: "$communityDetails" },
+    //   {
+    //     $replaceRoot: {
+    //       newRoot: {
+    //         $mergeObjects: ["$communityDetails", { latestMessage: "$latestMessage" }],
+    //       },
+    //     },
+    //   },
+    // ]);
 
+    // console.log(communities);
     res.status(200).json(communities);
   } catch (error) {
     console.error("An error occurred while fetching community data:", error);

@@ -14,7 +14,7 @@ import useUserData from "../utils/UserData";
 
 function PostForm({ Modal, setModalOpen, mypostFetch }) {
   const { userData } = useUserData();
-  
+
   const [iv, setisv] = useState(false);
   const [files, setFiles] = React.useState([]);
   const [postLoading, setPostLoading] = useState(false);
@@ -52,7 +52,6 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
       const uploadData = await uploadBytes(imgS, files[0]);
       const imageUrl = await getDownloadURL(uploadData.ref);
 
-      console.log(imageUrl);
       const requestData = {
         ...data,
         image: imageUrl,
@@ -184,10 +183,10 @@ function PostForm({ Modal, setModalOpen, mypostFetch }) {
 
             <button
               type="submit"
-              className="w-full py-3 px-4 mt-8 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-black text-white hover:bg-gray-900 duration-300 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600"
+              className="w-full py-0 px-4 mt-4 justify-center items-center text-sm font-semibold rounded-lg bg-black text-white hover:bg-gray-900 duration-300 "
             >
               {postLoading ? (
-                <div>
+                <div className="flex justify-center py-4">
                   <PulseLoader color="#ffffff" size={11} />
                 </div>
               ) : (

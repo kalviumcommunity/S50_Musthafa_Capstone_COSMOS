@@ -194,7 +194,7 @@ function UserProfile() {
                 value={userprofile?.name}
               />
             </div>
-            <div>
+            { userprofile?.bio && <div>
               <h2 className="text-lg tracking-wider">BIO</h2>
               <input
                 type="text"
@@ -202,15 +202,7 @@ function UserProfile() {
                 disabled
                 value={userprofile?.bio}
               />
-            </div>
-            <div className="w-full flex mt-9 justify-evenly">
-              <button className="px-4 py-2 bg-black rounded-sm text-white font-semibold tracking-wider">
-                Follow
-              </button>
-              <button onClick={() => sendMessage()} className="px-4 py-2 bg-black rounded-sm text-white font-semibold tracking-wider">
-                Message
-              </button>
-            </div>
+            </div>}
           </div>
         </div>
         <div className="w-full lg:mt-0 myPosts mt-10  bg-gray-200 px-10">
@@ -222,7 +214,7 @@ function UserProfile() {
                   setselectedComp("POSTS");
                 }}
               >
-                YOUR POSTS
+                POSTS
               </h2>
             </div>
           </div>

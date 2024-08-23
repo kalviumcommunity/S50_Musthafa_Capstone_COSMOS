@@ -6,7 +6,12 @@ export default {
     './node_modules/preline/preline.js',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontWeight: {
+        'extra-light': 50,
+        'super-light': 50,
+      },
+    },
   },
   plugins: [
     require('preline/plugin'),

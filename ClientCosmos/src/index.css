@@ -1053,6 +1053,12 @@
   z-index: 9999;
 }
 
-.font-light{
-  font-weight: 300;
+/* // <uniquifier>: Use a unique and descriptive class name */
+
+.quicksand-font {
+  font-family: "Quicksand", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 100;
+  letter-spacing: 1px;
+  font-style: normal;
 }

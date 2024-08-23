@@ -19,7 +19,6 @@ function Chats() {
   const [newMessage, setNewMessage] = useState("");
   const [socket, setSocket] = useState(null);
 
-  // Scroll to bottom of messages when new messages are added
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
@@ -222,41 +221,42 @@ function Chats() {
           <div className="w-full flex flex-col h-full">
             {selectedUser ? (
               <>
-                <nav className="w-full cursor-pointer hover:bg-slate-300 duration-300 flex justify-between items-center px-4 lg:px-10 py-3 bg-slate-200">
+                <nav
+                  onClick={() => navigate(`/userprofile/${selectedUser._id}`)}
+                  className="w-full cursor-pointer hover:bg-slate-300 duration-300 flex justify-between items-center px-4 lg:px-10 py-3 bg-slate-200"
+                >
                   <div className="flex items-center gap-3">
-                    <>
-                      <div className="flex justify-center gap-2">
-                        <span className="flex items-center">
-                          <svg
-                            onClick={() => setSelectedUser(null)}
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth="1.5"
-                            stroke="currentColor"
-                            className="w-7 h-7 hover:bg-slate-400 rounded-md duration-300 transform rotate-180"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
-                            ></path>
-                          </svg>
-                        </span>
-                        <div
-                          className="w-10 lg:w-12 h-10 lg:h-12 bg-cover rounded-full"
-                          style={{
-                            backgroundImage: `url(${
-                              selectedUser.profilePic || userchaticon
-                            })`,
-                            backgroundPosition: "center",
-                          }}
-                        ></div>
-                      </div>
-                      <h2 className="text-sm lg:text-base">
-                        {selectedUser.name}
-                      </h2>
-                    </>
+                    <div className="flex justify-center gap-2">
+                      <span className="flex items-center">
+                        <svg
+                          onClick={() => setSelectedUser(null)}
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth="1.5"
+                          stroke="currentColor"
+                          className="w-7 h-7 hover:bg-slate-400 rounded-md duration-300 transform rotate-180"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75"
+                          ></path>
+                        </svg>
+                      </span>
+                      <div
+                        className="w-10 lg:w-12 h-10 lg:h-12 bg-cover rounded-full"
+                        style={{
+                          backgroundImage: `url(${
+                            selectedUser.profilePic || userchaticon
+                          })`,
+                          backgroundPosition: "center",
+                        }}
+                      ></div>
+                    </div>
+                    <h2 className="text-sm lg:text-base">
+                      {selectedUser.name}
+                    </h2>
                   </div>
                   <div>
                     <img

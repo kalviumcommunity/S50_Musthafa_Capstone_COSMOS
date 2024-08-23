@@ -22,8 +22,7 @@ passport.use(
     {
       clientID: GOOGLE_CLIENT_ID,
       clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL:
-        "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google/callback",
+      callbackURL: "http://localhost:3000/auth/google/callback",
       passReqToCallback: true,
     },
     async function (request, accessToken, refreshToken, profile, done) {
@@ -52,18 +51,15 @@ passport.use(
           }
 
           const token = generateToken(existingProfile);
-
           request.res.cookie("token", token, {
-            maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: false,
-            secure: false,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
           });
 
           const passwordBool = false;
           request.res.cookie("passwordisthere", passwordBool, {
-            maxAge: 7 * 24 * 60 * 60 * 1000,
             httpOnly: false,
-            secure: false,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
           });
 
           return done(null, existingProfile);
@@ -88,15 +84,14 @@ passport.use(
         const token = generateToken(profileData);
 
         request.res.cookie("token", token, {
-          maxAge: 7 * 24 * 60 * 60 * 1000,
           httpOnly: false,
-          secure: false,
+          maxAge: 7 * 24 * 60 * 60 * 1000,
         });
+
         const passwordBool = false;
         request.res.cookie("passwordisthere", passwordBool, {
-          maxAge: 7 * 24 * 60 * 60 * 1000,
           httpOnly: false,
-          secure: false,
+          maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 
         return done(null, profileData);
