@@ -25,12 +25,10 @@ const useUserData = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const token = Cookies.get("token");
-      console.log(Cookies.get("token"));
       try {
         const response = await axios.post(
           "http://localhost:3000/users/tokenvalidate",
-          { token },
+          {},
           { withCredentials: true }
         );
         const { user, valid } = response.data;
@@ -40,8 +38,7 @@ const useUserData = () => {
         }
         setValid(valid);
       } catch (error) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("passwordisthere");
+        Cookies.remove("token");
         console.error("Error in post request", error.response.data);
         setError(error);
       } finally {

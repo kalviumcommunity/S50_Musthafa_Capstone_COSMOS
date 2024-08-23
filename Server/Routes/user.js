@@ -222,7 +222,7 @@ router.post("/getone", async (req, res) => {
 
     res
       .status(201)
-      .json({ message: "User Logged in successfully", token: token });
+      .json({ message: "User Logged in successfully"});
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Internal server error" });
@@ -264,7 +264,7 @@ router.post("/", async (req, res) => {
 
       res
         .status(201)
-        .json({ message: "User created successfully", token: token });
+        .json({ message: "User created successfully"});
     }
   } catch (err) {
     console.log(

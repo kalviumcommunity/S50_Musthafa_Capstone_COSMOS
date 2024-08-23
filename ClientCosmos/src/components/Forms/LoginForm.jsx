@@ -32,7 +32,6 @@ function LoginForm() {
         }
       );
       if (response.status === 201) {
-        localStorage.setItem("token", response.data.token);
         navigate("/HomePage");
       }
     } catch (error) {
