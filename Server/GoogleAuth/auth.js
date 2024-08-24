@@ -21,9 +21,6 @@ router.get("/logout", (req, res) => {
     path: "/",
   });
 
-  console.log(res.cookies)
-  console.log(req)
-  console.log(req.cookies)
   req.logout(function (err) {
     if (err) {
       return res.status(500).send("Error during logout");

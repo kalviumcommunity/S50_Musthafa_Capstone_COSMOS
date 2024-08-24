@@ -97,16 +97,15 @@ function HomePage({ setSelectedNews }) {
 
   const LogOut = async () => {
     await axios
-      .get("http://localhost:3000/auth/logout")
+      .get("https://s50-musthafa-capstone-cosmos.onrender.com/auth/logout")
       .then((res) => {
         setLogoutPopupOpen(false);
-        if (res.status === 200) {
-          Cookies.remove("token");
-          Cookies.remove("passwordisthere");
-          window.location.reload();
-        } else {
-          console.error("Error while logging out:", response.data);
-        }
+        console.log(res.data);
+        // if (res.status === 200) {
+        //   window.location.reload();
+        // } else {
+        //   console.error("Error while logging out:", response.data);
+        // }
       })
       .catch((err) => {
         console.log("Error while loggin out", err);
