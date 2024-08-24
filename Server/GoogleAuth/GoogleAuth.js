@@ -51,14 +51,18 @@ passport.use(
           }
 
           const token = generateToken(existingProfile);
-          request.res.cookie("token", token, {
-            httpOnly: false,
+          res.cookie("token", token, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
-
+          
           const passwordBool = false;
-          request.res.cookie("passwordisthere", passwordBool, {
-            httpOnly: false,
+          res.cookie("passwordisthere", passwordBool, {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
             maxAge: 7 * 24 * 60 * 60 * 1000,
           });
 
@@ -83,14 +87,17 @@ passport.use(
 
         const token = generateToken(profileData);
 
-        request.res.cookie("token", token, {
-          httpOnly: false,
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
-
         const passwordBool = false;
-        request.res.cookie("passwordisthere", passwordBool, {
-          httpOnly: false,
+        res.cookie("passwordisthere", passwordBool, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "none",
           maxAge: 7 * 24 * 60 * 60 * 1000,
         });
 

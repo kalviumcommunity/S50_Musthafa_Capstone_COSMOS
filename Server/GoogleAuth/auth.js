@@ -14,6 +14,13 @@ router.get('/google/callback',
 );
 
 router.get("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true, 
+    secure: true,
+    sameSite: "none",
+    path: "/",
+  });
+
   req.logout(function (err) {
     if (err) {
       return res.status(500).send("Error during logout");
@@ -25,7 +32,6 @@ router.get("/logout", (req, res) => {
       res.send("User logged out successfully");
     });
   });
-
 });
 
 
