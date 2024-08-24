@@ -258,10 +258,6 @@ router.post("/", async (req, res) => {
       const userProfile = await Profilemodel.create(userProfileData);
       const token = generateToken(userProfile);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> e1167974565b8983e39c4280c9f69f11d3c5fc41
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
