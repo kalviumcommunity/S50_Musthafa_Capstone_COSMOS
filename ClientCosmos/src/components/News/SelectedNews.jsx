@@ -82,11 +82,11 @@ function SelectedNews({ setSelectedNews, selectedNews }) {
             <div className="rounded">
               <img
                 className="rounded-lg h-8"
-                src={userData?.profilePic}
+                src={userData?.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
                 alt="Profile"
               />
             </div>
-            <div className="font-poppins text-sm">{userData?.name}</div>
+            <div className="font-poppins text-sm">{userData?.name || "Guest"}</div>
           </div>
         </nav>
 

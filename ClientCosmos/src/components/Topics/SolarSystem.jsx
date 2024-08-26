@@ -9,7 +9,7 @@ function SolarSystem({ setSelectedNews }) {
   const [showAnswerIndex, setShowAnswerIndex] = useState(-1);
   const navigate = useNavigate();
   const { userData } = useUserData();
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -205,9 +205,17 @@ function SolarSystem({ setSelectedNews }) {
           </ul>
           <div className="flex items-center gap-3 justify-between cursor-pointer bg-gray-300 px-3 py-2 rounded-xl">
             <div onClick={() => discoverTopics("profile")} className="rounded">
-              <img className="rounded-lg h-8" src={userData?.profilePic} />
+              <img
+                className="rounded-lg h-8"
+                src={
+                  userData?.profilePic ||
+                  "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                }
+              />
             </div>
-            <div className="font-poppins text-sm">{userData?.name}</div>
+            <div className="font-poppins text-sm">
+              {userData?.name || "Guest"}
+            </div>
           </div>
         </nav>
 
@@ -282,7 +290,10 @@ function SolarSystem({ setSelectedNews }) {
               <div
                 key={index}
                 className="h-full flex items-end bg-cover bg-blue-600"
-                style={{ backgroundImage: `url(${planet.image})` , backgroundPosition:"left" }}
+                style={{
+                  backgroundImage: `url(${planet.image})`,
+                  backgroundPosition: "left",
+                }}
               >
                 <div className="w-72">
                   <h2 className="text-3xl text-white mb-7 ml-5 font-bold ">

@@ -270,6 +270,30 @@ function Settings() {
 
   return (
     <>
+      {!userData && (
+        <div>
+          <div className="overlay"></div>
+          <div className="border logout-popup p-5 py-8 rounded flex flex-col justify-around text-center">
+            <h2 className="text-xl mb-5 font-poppins">
+              You have to login to see your account details !
+            </h2>
+            <div className="flex mt-3 justify-evenly">
+              <button
+                className="py-2 px-5  bg-black text-white  tracking-wider "
+                onClick={() => navigate("/login")}
+              >
+                Login
+              </button>
+              <button
+                className="py-2 px-5  border  text-black  hover:bg-gray-50"
+                onClick={() => navigate("/HomePage")}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {DeleteAccountPopUp && (
         <div>
           <div className="overlay"></div>

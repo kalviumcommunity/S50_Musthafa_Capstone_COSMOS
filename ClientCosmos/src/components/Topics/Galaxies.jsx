@@ -198,11 +198,15 @@ The central bar in these types of galaxies plays an important role in their evol
             <div onClick={() => discoverTopics("profile")} className="rounded">
               <img
                 className="rounded-lg h-8"
-                src={userData?.profilePic}
-                alt="Profile"
+                src={
+                  userData?.profilePic ||
+                  "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                }
               />
             </div>
-            <div className="font-poppins text-sm">{userData?.name}</div>
+            <div className="font-poppins text-sm">
+              {userData?.name || "Guest"}
+            </div>
           </div>
         </nav>
 

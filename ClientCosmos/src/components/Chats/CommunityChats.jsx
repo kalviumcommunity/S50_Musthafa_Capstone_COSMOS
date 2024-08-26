@@ -64,7 +64,7 @@ function Chats() {
   const fetchAllCommunities = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/community/getAll/${userData?._id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/getAll/${userData?._id}`
       );
       setCommunities(response.data);
     } catch (error) {
@@ -76,7 +76,7 @@ function Chats() {
     console.log("dfghjk",userData?._id);
     try {
       const response = await axios.get(
-        `http://localhost:3000/community/mycommunities/${userData?._id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/mycommunities/${userData?._id}`
       );
       setCommunities(response.data);
     } catch (error) {
@@ -95,7 +95,7 @@ function Chats() {
   }, [selectedSection, userData]);
 
   useEffect(() => {
-    const newSocket = io("http://localhost:3000", {
+    const newSocket = io("https://s50-musthafa-capstone-cosmos.onrender.com", {
       withCredentials: true,
       transports: ["websocket", "polling"],
     });
@@ -115,7 +115,7 @@ function Chats() {
       const fetchMessages = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:3000/chat/${selectedCommunity._id}`
+            `https://s50-musthafa-capstone-cosmos.onrender.com/chat/${selectedCommunity._id}`
           );
           setMessages(response.data);
         } catch (error) {
@@ -161,7 +161,7 @@ function Chats() {
   const fetchTheCommunityData = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:3000/community/details/${selectedCommunity._id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/details/${selectedCommunity._id}`
       );
       setCommunityData(response.data);
     } catch (error) {
@@ -176,7 +176,7 @@ function Chats() {
     };
     try {
       const response = await axios.post(
-        "http://localhost:3000/community/join",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/community/join",
         data
       );
       console.log(response.data);
@@ -205,7 +205,7 @@ function Chats() {
       };
 
       const response = await axios.post(
-        "http://localhost:3000/community/create",
+        "https://s50-musthafa-capstone-cosmos.onrender.com/community/create",
         requestData
       );
 
@@ -232,7 +232,7 @@ function Chats() {
   const DeleteCommunity = async () => {
     try {
       const response = await axios.delete(
-        `http://localhost:3000/community/delete/${communityData._id}`
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/delete/${communityData._id}`
       );
       window.location.reload();
     } catch (err) {
@@ -244,7 +244,7 @@ function Chats() {
     const userID = userData._id;
     try {
       const response = await axios.post(
-        `http://localhost:3000/community/exit`,
+        `https://s50-musthafa-capstone-cosmos.onrender.com/community/exit`,
         {
           userId: userID,
           communityId: communityData._id,
@@ -265,11 +265,11 @@ function Chats() {
         let response;
         if (selectedSection === "ALL") {
           response = await axios.get(
-            `http://localhost:3000/community/getAll/${userData?._id}`
+            `https://s50-musthafa-capstone-cosmos.onrender.com/community/getAll/${userData?._id}`
           );
         } else {
           response = await axios.get(
-            `http://localhost:3000/community/mycommunities/${userData?._id}`
+            `https://s50-musthafa-capstone-cosmos.onrender.com/community/mycommunities/${userData?._id}`
           );
         }
 

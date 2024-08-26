@@ -188,9 +188,17 @@ function Stars({ setSelectedNews }) {
           </ul>
           <div className="flex items-center gap-3 justify-between cursor-pointer bg-gray-300 px-3 py-2 rounded-xl">
             <div onClick={() => discoverTopics("profile")} className="rounded">
-              <img className="rounded-lg h-8" src={userData?.profilePic} />
+              <img
+                className="rounded-lg h-8"
+                src={
+                  userData?.profilePic ||
+                  "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                }
+              />
             </div>
-            <div className="font-poppins text-sm">{userData?.name}</div>
+            <div className="font-poppins text-sm">
+              {userData?.name || "Guest"}
+            </div>
           </div>
         </nav>
 

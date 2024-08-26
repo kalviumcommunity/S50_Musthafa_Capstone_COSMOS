@@ -12,9 +12,10 @@ import { v4 } from "uuid";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { MoonLoader } from "react-spinners";
 import useUserData from "../utils/UserData";
+import { toast, ToastContainer } from "react-toastify";
 
 function Profile() {
-  const { userData , setUserData } = useUserData();
+  const { userData, setUserData } = useUserData();
   const [myPosts, setMyPosts] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -98,7 +99,9 @@ function Profile() {
 
   const DeleteMyPost = async () => {
     await axios
-      .delete(`https://s50-musthafa-capstone-cosmos.onrender.com/posts/${deletePostId}`)
+      .delete(
+        `https://s50-musthafa-capstone-cosmos.onrender.com/posts/${deletePostId}`
+      )
       .then((res) => {
         console.log(res.data);
         setDeletePostPopUp(false);
@@ -155,9 +158,7 @@ function Profile() {
           action: action,
         }
       );
-      console.log("Post updated:", response.data);
-
-      // Update the local state immediately
+      toast.success(response.data.message);
       const updatedPosts = myPosts.map((post) => {
         if (post._id === postId) {
           if (action === "liked") {
@@ -197,7 +198,6 @@ function Profile() {
       );
       console.log("User updated:", response.data);
 
-      // Update the local state immediately
       const updatedUserData = {
         ...userData,
         saved_posts:
@@ -263,6 +263,7 @@ function Profile() {
         </div>
       )}
       <div className="w-full h-screen flex flex-col lg:flex-row">
+        <ToastContainer />
         <div className="lg:w-3/4 w-full lg:block grid justify-center  px-10">
           <div className="flex items-center gap-3">
             <span
@@ -309,7 +310,10 @@ function Profile() {
                   <div
                     className="w-52 h-52 bg-cover hover:cursor-pointer hover:grayscale rounded-full"
                     style={{
-                      backgroundImage: `url(${userData?.profilePic})`,
+                      backgroundImage: `url(${
+                        userData?.profilePic ||
+                        "https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                      })`,
                       backgroundPosition: "center",
                     }}
                   ></div>
@@ -317,7 +321,7 @@ function Profile() {
               </label>
             </div>
             <h2 className="text-3xl  font font-bold tracking-widest my-3">
-              {userData?.name}
+              {userData?.name || "Guest"}
             </h2>
           </div>
           <div className="lg:overflow-auto myPosts lg:h-72">
@@ -327,7 +331,7 @@ function Profile() {
                 type="text"
                 className="w-full font-light border mt-2 p-3 outline-none bg-white rounded-md"
                 disabled
-                value={userData?.name}
+                value={userData?.name || "Guest"}
               />
             </div>
             <div>
@@ -349,23 +353,6 @@ function Profile() {
         <div className="w-full lg:mt-0 myPosts mt-10  bg-gray-200 px-10">
           <div className="z-50 w-full flex py-6 justify-between items-center px-5">
             <div className="flex gap-2 items-center">
-              {/* <h2
-                className="text-4xl font-bold bg-yellow-300 p-2 tracking-widest cursor-pointer"
-                onClick={() => {
-                  setselectedComp("POSTS");
-                }}
-              >
-                YOUR POSTS
-              </h2>
-              {/*
-              <h2
-                className="text-4xl font-bold bg-yellow-300 p-2 tracking-widest cursor-pointer"
-                onClick={() => {
-                  setselectedComp("BLOGS");
-                }}
-              >
-                YOUR BLOGS
-              </h2> */}
               <h2
                 className="text-4xl font-bold tracking-widest cursor-pointer"
                 onClick={() => {
@@ -375,12 +362,20 @@ function Profile() {
                 YOUR POSTS
               </h2>
             </div>
-            <button
-              onClick={openModal}
-              className="py-2 px-4 text-lg  text-white font-semibold rounded-sm bg-black tracking-wider duration-500"
-            >
-              Create Post
-            </button>
+            {userData ? (
+              <button
+                onClick={openModal}
+                className="py-2 px-4 text-lg  text-white font-semibold rounded-sm bg-black tracking-wider duration-500"
+              >
+                Create Post
+              </button>
+            ) : (
+              <div>
+                <button onClick={() => navigate("/login")} className="py-2 px-4 text-lg  text-white rounded-sm bg-black tracking-wider duration-500">
+                  Login
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="overflow-auto h-[85vh] myPosts">
@@ -454,61 +449,6 @@ function Profile() {
                     </h2>
 
                     <div className="flex items-center justify-between mt-3 gap-5">
-                      {/*<div className="flex gap-4">
-                        <div>
-                          <label className="ui-bookmark">
-                            <input
-                              type="checkbox"
-                              onChange={(event) =>
-                                handleCheckboxChange(event, post._id)
-                              }
-                              checked={post.likes.includes(userData._id)}
-                            />
-                            <div className="bookmark z-0">
-                              <svg
-                                viewBox="0 0 16 16"
-                                style={{ marginTop: "4px" }}
-                                className="bi bi-heart-fill mt-10"
-                                height="25"
-                                width="25"
-                                xmlns="http://www.w3.org/2000/svg"
-                              >
-                                <path
-                                  d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"
-                                  fillRule="evenodd"
-                                ></path>
-                              </svg>
-                            </div>
-                          </label>
-                          <h2 className="text-center">{post.likes.length}</h2>
-                        </div>
-
-                        <div className="drawer mt-1 cursor-pointer drawer-end w-fit">
-                          <input
-                            id="my-drawer-4"
-                            type="checkbox"
-                            className="drawer-toggle"
-                          />
-                          <div
-                            onClick={() => toggleCommentModal(post._id)}
-                            className="drawer-content z-30 w-fit"
-                          >
-                            <img src={commenticon} className="w-6" alt="" />
-                          </div>
-                        </div>
-                      </div>
-
-                      <label className="custom-container">
-                        <input type="checkbox" />
-                        <div className="custom-bookmark z-0">
-                          <svg viewBox="0 0 32 32">
-                            <g>
-                              <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                            </g>
-                          </svg>
-                        </div>
-                      </label>
-                    </div> */}
                       <div className="flex items-center gap-2">
                         <div className="flex justify-center items-center gap-1">
                           <label className="ui-bookmark">

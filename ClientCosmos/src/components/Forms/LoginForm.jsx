@@ -43,7 +43,7 @@ function LoginForm() {
 
   const toLogin = () => {
     window.location.href =
-      "http://localhost:3000/auth/google";
+      "https://s50-musthafa-capstone-cosmos.onrender.com/auth/google";
   };
 
   return (
