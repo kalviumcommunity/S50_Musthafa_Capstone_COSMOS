@@ -6,12 +6,6 @@ router.get('/google',
   passport.authenticate('google', { scope: ['email', 'profile'] })
 );
 
-// router.get('/google/callback',
-//   passport.authenticate('google', {
-//     successRedirect: 'http://localhost:5173/HomePage',
-//     failureRedirect: 'http://localhost:5173/login'
-//   })
-// );
 router.get(
   "/google/callback",
   passport.authenticate("google", { failureRedirect: "http://localhost:5173/login" }),

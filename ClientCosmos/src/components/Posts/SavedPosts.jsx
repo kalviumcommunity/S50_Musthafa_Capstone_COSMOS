@@ -4,8 +4,7 @@ import PostComments from "../Comment/PostComments";
 import axios from "axios";
 import commenticon from "../../Assets/commenticon.png";
 
-
-function SavedPosts({ userData , setUserData }) {
+function SavedPosts({ userData, setUserData }) {
   const [mySavedPosts, setMySavedPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [commentModal, setCommentModal] = useState(false);
@@ -45,11 +44,12 @@ function SavedPosts({ userData , setUserData }) {
       // Update the local state immediately
       const updatedUserData = {
         ...userData,
-        saved_posts: action === "saved"
-          ? [...userData.saved_posts, postId]
-          : userData.saved_posts.filter((id) => id !== postId),
+        saved_posts:
+          action === "saved"
+            ? [...userData.saved_posts, postId]
+            : userData.saved_posts.filter((id) => id !== postId),
       };
-      
+
       setUserData(updatedUserData);
     } catch (error) {
       console.error(
@@ -58,7 +58,6 @@ function SavedPosts({ userData , setUserData }) {
       );
     }
   };
-
 
   const handleCheckboxChange = async (event, postId) => {
     const action = event.target.checked ? "liked" : "unliked";
@@ -110,7 +109,9 @@ function SavedPosts({ userData , setUserData }) {
     <div>
       {mySavedPosts.length === 0 && !loading ? (
         <div className="text-center text-3xl font-bold font-poppins mt-40 mb-40 lg:mb-0 lg:mt-64 text-gray-700">
-          You haven't saved any Post
+          {userData
+            ? "You haven't saved any Post"
+            : "You haven't Login to see your saved posts"}
         </div>
       ) : loading ? (
         <div className="">
@@ -181,25 +182,23 @@ function SavedPosts({ userData , setUserData }) {
               </div>
 
               <label className="custom-container">
-                  <input
-                    type="checkbox"
-                    onChange={(event) =>
-                      savePostsHandleChange(event, post._id)
-                    }
-                    checked={
-                      userData.saved_posts
-                        ? userData.saved_posts.includes(post._id)
-                        : false
-                    }
-                  />
-                  <div className="custom-bookmark z-0">
-                    <svg viewBox="0 0 32 32">
-                      <g>
-                        <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
-                      </g>
-                    </svg>
-                  </div>
-                </label>
+                <input
+                  type="checkbox"
+                  onChange={(event) => savePostsHandleChange(event, post._id)}
+                  checked={
+                    userData.saved_posts
+                      ? userData.saved_posts.includes(post._id)
+                      : false
+                  }
+                />
+                <div className="custom-bookmark z-0">
+                  <svg viewBox="0 0 32 32">
+                    <g>
+                      <path d="M27 4v27a1 1 0 0 1-1.625.781L16 24.281l-9.375 7.5A1 1 0 0 1 5 31V4a4 4 0 0 1 4-4h14a4 4 0 0 1 4 4z"></path>
+                    </g>
+                  </svg>
+                </div>
+              </label>
             </div>
           </div>
         ))

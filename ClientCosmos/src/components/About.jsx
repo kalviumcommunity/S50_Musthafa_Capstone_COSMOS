@@ -259,7 +259,7 @@ function About() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mb-10 gap-6 mt-8">
+        <div className="flex  mb-10 gap-6 mt-8">
           {reviews.length > 0 ? (
             reviews.map((review) => (
               <div
@@ -274,12 +274,6 @@ function About() {
                   />
                   <div>
                     <p className="font-bold">{review.name}</p>
-                    {/* <Rating
-                      value={review.rating}
-                      readOnly
-                      stars={5}
-                      cancel={false}
-                    /> */}
                   </div>
                 </div>
                 <p className="mb-4">{review.comment}</p>

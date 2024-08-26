@@ -101,11 +101,11 @@ function HomePage({ setSelectedNews }) {
       .then((res) => {
         setLogoutPopupOpen(false);
         console.log(res.data);
-        // if (res.status === 200) {
-        //   window.location.reload();
-        // } else {
-        //   console.error("Error while logging out:", response.data);
-        // }
+        if (res.status === 200) {
+          window.location.reload();
+        } else {
+          console.error("Error while logging out:", response.data);
+        }
       })
       .catch((err) => {
         console.log("Error while loggin out", err);
@@ -310,11 +310,11 @@ function HomePage({ setSelectedNews }) {
                 <div className="w-full  text-black flex gap-5  shadow-lg hover:bg-gray-300">
                   <img
                     className="w-16 h-16 rounded-lg mb-2"
-                    src={userData?.profilePic}
+                    src={userData?.profilePic || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
                     alt="Profile"
                   />
                   <h2 className="text-center  font-semibold text-lg mb-2">
-                    {userData?.name}
+                    {userData?.name || "Guest"}
                   </h2>
                 </div>
               </li>
