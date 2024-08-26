@@ -8,7 +8,7 @@ router.get('/google',
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "http://localhost:5173/login" }),
+  passport.authenticate("google", { failureRedirect: "https://cosmos-plum.vercel.app/login" }),
   (req, res) => {
     console.log(req);
     const { token, profile } = req.user;
@@ -28,7 +28,7 @@ router.get(
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    res.redirect("http://localhost:5173/HomePage");
+    res.redirect("https://cosmos-plum.vercel.app/HomePage");
   }
 );
 
