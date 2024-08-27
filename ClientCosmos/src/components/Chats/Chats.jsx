@@ -184,7 +184,7 @@ function Chats() {
                   className="w-10 lg:w-12 h-10 lg:h-12 bg-cover rounded-full"
                   style={{
                     backgroundImage: `url(${
-                      userData?.profilePic || userchaticon
+                      userData?.profilePic || "https://placehold.co/600x400/png"
                     })`,
                     backgroundPosition: "center",
                   }}
