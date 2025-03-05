@@ -39,7 +39,7 @@ app.use(passport.session());
 
 app.use(
   cors({
-    origin: "https://cosmos-plum.vercel.app",
+    origin: "https://thecosmos-lovuhjb24-swe1.vercel.app",
     credentials: true,
   })
 );
