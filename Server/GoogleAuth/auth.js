@@ -1,14 +1,17 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-router.get('/google',
-  passport.authenticate('google', { scope: ['email', 'profile'] })
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["email", "profile"] })
 );
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "https://thecosmos-lovuhjb24-swe1.vercel.app/login" }),
+  passport.authenticate("google", {
+    failureRedirect: "https://thecosmos-lovuhjb24-swe1.vercel.app/login",
+  }),
   (req, res) => {
     console.log(req);
     const { token, profile } = req.user;
@@ -32,10 +35,9 @@ router.get(
   }
 );
 
-
 router.get("/logout", (req, res) => {
-  res.clearCookie("token", {
-    httpOnly: true, 
+  res.clearCookie("token", "connect.sid", "passwordisthere", {
+    httpOnly: true,
     secure: true,
     sameSite: "none",
     path: "/",
@@ -53,6 +55,5 @@ router.get("/logout", (req, res) => {
     });
   });
 });
-
 
 module.exports = router;
